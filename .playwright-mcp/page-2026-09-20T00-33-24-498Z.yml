@@ -1,0 +1,51 @@
+- generic [ref=f1e2]:
+  - generic [ref=f1e3]: DEMO — sample data, no live systems connected.
+  - generic [ref=f1e7]:
+    - complementary [ref=f1e8]:
+      - generic [ref=f1e9]: BuildLedger
+      - navigation [ref=f1e16]:
+        - link "Dashboard" [ref=f1e17] [cursor=pointer]:
+          - /url: /
+        - link "Projects" [ref=f1e24] [cursor=pointer]:
+          - /url: /projects
+        - link "Invoices" [ref=f1e30] [cursor=pointer]:
+          - /url: /invoices
+        - link "Approvals 3" [ref=f1e34] [cursor=pointer]:
+          - /url: /approvals
+          - generic [ref=f1e38]: Approvals
+          - generic [ref=f1e39]: "3"
+        - link "Exceptions 4" [ref=f1e40] [cursor=pointer]:
+          - /url: /exceptions
+          - generic [ref=f1e43]: Exceptions
+          - generic [ref=f1e44]: "4"
+        - link "Inbox" [ref=f1e45] [cursor=pointer]:
+          - /url: /inbox
+        - link "Assistant" [ref=f1e50] [cursor=pointer]:
+          - /url: /assistant
+        - link "Integrations" [ref=f1e54] [cursor=pointer]:
+          - /url: /integrations
+      - generic [ref=f1e59]:
+        - paragraph [ref=f1e60]: Xero · CostX · EzzyBills
+        - paragraph [ref=f1e61]: All systems connected
+    - generic [ref=f1e62]:
+      - banner [ref=f1e63]:
+        - button "Project All projects" [ref=f1e64] [cursor=pointer]:
+          - generic [ref=f1e65]: Project
+          - generic [ref=f1e66]: All projects
+        - textbox "Search" [ref=f1e68]:
+          - /placeholder: Search projects, suppliers, invoices
+        - generic [ref=f1e69]:
+          - generic [ref=f1e70]:
+            - paragraph [ref=f1e71]: Sarah Chen
+            - paragraph [ref=f1e72]: Project Manager
+          - generic [ref=f1e73]: SC
+      - main [ref=f1e74]:
+        - generic [ref=f1e75]:
+          - generic [ref=f1e77]:
+            - heading "Dashboard" [level=1] [ref=f1e78]
+            - paragraph [ref=f1e79]: Portfolio health across all four active projects — budget, spend and open exceptions in one place.
+          - generic [ref=f1e81]:
+            - paragraph [ref=f1e87]: KPI cards, budget vs actual chart and the projects table land here next.
+            - generic [ref=f1e88]:
+              - generic "Sourced from CostX" [ref=f1e89]: CostX
+              - generic "Sourced from Xero" [ref=f1e90]: Xero

@@ -1,0 +1,322 @@
+- generic [active] [ref=f18e1]:
+  - generic [ref=f18e2]:
+    - generic [ref=f18e3]: DEMO — sample data, no live systems connected.
+    - generic [ref=f18e7]:
+      - complementary [ref=f18e8]:
+        - link "BuildLedger" [ref=f18e9] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=f18e16]:
+          - link "Dashboard" [ref=f18e17] [cursor=pointer]:
+            - /url: /
+          - link "Projects" [ref=f18e24] [cursor=pointer]:
+            - /url: /projects
+          - link "Invoices" [ref=f18e30] [cursor=pointer]:
+            - /url: /invoices
+          - link "Approvals 3" [ref=f18e34] [cursor=pointer]:
+            - /url: /approvals
+            - generic [ref=f18e38]: Approvals
+            - generic [ref=f18e39]: "3"
+          - link "Exceptions 4" [ref=f18e40] [cursor=pointer]:
+            - /url: /exceptions
+            - generic [ref=f18e43]: Exceptions
+            - generic [ref=f18e44]: "4"
+          - link "Inbox" [ref=f18e45] [cursor=pointer]:
+            - /url: /inbox
+          - link "Assistant" [ref=f18e50] [cursor=pointer]:
+            - /url: /assistant
+          - link "Integrations" [ref=f18e54] [cursor=pointer]:
+            - /url: /integrations
+        - link [ref=f18e59] [cursor=pointer]:
+          - /url: /integrations
+          - paragraph [ref=f18e60]: 5 systems connected
+          - paragraph [ref=f18e64]: Xero · CostX · EzzyBills · +2
+      - generic [ref=f18e65]:
+        - banner [ref=f18e66]:
+          - button "Project All projects" [ref=f18e67] [cursor=pointer]:
+            - generic [ref=f18e68]: Project
+            - generic [ref=f18e69]: All projects
+          - textbox "Search" [ref=f18e71]:
+            - /placeholder: Search projects, suppliers, invoices
+          - generic [ref=f18e72]:
+            - button "Reset demo" [ref=f18e73] [cursor=pointer]
+            - generic [ref=f18e74]:
+              - paragraph [ref=f18e75]: Sarah Chen
+              - paragraph [ref=f18e76]: Project Manager
+            - generic [ref=f18e77]: SC
+        - main [ref=f18e78]:
+          - generic [ref=f18e79]:
+            - generic [ref=f18e80]:
+              - link "All projects" [ref=f18e81] [cursor=pointer]:
+                - /url: /projects
+              - generic [ref=f18e84]:
+                - generic [ref=f18e85]:
+                  - generic [ref=f18e86]:
+                    - heading "Riverside Office Fitout" [level=1] [ref=f18e87]
+                    - generic [ref=f18e88]: Over budget
+                    - generic [ref=f18e89]: RIV-01
+                  - paragraph [ref=f18e90]: Meridian Property Group
+                - link "Ask about this project" [ref=f18e91] [cursor=pointer]:
+                  - /url: /assistant?q=Why%20is%20Riverside%20over%20budget%3F
+            - generic [ref=f18e92]:
+              - generic [ref=f18e93]:
+                - generic [ref=f18e94]:
+                  - paragraph [ref=f18e95]: Budget
+                  - generic "Sourced from CostX" [ref=f18e96]: CostX
+                - paragraph [ref=f18e97]: $742,000
+                - generic [ref=f18e98]: at tender
+              - generic [ref=f18e99]:
+                - generic [ref=f18e100]:
+                  - paragraph [ref=f18e101]: Committed
+                  - generic "Sourced from ApprovalMax" [ref=f18e102]: ApprovalMax
+                - paragraph [ref=f18e103]: $698,000
+                - generic [ref=f18e104]: purchase orders raised
+              - generic [ref=f18e105]:
+                - generic [ref=f18e106]:
+                  - paragraph [ref=f18e107]: Actual to date
+                  - generic "Sourced from Xero" [ref=f18e108]: Xero
+                - paragraph [ref=f18e109]: $610,000
+                - generic [ref=f18e110]: costs incurred
+              - generic [ref=f18e111]:
+                - paragraph [ref=f18e113]: Forecast final
+                - paragraph [ref=f18e114]: $786,000
+                - generic [ref=f18e115]: +$44,000 (+5.9%) vs budget
+              - generic [ref=f18e117]:
+                - paragraph [ref=f18e119]: Margin
+                - paragraph [ref=f18e120]: 6.4%
+                - generic [ref=f18e121]: "-5.6 pts from 12.0%"
+            - generic [ref=f18e132]:
+              - paragraph [ref=f18e133]: 4 trades are over budget — +$17,600 in total
+              - paragraph [ref=f18e134]: Electrical +$11,300 · Structural steel +$5,500 · Concrete floor slab +$400
+            - generic [ref=f18e135]:
+              - generic [ref=f18e137]:
+                - generic [ref=f18e138]:
+                  - generic [ref=f18e139]: Budget vs actual — line by line
+                  - generic [ref=f18e140]: Joined on trade code. Budgets come from CostX, commitments from ApprovalMax, actuals from Xero.
+                - generic [ref=f18e141]:
+                  - generic "Sourced from CostX" [ref=f18e142]: CostX
+                  - generic "Sourced from ApprovalMax" [ref=f18e143]: ApprovalMax
+                  - generic "Sourced from Xero" [ref=f18e144]: Xero
+              - table [ref=f18e147]:
+                - rowgroup [ref=f18e148]:
+                  - row [ref=f18e149]:
+                    - columnheader "Code" [ref=f18e150]
+                    - columnheader "Description" [ref=f18e151]
+                    - columnheader "Budget CostX" [ref=f18e152]:
+                      - generic [ref=f18e153]:
+                        - text: Budget
+                        - generic "Sourced from CostX" [ref=f18e154]: CostX
+                    - columnheader "Committed ApprovalMax" [ref=f18e155]:
+                      - generic [ref=f18e156]:
+                        - text: Committed
+                        - generic "Sourced from ApprovalMax" [ref=f18e157]: ApprovalMax
+                    - columnheader "Actual Xero" [ref=f18e158]:
+                      - generic [ref=f18e159]:
+                        - text: Actual
+                        - generic "Sourced from Xero" [ref=f18e160]: Xero
+                    - columnheader "Variance $" [ref=f18e161]
+                    - columnheader "Variance %" [ref=f18e162]
+                    - columnheader "Over / under" [ref=f18e163]
+                - rowgroup [ref=f18e164]:
+                  - row [ref=f18e165]:
+                    - cell "01-100" [ref=f18e166]
+                    - cell "Preliminaries & site" [ref=f18e167]
+                    - cell "$95,000" [ref=f18e168]
+                    - cell "$92,000" [ref=f18e169]
+                    - cell "$88,000" [ref=f18e170]
+                    - cell "-$7,000" [ref=f18e171]
+                    - cell "-7.4%" [ref=f18e172]
+                    - cell [ref=f18e173]
+                  - row [ref=f18e177]:
+                    - cell "02-100" [ref=f18e178]
+                    - cell "Demolition & strip-out" [ref=f18e179]
+                    - cell "$34,000" [ref=f18e180]
+                    - cell "$33,500" [ref=f18e181]
+                    - cell "$33,200" [ref=f18e182]
+                    - cell "-$800" [ref=f18e183]
+                    - cell "-2.4%" [ref=f18e184]
+                    - cell [ref=f18e185]
+                  - row [ref=f18e189]:
+                    - cell "03-100" [ref=f18e190]
+                    - cell "Concrete floor slab" [ref=f18e191]
+                    - cell "$17,000" [ref=f18e192]
+                    - cell "$17,000" [ref=f18e193]
+                    - cell "$17,400" [ref=f18e194]
+                    - cell "+$400" [ref=f18e195]
+                    - cell "+2.4%" [ref=f18e196]
+                    - cell [ref=f18e197]
+                  - row [ref=f18e201]:
+                    - cell "03-200" [ref=f18e202]
+                    - cell "Reinforcement steel" [ref=f18e203]
+                    - cell "$4,800" [ref=f18e204]
+                    - cell "$5,000" [ref=f18e205]
+                    - cell "$5,200" [ref=f18e206]
+                    - cell "+$400" [ref=f18e207]
+                    - cell "+8.3%" [ref=f18e208]
+                    - cell [ref=f18e209]
+                  - row [ref=f18e213]:
+                    - cell "04-100" [ref=f18e214]
+                    - cell "Blockwork" [ref=f18e215]
+                    - cell "$16,800" [ref=f18e216]
+                    - cell "$16,000" [ref=f18e217]
+                    - cell "$15,900" [ref=f18e218]
+                    - cell "-$900" [ref=f18e219]
+                    - cell "-5.4%" [ref=f18e220]
+                    - cell [ref=f18e221]
+                  - row [ref=f18e225]:
+                    - cell "05-100" [ref=f18e226]
+                    - cell "Structural steel" [ref=f18e227]
+                    - cell "$36,000" [ref=f18e228]
+                    - cell "$40,000" [ref=f18e229]
+                    - cell "$41,500" [ref=f18e230]
+                    - cell "+$5,500" [ref=f18e231]
+                    - cell "+15.3%" [ref=f18e232]
+                    - cell [ref=f18e233]
+                  - row [ref=f18e237]:
+                    - cell "06-100" [ref=f18e238]
+                    - cell "Carpentry & joinery" [ref=f18e239]
+                    - cell "$52,000" [ref=f18e240]
+                    - cell "$51,000" [ref=f18e241]
+                    - cell "$49,000" [ref=f18e242]
+                    - cell "-$3,000" [ref=f18e243]
+                    - cell "-5.8%" [ref=f18e244]
+                    - cell [ref=f18e245]
+                  - row [ref=f18e249]:
+                    - cell "07-100" [ref=f18e250]
+                    - cell "Insulation & fire-stopping" [ref=f18e251]
+                    - cell "$18,400" [ref=f18e252]
+                    - cell "$17,000" [ref=f18e253]
+                    - cell "$12,600" [ref=f18e254]
+                    - cell "-$5,800" [ref=f18e255]
+                    - cell "-31.5%" [ref=f18e256]
+                    - cell [ref=f18e257]
+                  - row [ref=f18e261]:
+                    - cell "08-100" [ref=f18e262]
+                    - cell "Windows & glazing" [ref=f18e263]
+                    - cell "$44,000" [ref=f18e264]
+                    - cell "$43,500" [ref=f18e265]
+                    - cell "$38,200" [ref=f18e266]
+                    - cell "-$5,800" [ref=f18e267]
+                    - cell "-13.2%" [ref=f18e268]
+                    - cell [ref=f18e269]
+                  - row [ref=f18e273]:
+                    - cell "09-100" [ref=f18e274]
+                    - cell "Plasterboard & painting" [ref=f18e275]
+                    - cell "$39,000" [ref=f18e276]
+                    - cell "$38,000" [ref=f18e277]
+                    - cell "$31,500" [ref=f18e278]
+                    - cell "-$7,500" [ref=f18e279]
+                    - cell "-19.2%" [ref=f18e280]
+                    - cell [ref=f18e281]
+                  - row [ref=f18e285]:
+                    - cell "10-100" [ref=f18e286]
+                    - cell "Partitions & ceilings" [ref=f18e287]
+                    - cell "$47,000" [ref=f18e288]
+                    - cell "$44,000" [ref=f18e289]
+                    - cell "$31,000" [ref=f18e290]
+                    - cell "-$16,000" [ref=f18e291]
+                    - cell "-34.0%" [ref=f18e292]
+                    - cell [ref=f18e293]
+                  - row [ref=f18e297]:
+                    - cell "12-100" [ref=f18e298]
+                    - cell "Floor coverings" [ref=f18e299]
+                    - cell "$41,000" [ref=f18e300]
+                    - cell "$26,000" [ref=f18e301]
+                    - cell "$9,800" [ref=f18e302]
+                    - cell "-$31,200" [ref=f18e303]
+                    - cell "-76.1%" [ref=f18e304]
+                    - cell [ref=f18e305]
+                  - row [ref=f18e309]:
+                    - cell "15-100" [ref=f18e310]
+                    - cell "Mechanical / HVAC" [ref=f18e311]
+                    - cell "$88,000" [ref=f18e312]
+                    - cell "$84,000" [ref=f18e313]
+                    - cell "$79,300" [ref=f18e314]
+                    - cell "-$8,700" [ref=f18e315]
+                    - cell "-9.9%" [ref=f18e316]
+                    - cell [ref=f18e317]
+                  - row [ref=f18e321]:
+                    - cell "15-200" [ref=f18e322]
+                    - cell "Plumbing" [ref=f18e323]
+                    - cell "$28,000" [ref=f18e324]
+                    - cell "$27,000" [ref=f18e325]
+                    - cell "$27,600" [ref=f18e326]
+                    - cell "-$400" [ref=f18e327]
+                    - cell "-1.4%" [ref=f18e328]
+                    - cell [ref=f18e329]
+                  - row [ref=f18e333]:
+                    - cell "16-100" [ref=f18e334]
+                    - cell "Electrical" [ref=f18e335]
+                    - cell "$61,000" [ref=f18e336]
+                    - cell "$70,000" [ref=f18e337]
+                    - cell "$72,300" [ref=f18e338]
+                    - cell "+$11,300" [ref=f18e339]
+                    - cell "+18.5%" [ref=f18e340]
+                    - cell [ref=f18e341]
+                  - row [ref=f18e345]:
+                    - cell "17-100" [ref=f18e346]
+                    - cell "Fit-out & fixtures" [ref=f18e347]
+                    - cell "$71,000" [ref=f18e348]
+                    - cell "$68,000" [ref=f18e349]
+                    - cell "$45,000" [ref=f18e350]
+                    - cell "-$26,000" [ref=f18e351]
+                    - cell "-36.6%" [ref=f18e352]
+                    - cell [ref=f18e353]
+                  - row [ref=f18e357]:
+                    - cell "26-100" [ref=f18e358]
+                    - cell "Data & security cabling" [ref=f18e359]
+                    - cell "$25,000" [ref=f18e360]
+                    - cell "$12,000" [ref=f18e361]
+                    - cell "$4,200" [ref=f18e362]
+                    - cell "-$20,800" [ref=f18e363]
+                    - cell "-83.2%" [ref=f18e364]
+                    - cell [ref=f18e365]
+                  - row [ref=f18e369]:
+                    - cell "31-100" [ref=f18e370]
+                    - cell "External works & landscaping" [ref=f18e371]
+                    - cell "$24,000" [ref=f18e372]
+                    - cell "$14,000" [ref=f18e373]
+                    - cell "$8,300" [ref=f18e374]
+                    - cell "-$15,700" [ref=f18e375]
+                    - cell "-65.4%" [ref=f18e376]
+                    - cell [ref=f18e377]
+                - rowgroup [ref=f18e381]:
+                  - row [ref=f18e382]:
+                    - cell "Total" [ref=f18e383]
+                    - cell "$742,000" [ref=f18e384]
+                    - cell "$698,000" [ref=f18e385]
+                    - cell "$610,000" [ref=f18e386]
+                    - cell "-$132,000" [ref=f18e387]
+                    - cell "-17.8%" [ref=f18e388]
+                    - cell [ref=f18e389]
+            - generic [ref=f18e390]:
+              - generic [ref=f18e392]:
+                - generic [ref=f18e393]: Variance by trade
+                - generic [ref=f18e394]: Worst overrun first. Red is over budget; the muted green below the line is mostly work not yet invoiced rather than a saving.
+              - generic [ref=f18e398]:
+                - generic [ref=f18e399]: Exceptions on this project
+                - generic [ref=f18e401]:
+                  - link "Duplicate invoice High PAC-2231 from Pacific Concrete appears twice, dated 8 and 9 Sep. $6,200" [ref=f18e402] [cursor=pointer]:
+                    - /url: /exceptions
+                    - generic [ref=f18e407]:
+                      - generic [ref=f18e408]:
+                        - generic [ref=f18e409]: Duplicate invoice
+                        - generic [ref=f18e410]: High
+                      - paragraph [ref=f18e411]: PAC-2231 from Pacific Concrete appears twice, dated 8 and 9 Sep.
+                      - paragraph [ref=f18e412]: $6,200
+                  - link "Over budget High Electrical (16-100) is $11,300 over budget — $72,300 actual against $61,000. $11,300" [ref=f18e413] [cursor=pointer]:
+                    - /url: /exceptions
+                    - generic [ref=f18e417]:
+                      - generic [ref=f18e418]:
+                        - generic [ref=f18e419]: Over budget
+                        - generic [ref=f18e420]: High
+                      - paragraph [ref=f18e421]: Electrical (16-100) is $11,300 over budget — $72,300 actual against $61,000.
+                      - paragraph [ref=f18e422]: $11,300
+                  - link "No PO spend Medium Voltix Electrical invoice received with no matching purchase order. $12,400" [ref=f18e423] [cursor=pointer]:
+                    - /url: /exceptions
+                    - generic [ref=f18e427]:
+                      - generic [ref=f18e428]:
+                        - generic [ref=f18e429]: No PO spend
+                        - generic [ref=f18e430]: Medium
+                      - paragraph [ref=f18e431]: Voltix Electrical invoice received with no matching purchase order.
+                      - paragraph [ref=f18e432]: $12,400
+  - alert [ref=f18e433]

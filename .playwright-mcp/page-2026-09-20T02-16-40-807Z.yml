@@ -1,0 +1,294 @@
+- generic:
+  - generic [aria-hidden]:
+    - generic: DEMO — sample data, no live systems connected.
+    - generic:
+      - complementary:
+        - link:
+          - /url: /
+          - generic: BuildLedger
+        - navigation:
+          - link:
+            - /url: /
+            - generic: Dashboard
+          - link:
+            - /url: /projects
+            - generic: Projects
+          - link:
+            - /url: /invoices
+            - generic: Invoices
+          - link:
+            - /url: /approvals
+            - generic: Approvals
+            - generic: "3"
+          - link:
+            - /url: /exceptions
+            - generic: Exceptions
+            - generic: "4"
+          - link:
+            - /url: /inbox
+            - generic: Inbox
+          - link:
+            - /url: /assistant
+            - generic: Assistant
+          - link:
+            - /url: /integrations
+            - generic: Integrations
+        - generic:
+          - link:
+            - /url: /integrations
+            - paragraph: 5 systems connected
+            - paragraph: Xero · CostX · EzzyBills · +2
+      - generic:
+        - banner:
+          - button:
+            - generic: Project
+            - generic: All projects
+          - generic:
+            - textbox:
+              - /placeholder: Search projects, suppliers, invoices
+          - generic:
+            - button
+            - generic:
+              - paragraph: Sarah Chen
+              - paragraph: Project Manager
+            - generic: SC
+        - main:
+          - generic:
+            - generic:
+              - generic:
+                - heading [level=1]: Invoices
+                - paragraph: Captured by EzzyBills, coded to a trade line, approved in ApprovalMax and paid in Xero — the whole run in one board. Click any invoice to see what was extracted.
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: In the pipeline
+                  - generic: EzzyBills
+                - paragraph: "10"
+                - generic: $100k unpaid
+              - generic:
+                - generic:
+                  - paragraph: Pending approval
+                  - generic: ApprovalMax
+                - paragraph: "3"
+                - generic: $30k
+              - generic:
+                - generic:
+                  - paragraph: Flagged
+                  - generic:
+                    - generic: EzzyBills
+                    - generic: Xero
+                - paragraph: "2"
+                - generic: duplicates and no-PO spend
+              - generic:
+                - generic:
+                  - paragraph: Paid this month
+                  - generic: Xero
+                - paragraph: $118k
+                - generic: settled
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - heading [level=2]: Captured
+                    - generic: "2"
+                  - paragraph: $21,880
+                - generic:
+                  - button:
+                    - paragraph: Southern Steelworks
+                    - paragraph: $18,600
+                    - paragraph: Hobsonville Warehouse
+                    - generic:
+                      - generic: STL-7741
+                      - generic: 15 Sep
+                  - button:
+                    - paragraph: EcoPaint Co
+                    - paragraph: $3,280
+                    - paragraph: Newmarket Retail Refit
+                    - generic:
+                      - generic: ECO-9012
+                      - generic: 14 Sep
+              - generic:
+                - generic:
+                  - generic:
+                    - heading [level=2]: Coded
+                    - generic: "2"
+                  - paragraph: $11,170
+                - generic:
+                  - button:
+                    - paragraph: PlumbRight Ltd
+                    - paragraph: $4,750
+                    - paragraph: Hobsonville Warehouse
+                    - generic:
+                      - generic: PLR-5567
+                      - generic: 13 Sep
+                  - button:
+                    - paragraph: Lumina Lighting
+                    - paragraph: $6,420
+                    - paragraph: Newmarket Retail Refit
+                    - generic:
+                      - generic: LGT-4490
+                      - generic: 17 Sep
+              - generic:
+                - generic:
+                  - generic:
+                    - heading [level=2]: Pending approval
+                    - generic: "3"
+                  - paragraph: $30,350
+                - generic:
+                  - button:
+                    - paragraph: Voltix Electrical
+                    - paragraph: $12,400
+                    - paragraph: Riverside Office Fitout
+                    - generic:
+                      - generic: VLX-4471
+                      - generic: 12 Sep
+                    - generic: No PO
+                  - button:
+                    - paragraph: Pacific Concrete Ltd
+                    - paragraph: $6,200
+                    - paragraph: Riverside Office Fitout
+                    - generic:
+                      - generic: PAC-2231
+                      - generic: 9 Sep
+                    - generic: Duplicate
+                  - button:
+                    - paragraph: Woodgrain Joinery
+                    - paragraph: $11,750
+                    - paragraph: Newmarket Retail Refit
+                    - generic:
+                      - generic: JNR-6650
+                      - generic: 16 Sep
+              - generic:
+                - generic:
+                  - generic:
+                    - heading [level=2]: Approved
+                    - generic: "1"
+                  - paragraph: $8,900
+                - generic:
+                  - button:
+                    - paragraph: Northern Steel Supplies
+                    - paragraph: $8,900
+                    - paragraph: Riverside Office Fitout
+                    - generic:
+                      - generic: NST-8890
+                      - generic: 10 Sep
+              - generic:
+                - generic:
+                  - generic:
+                    - heading [level=2]: Awaiting payment
+                    - generic: "2"
+                  - paragraph: $28,100
+                - generic:
+                  - button:
+                    - paragraph: Pacific Concrete Ltd
+                    - paragraph: $6,200
+                    - paragraph: Riverside Office Fitout
+                    - generic:
+                      - generic: PAC-2231
+                      - generic: 8 Sep
+                  - button:
+                    - paragraph: AirStream Mechanical
+                    - paragraph: $21,900
+                    - paragraph: Riverside Office Fitout
+                    - generic:
+                      - generic: HVC-3318
+                      - generic: 6 Sep
+              - generic:
+                - generic:
+                  - generic:
+                    - heading [level=2]: Paid
+                    - generic: "4"
+                  - paragraph: $118,000
+                - generic:
+                  - button:
+                    - paragraph: TimberYard Co
+                    - paragraph: $22,300
+                    - paragraph: Kauri Apartments Stage 2
+                    - generic:
+                      - generic: TMB-1180
+                      - generic: 11 Sep
+                  - button:
+                    - paragraph: ClearView Glazing
+                    - paragraph: $15,800
+                    - paragraph: Riverside Office Fitout
+                    - generic:
+                      - generic: GLZ-3020
+                      - generic: 7 Sep
+                  - button:
+                    - paragraph: Precast Solutions NZ
+                    - paragraph: $46,500
+                    - paragraph: Kauri Apartments Stage 2
+                    - generic:
+                      - generic: PCS-4408
+                      - generic: 5 Sep
+                  - button:
+                    - paragraph: Groundline Civil
+                    - paragraph: $33,400
+                    - paragraph: Hobsonville Warehouse
+                    - generic:
+                      - generic: EXC-1102
+                      - generic: 3 Sep
+  - alert
+  - dialog [ref=f19e313]:
+    - generic [ref=f19e314]:
+      - generic [ref=f19e315]:
+        - heading "VLX-4471" [level=2] [ref=f19e316]
+        - generic [ref=f19e317]: Pending approval
+        - generic [ref=f19e318]: No PO
+      - paragraph [ref=f19e319]: Voltix Electrical · Riverside Office Fitout
+    - generic [ref=f19e320]:
+      - generic [ref=f19e321]:
+        - paragraph [ref=f19e322]: Extracted fields
+        - generic [ref=f19e323]:
+          - generic [ref=f19e324]:
+            - generic [ref=f19e325]:
+              - paragraph [ref=f19e326]: Supplier
+              - generic "Sourced from EzzyBills" [ref=f19e327]: EzzyBills
+            - generic [ref=f19e328]: Voltix Electrical
+          - generic [ref=f19e329]:
+            - generic [ref=f19e330]:
+              - paragraph [ref=f19e331]: Invoice date
+              - generic "Sourced from EzzyBills" [ref=f19e332]: EzzyBills
+            - generic [ref=f19e333]: 12 Sep 2026
+          - generic [ref=f19e334]:
+            - generic [ref=f19e335]:
+              - paragraph [ref=f19e336]: Amount (incl. GST)
+              - generic "Sourced from EzzyBills" [ref=f19e337]: EzzyBills
+            - generic [ref=f19e338]: $12,400.00
+          - generic [ref=f19e339]:
+            - generic [ref=f19e340]:
+              - paragraph [ref=f19e341]: GST (15%)
+              - generic "Sourced from EzzyBills" [ref=f19e342]: EzzyBills
+            - generic [ref=f19e343]: $1,617.39
+          - generic [ref=f19e344]:
+            - generic [ref=f19e345]:
+              - paragraph [ref=f19e346]: Line code
+              - generic "Sourced from Xero" [ref=f19e347]: Xero
+            - generic [ref=f19e348]: 16-100
+          - generic [ref=f19e349]:
+            - generic [ref=f19e350]:
+              - paragraph [ref=f19e351]: Purchase order
+              - generic "Sourced from Xero" [ref=f19e352]: Xero
+            - generic [ref=f19e353]: No matching PO
+        - generic [ref=f19e362]:
+          - paragraph [ref=f19e363]: VLX-4471.pdf
+          - paragraph [ref=f19e364]: Received by email
+      - generic [ref=f19e368]:
+        - generic [ref=f19e369]:
+          - paragraph [ref=f19e370]: Approval chain
+          - generic "Sourced from ApprovalMax" [ref=f19e371]: ApprovalMax
+        - list [ref=f19e372]:
+          - listitem [ref=f19e373]:
+            - generic [ref=f19e380]:
+              - paragraph [ref=f19e381]: Sarah Chen
+              - paragraph [ref=f19e382]: Project Manager
+              - paragraph [ref=f19e383]: Waiting
+          - listitem [ref=f19e384]:
+            - generic [ref=f19e390]:
+              - paragraph [ref=f19e391]: David Whitfield
+              - paragraph [ref=f19e392]: Commercial Manager
+              - paragraph [ref=f19e393]: Waiting
+    - generic [ref=f19e394]:
+      - button "Reject" [active] [ref=f19e395] [cursor=pointer]
+      - button "Approve" [ref=f19e396] [cursor=pointer]
+    - button "Close" [ref=f19e397] [cursor=pointer]

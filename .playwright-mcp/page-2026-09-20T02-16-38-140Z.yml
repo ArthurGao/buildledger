@@ -1,0 +1,220 @@
+- generic [active] [ref=f19e1]:
+  - generic [ref=f19e2]:
+    - generic [ref=f19e3]: DEMO — sample data, no live systems connected.
+    - generic [ref=f19e7]:
+      - complementary [ref=f19e8]:
+        - link "BuildLedger" [ref=f19e9] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=f19e16]:
+          - link "Dashboard" [ref=f19e17] [cursor=pointer]:
+            - /url: /
+          - link "Projects" [ref=f19e24] [cursor=pointer]:
+            - /url: /projects
+          - link "Invoices" [ref=f19e30] [cursor=pointer]:
+            - /url: /invoices
+          - link "Approvals 3" [ref=f19e34] [cursor=pointer]:
+            - /url: /approvals
+            - generic [ref=f19e38]: Approvals
+            - generic [ref=f19e39]: "3"
+          - link "Exceptions 4" [ref=f19e40] [cursor=pointer]:
+            - /url: /exceptions
+            - generic [ref=f19e43]: Exceptions
+            - generic [ref=f19e44]: "4"
+          - link "Inbox" [ref=f19e45] [cursor=pointer]:
+            - /url: /inbox
+          - link "Assistant" [ref=f19e50] [cursor=pointer]:
+            - /url: /assistant
+          - link "Integrations" [ref=f19e54] [cursor=pointer]:
+            - /url: /integrations
+        - link [ref=f19e59] [cursor=pointer]:
+          - /url: /integrations
+          - paragraph [ref=f19e60]: 5 systems connected
+          - paragraph [ref=f19e64]: Xero · CostX · EzzyBills · +2
+      - generic [ref=f19e65]:
+        - banner [ref=f19e66]:
+          - button "Project All projects" [ref=f19e67] [cursor=pointer]:
+            - generic [ref=f19e68]: Project
+            - generic [ref=f19e69]: All projects
+          - textbox "Search" [ref=f19e71]:
+            - /placeholder: Search projects, suppliers, invoices
+          - generic [ref=f19e72]:
+            - button "Reset demo" [ref=f19e73] [cursor=pointer]
+            - generic [ref=f19e74]:
+              - paragraph [ref=f19e75]: Sarah Chen
+              - paragraph [ref=f19e76]: Project Manager
+            - generic [ref=f19e77]: SC
+        - main [ref=f19e78]:
+          - generic [ref=f19e79]:
+            - generic [ref=f19e81]:
+              - heading "Invoices" [level=1] [ref=f19e82]
+              - paragraph [ref=f19e83]: Captured by EzzyBills, coded to a trade line, approved in ApprovalMax and paid in Xero — the whole run in one board. Click any invoice to see what was extracted.
+            - generic [ref=f19e84]:
+              - generic [ref=f19e85]:
+                - generic [ref=f19e86]:
+                  - paragraph [ref=f19e87]: In the pipeline
+                  - generic "Sourced from EzzyBills" [ref=f19e89]: EzzyBills
+                - paragraph [ref=f19e90]: "10"
+                - generic [ref=f19e91]: $100k unpaid
+              - generic [ref=f19e93]:
+                - generic [ref=f19e94]:
+                  - paragraph [ref=f19e95]: Pending approval
+                  - generic "Sourced from ApprovalMax" [ref=f19e97]: ApprovalMax
+                - paragraph [ref=f19e98]: "3"
+                - generic [ref=f19e99]: $30k
+              - generic [ref=f19e101]:
+                - generic [ref=f19e102]:
+                  - paragraph [ref=f19e103]: Flagged
+                  - generic [ref=f19e104]:
+                    - generic "Sourced from EzzyBills" [ref=f19e105]: EzzyBills
+                    - generic "Sourced from Xero" [ref=f19e106]: Xero
+                - paragraph [ref=f19e107]: "2"
+                - generic [ref=f19e108]: duplicates and no-PO spend
+              - generic [ref=f19e110]:
+                - generic [ref=f19e111]:
+                  - paragraph [ref=f19e112]: Paid this month
+                  - generic "Sourced from Xero" [ref=f19e114]: Xero
+                - paragraph [ref=f19e115]: $118k
+                - generic [ref=f19e116]: settled
+            - generic [ref=f19e118]:
+              - generic [ref=f19e119]:
+                - generic [ref=f19e120]:
+                  - generic [ref=f19e121]:
+                    - heading "Captured" [level=2] [ref=f19e123]
+                    - generic [ref=f19e124]: "2"
+                  - paragraph [ref=f19e125]: $21,880
+                - generic [ref=f19e126]:
+                  - button "Southern Steelworks $18,600 Hobsonville Warehouse STL-7741 15 Sep" [ref=f19e127] [cursor=pointer]:
+                    - paragraph [ref=f19e128]: Southern Steelworks
+                    - paragraph [ref=f19e129]: $18,600
+                    - paragraph [ref=f19e130]: Hobsonville Warehouse
+                    - generic [ref=f19e131]:
+                      - generic [ref=f19e132]: STL-7741
+                      - generic [ref=f19e133]: 15 Sep
+                  - button "EcoPaint Co $3,280 Newmarket Retail Refit ECO-9012 14 Sep" [ref=f19e137] [cursor=pointer]:
+                    - paragraph [ref=f19e138]: EcoPaint Co
+                    - paragraph [ref=f19e139]: $3,280
+                    - paragraph [ref=f19e140]: Newmarket Retail Refit
+                    - generic [ref=f19e141]:
+                      - generic [ref=f19e142]: ECO-9012
+                      - generic [ref=f19e143]: 14 Sep
+              - generic [ref=f19e147]:
+                - generic [ref=f19e148]:
+                  - generic [ref=f19e149]:
+                    - heading "Coded" [level=2] [ref=f19e151]
+                    - generic [ref=f19e152]: "2"
+                  - paragraph [ref=f19e153]: $11,170
+                - generic [ref=f19e154]:
+                  - button "PlumbRight Ltd $4,750 Hobsonville Warehouse PLR-5567 13 Sep" [ref=f19e155] [cursor=pointer]:
+                    - paragraph [ref=f19e156]: PlumbRight Ltd
+                    - paragraph [ref=f19e157]: $4,750
+                    - paragraph [ref=f19e158]: Hobsonville Warehouse
+                    - generic [ref=f19e159]:
+                      - generic [ref=f19e160]: PLR-5567
+                      - generic [ref=f19e161]: 13 Sep
+                  - button "Lumina Lighting $6,420 Newmarket Retail Refit LGT-4490 17 Sep" [ref=f19e165] [cursor=pointer]:
+                    - paragraph [ref=f19e166]: Lumina Lighting
+                    - paragraph [ref=f19e167]: $6,420
+                    - paragraph [ref=f19e168]: Newmarket Retail Refit
+                    - generic [ref=f19e169]:
+                      - generic [ref=f19e170]: LGT-4490
+                      - generic [ref=f19e171]: 17 Sep
+              - generic [ref=f19e175]:
+                - generic [ref=f19e176]:
+                  - generic [ref=f19e177]:
+                    - heading "Pending approval" [level=2] [ref=f19e179]
+                    - generic [ref=f19e180]: "3"
+                  - paragraph [ref=f19e181]: $30,350
+                - generic [ref=f19e182]:
+                  - button "Voltix Electrical $12,400 Riverside Office Fitout VLX-4471 12 Sep No PO" [ref=f19e183] [cursor=pointer]:
+                    - paragraph [ref=f19e184]: Voltix Electrical
+                    - paragraph [ref=f19e185]: $12,400
+                    - paragraph [ref=f19e186]: Riverside Office Fitout
+                    - generic [ref=f19e187]:
+                      - generic [ref=f19e188]: VLX-4471
+                      - generic [ref=f19e189]: 12 Sep
+                    - generic [ref=f19e193]: No PO
+                  - button "Pacific Concrete Ltd $6,200 Riverside Office Fitout PAC-2231 9 Sep Duplicate" [ref=f19e195] [cursor=pointer]:
+                    - paragraph [ref=f19e196]: Pacific Concrete Ltd
+                    - paragraph [ref=f19e197]: $6,200
+                    - paragraph [ref=f19e198]: Riverside Office Fitout
+                    - generic [ref=f19e199]:
+                      - generic [ref=f19e200]: PAC-2231
+                      - generic [ref=f19e201]: 9 Sep
+                    - generic [ref=f19e205]: Duplicate
+                  - button "Woodgrain Joinery $11,750 Newmarket Retail Refit JNR-6650 16 Sep" [ref=f19e207] [cursor=pointer]:
+                    - paragraph [ref=f19e208]: Woodgrain Joinery
+                    - paragraph [ref=f19e209]: $11,750
+                    - paragraph [ref=f19e210]: Newmarket Retail Refit
+                    - generic [ref=f19e211]:
+                      - generic [ref=f19e212]: JNR-6650
+                      - generic [ref=f19e213]: 16 Sep
+              - generic [ref=f19e217]:
+                - generic [ref=f19e218]:
+                  - generic [ref=f19e219]:
+                    - heading "Approved" [level=2] [ref=f19e221]
+                    - generic [ref=f19e222]: "1"
+                  - paragraph [ref=f19e223]: $8,900
+                - button "Northern Steel Supplies $8,900 Riverside Office Fitout NST-8890 10 Sep" [ref=f19e225] [cursor=pointer]:
+                  - paragraph [ref=f19e226]: Northern Steel Supplies
+                  - paragraph [ref=f19e227]: $8,900
+                  - paragraph [ref=f19e228]: Riverside Office Fitout
+                  - generic [ref=f19e229]:
+                    - generic [ref=f19e230]: NST-8890
+                    - generic [ref=f19e231]: 10 Sep
+              - generic [ref=f19e235]:
+                - generic [ref=f19e236]:
+                  - generic [ref=f19e237]:
+                    - heading "Awaiting payment" [level=2] [ref=f19e239]
+                    - generic [ref=f19e240]: "2"
+                  - paragraph [ref=f19e241]: $28,100
+                - generic [ref=f19e242]:
+                  - button "Pacific Concrete Ltd $6,200 Riverside Office Fitout PAC-2231 8 Sep" [ref=f19e243] [cursor=pointer]:
+                    - paragraph [ref=f19e244]: Pacific Concrete Ltd
+                    - paragraph [ref=f19e245]: $6,200
+                    - paragraph [ref=f19e246]: Riverside Office Fitout
+                    - generic [ref=f19e247]:
+                      - generic [ref=f19e248]: PAC-2231
+                      - generic [ref=f19e249]: 8 Sep
+                  - button "AirStream Mechanical $21,900 Riverside Office Fitout HVC-3318 6 Sep" [ref=f19e253] [cursor=pointer]:
+                    - paragraph [ref=f19e254]: AirStream Mechanical
+                    - paragraph [ref=f19e255]: $21,900
+                    - paragraph [ref=f19e256]: Riverside Office Fitout
+                    - generic [ref=f19e257]:
+                      - generic [ref=f19e258]: HVC-3318
+                      - generic [ref=f19e259]: 6 Sep
+              - generic [ref=f19e263]:
+                - generic [ref=f19e264]:
+                  - generic [ref=f19e265]:
+                    - heading "Paid" [level=2] [ref=f19e267]
+                    - generic [ref=f19e268]: "4"
+                  - paragraph [ref=f19e269]: $118,000
+                - generic [ref=f19e270]:
+                  - button "TimberYard Co $22,300 Kauri Apartments Stage 2 TMB-1180 11 Sep" [ref=f19e271] [cursor=pointer]:
+                    - paragraph [ref=f19e272]: TimberYard Co
+                    - paragraph [ref=f19e273]: $22,300
+                    - paragraph [ref=f19e274]: Kauri Apartments Stage 2
+                    - generic [ref=f19e275]:
+                      - generic [ref=f19e276]: TMB-1180
+                      - generic [ref=f19e277]: 11 Sep
+                  - button "ClearView Glazing $15,800 Riverside Office Fitout GLZ-3020 7 Sep" [ref=f19e281] [cursor=pointer]:
+                    - paragraph [ref=f19e282]: ClearView Glazing
+                    - paragraph [ref=f19e283]: $15,800
+                    - paragraph [ref=f19e284]: Riverside Office Fitout
+                    - generic [ref=f19e285]:
+                      - generic [ref=f19e286]: GLZ-3020
+                      - generic [ref=f19e287]: 7 Sep
+                  - button "Precast Solutions NZ $46,500 Kauri Apartments Stage 2 PCS-4408 5 Sep" [ref=f19e291] [cursor=pointer]:
+                    - paragraph [ref=f19e292]: Precast Solutions NZ
+                    - paragraph [ref=f19e293]: $46,500
+                    - paragraph [ref=f19e294]: Kauri Apartments Stage 2
+                    - generic [ref=f19e295]:
+                      - generic [ref=f19e296]: PCS-4408
+                      - generic [ref=f19e297]: 5 Sep
+                  - button "Groundline Civil $33,400 Hobsonville Warehouse EXC-1102 3 Sep" [ref=f19e301] [cursor=pointer]:
+                    - paragraph [ref=f19e302]: Groundline Civil
+                    - paragraph [ref=f19e303]: $33,400
+                    - paragraph [ref=f19e304]: Hobsonville Warehouse
+                    - generic [ref=f19e305]:
+                      - generic [ref=f19e306]: EXC-1102
+                      - generic [ref=f19e307]: 3 Sep
+  - alert [ref=f19e311]

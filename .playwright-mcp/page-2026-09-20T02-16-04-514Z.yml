@@ -1,0 +1,131 @@
+- generic [active] [ref=f15e1]:
+  - generic [ref=f15e2]:
+    - generic [ref=f15e3]: DEMO — sample data, no live systems connected.
+    - generic [ref=f15e7]:
+      - complementary [ref=f15e8]:
+        - link "BuildLedger" [ref=f15e9] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=f15e16]:
+          - link "Dashboard" [ref=f15e17] [cursor=pointer]:
+            - /url: /
+          - link "Projects" [ref=f15e24] [cursor=pointer]:
+            - /url: /projects
+          - link "Invoices" [ref=f15e30] [cursor=pointer]:
+            - /url: /invoices
+          - link "Approvals 3" [ref=f15e34] [cursor=pointer]:
+            - /url: /approvals
+            - generic [ref=f15e38]: Approvals
+            - generic [ref=f15e39]: "3"
+          - link "Exceptions 4" [ref=f15e40] [cursor=pointer]:
+            - /url: /exceptions
+            - generic [ref=f15e43]: Exceptions
+            - generic [ref=f15e44]: "4"
+          - link "Inbox" [ref=f15e45] [cursor=pointer]:
+            - /url: /inbox
+          - link "Assistant" [ref=f15e50] [cursor=pointer]:
+            - /url: /assistant
+          - link "Integrations" [ref=f15e54] [cursor=pointer]:
+            - /url: /integrations
+        - link [ref=f15e59] [cursor=pointer]:
+          - /url: /integrations
+          - paragraph [ref=f15e60]: 5 systems connected
+          - paragraph [ref=f15e64]: Xero · CostX · EzzyBills · +2
+      - generic [ref=f15e65]:
+        - banner [ref=f15e66]:
+          - button "Project All projects" [ref=f15e67] [cursor=pointer]:
+            - generic [ref=f15e68]: Project
+            - generic [ref=f15e69]: All projects
+          - textbox "Search" [ref=f15e71]:
+            - /placeholder: Search projects, suppliers, invoices
+          - generic [ref=f15e72]:
+            - button "Reset demo" [ref=f15e73] [cursor=pointer]
+            - generic [ref=f15e74]:
+              - paragraph [ref=f15e75]: Sarah Chen
+              - paragraph [ref=f15e76]: Project Manager
+            - generic [ref=f15e77]: SC
+        - main [ref=f15e78]:
+          - generic [ref=f15e79]:
+            - generic [ref=f15e81]:
+              - heading "Inbox" [level=1] [ref=f15e82]
+              - paragraph [ref=f15e83]: Incoming mail is auto-classified and routed — invoices to AP, RFQs to estimating, client queries to the PM. Open any message to see why.
+            - generic [ref=f15e84]:
+              - generic [ref=f15e85]:
+                - generic [ref=f15e86]:
+                  - paragraph [ref=f15e87]: Messages today
+                  - generic "Sourced from Microsoft 365" [ref=f15e89]: M365
+                - paragraph [ref=f15e90]: "6"
+                - generic [ref=f15e91]: read from Outlook
+              - generic [ref=f15e93]:
+                - generic [ref=f15e94]:
+                  - paragraph [ref=f15e95]: Routed automatically
+                  - generic "Sourced from Microsoft 365" [ref=f15e97]: M365
+                - paragraph [ref=f15e98]: "5"
+                - generic [ref=f15e99]: no manual sorting
+              - generic [ref=f15e101]:
+                - generic [ref=f15e102]:
+                  - paragraph [ref=f15e103]: Average confidence
+                  - generic "Sourced from Microsoft 365" [ref=f15e105]: M365
+                - paragraph [ref=f15e106]: 95%
+                - generic [ref=f15e107]: across all classifications
+              - generic [ref=f15e109]:
+                - generic [ref=f15e110]:
+                  - paragraph [ref=f15e111]: Invoices to AP
+                  - generic "Sourced from EzzyBills" [ref=f15e113]: EzzyBills
+                - paragraph [ref=f15e114]: "2"
+                - generic [ref=f15e115]: handed to capture
+            - list [ref=f15e119]:
+              - listitem [ref=f15e120]:
+                - 'button "Invoice #4471 — Riverside electrical accounts@voltix.co.nz Invoice EzzyBills / AP 98% 12 Sep" [ref=f15e121] [cursor=pointer]':
+                  - generic [ref=f15e122]:
+                    - paragraph [ref=f15e123]: "Invoice #4471 — Riverside electrical"
+                    - paragraph [ref=f15e124]: accounts@voltix.co.nz
+                  - generic [ref=f15e125]: Invoice
+                  - generic [ref=f15e126]: EzzyBills / AP
+                  - generic [ref=f15e130]: 98%
+                  - generic [ref=f15e134]: 12 Sep
+              - listitem [ref=f15e135]:
+                - 'button "RFQ: Newmarket retail refit — electrical package tenders@newmarket-dev.com RFQ Estimating 94% 11 Sep" [ref=f15e136] [cursor=pointer]':
+                  - generic [ref=f15e137]:
+                    - paragraph [ref=f15e138]: "RFQ: Newmarket retail refit — electrical package"
+                    - paragraph [ref=f15e139]: tenders@newmarket-dev.com
+                  - generic [ref=f15e140]: RFQ
+                  - generic [ref=f15e141]: Estimating
+                  - generic [ref=f15e145]: 94%
+                  - generic [ref=f15e149]: 11 Sep
+              - listitem [ref=f15e150]:
+                - 'button "Re: variation request — Kauri Apartments L3 j.kauri@kauriliving.co.nz Client query PM (Sarah Chen) 91% 11 Sep" [ref=f15e151] [cursor=pointer]':
+                  - generic [ref=f15e152]:
+                    - paragraph [ref=f15e153]: "Re: variation request — Kauri Apartments L3"
+                    - paragraph [ref=f15e154]: j.kauri@kauriliving.co.nz
+                  - generic [ref=f15e155]: Client query
+                  - generic [ref=f15e156]: PM (Sarah Chen)
+                  - generic [ref=f15e160]: 91%
+                  - generic [ref=f15e164]: 11 Sep
+              - listitem [ref=f15e165]:
+                - button "Quote for blockwork — Hobsonville warehouse sales@blocklayers.nz Subbie quote Estimating 89% 10 Sep" [ref=f15e166] [cursor=pointer]:
+                  - generic [ref=f15e167]:
+                    - paragraph [ref=f15e168]: Quote for blockwork — Hobsonville warehouse
+                    - paragraph [ref=f15e169]: sales@blocklayers.nz
+                  - generic [ref=f15e170]: Subbie quote
+                  - generic [ref=f15e171]: Estimating
+                  - generic [ref=f15e175]: 89%
+                  - generic [ref=f15e179]: 10 Sep
+              - listitem [ref=f15e180]:
+                - 'button "Last chance: BuildExpo early-bird tickets info@buildexpo2026.com Noise Ignored 99% 9 Sep" [ref=f15e181] [cursor=pointer]':
+                  - generic [ref=f15e182]:
+                    - paragraph [ref=f15e183]: "Last chance: BuildExpo early-bird tickets"
+                    - paragraph [ref=f15e184]: info@buildexpo2026.com
+                  - generic [ref=f15e185]: Noise
+                  - generic [ref=f15e186]: Ignored
+                  - generic [ref=f15e190]: 99%
+                  - generic [ref=f15e194]: 9 Sep
+              - listitem [ref=f15e195]:
+                - button "Statement + invoice NST-8890 accounts@northsteel.co.nz Invoice EzzyBills / AP 97% 10 Sep" [ref=f15e196] [cursor=pointer]:
+                  - generic [ref=f15e197]:
+                    - paragraph [ref=f15e198]: Statement + invoice NST-8890
+                    - paragraph [ref=f15e199]: accounts@northsteel.co.nz
+                  - generic [ref=f15e200]: Invoice
+                  - generic [ref=f15e201]: EzzyBills / AP
+                  - generic [ref=f15e205]: 97%
+                  - generic [ref=f15e209]: 10 Sep
+  - alert [ref=f15e210]

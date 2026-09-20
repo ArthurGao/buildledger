@@ -1,0 +1,33 @@
+- generic [active] [ref=f17e1]:
+  - generic [ref=f17e2]:
+    - generic [ref=f17e3]: DEMO — sample data, no live systems connected.
+    - generic [ref=f17e8]:
+      - generic [ref=f17e9]:
+        - generic [ref=f17e10]: BuildLedger
+        - generic [ref=f17e17]:
+          - heading "Your estimating and your accounts, finally looking at the same numbers." [level=1] [ref=f17e18]
+          - paragraph [ref=f17e19]: BuildLedger joins the systems you already run and shows you, in one place, which jobs are making money and which ones are quietly losing it.
+        - generic [ref=f17e20]:
+          - generic "Sourced from CostX" [ref=f17e21]: CostX
+          - generic "Sourced from Xero" [ref=f17e22]: Xero
+          - generic "Sourced from EzzyBills" [ref=f17e23]: EzzyBills
+          - generic "Sourced from ApprovalMax" [ref=f17e24]: ApprovalMax
+          - generic "Sourced from Microsoft 365" [ref=f17e25]: Microsoft 365
+        - generic [ref=f17e26]:
+          - link "Sign in with Microsoft" [ref=f17e27] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=f17e28]: Demo sign-in — no credentials required, no live systems connected.
+      - list [ref=f17e29]:
+        - listitem [ref=f17e30]:
+          - generic [ref=f17e34]:
+            - paragraph [ref=f17e35]: Budget vs actual, line by line
+            - paragraph [ref=f17e36]: CostX budgets reconciled against Xero spend on every trade code.
+        - listitem [ref=f17e37]:
+          - generic [ref=f17e42]:
+            - paragraph [ref=f17e43]: Exceptions caught for you
+            - paragraph [ref=f17e44]: Duplicate invoices, spend with no PO and trades running over budget.
+        - listitem [ref=f17e45]:
+          - generic [ref=f17e50]:
+            - paragraph [ref=f17e51]: Answers in plain English
+            - paragraph [ref=f17e52]: Ask where the margin went. Read-only — it never moves money.
+  - alert [ref=f17e53]
