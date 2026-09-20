@@ -8,6 +8,7 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 import { GlobalSearch } from "@/components/layout/global-search";
 import { ProjectSwitcher } from "@/components/layout/project-switcher";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { PageGuideButton } from "@/components/layout/page-guide";
 import { useDemoState } from "@/lib/demo-state";
 
 export function Header() {
@@ -29,6 +30,8 @@ export function Header() {
       <GlobalSearch className="ml-auto hidden w-full max-w-xs md:block" />
 
       <div className="ml-auto flex shrink-0 items-center gap-1 md:ml-0 lg:gap-2">
+        <PageGuideButton />
+
         <ThemeToggle />
 
         <Tooltip>
