@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { ArrowRight, Sparkles } from "lucide-react";
 import {
   Dialog,
@@ -21,7 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { SourceBadge } from "@/components/source-badge";
 import { ClassBadge, ConfidenceBar } from "@/components/inbox/class-badge";
 import { useDemoState } from "@/lib/demo-state";
-import { formatConfidence } from "@/lib/format";
+import { formatConfidence, formatDateTimeLong } from "@/lib/format";
 import type { EmailItem } from "@/lib/types";
 
 /** Where mail can be sent. Classification is a suggestion; routing is a rule. */
@@ -45,7 +44,7 @@ export function EmailDialog({
         <DialogHeader>
           <DialogTitle className="pr-8 text-base">{email.subject}</DialogTitle>
           <DialogDescription>
-            {email.from} · {format(new Date(email.receivedAt), "d MMM yyyy, h:mm a")}
+            {email.from} · {formatDateTimeLong(email.receivedAt)}
           </DialogDescription>
         </DialogHeader>
 

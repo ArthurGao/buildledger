@@ -9,7 +9,8 @@
  *
  * Run with: npm run check:data
  */
-import { exceptions, invoices, projects, budgetLines, chatQA, GST_RATE } from "../lib/mock-data";
+import { emails, exceptions, invoices, projects, budgetLines, chatQA, GST_RATE } from "../lib/mock-data";
+import { formatDateShort, formatDateLong, formatDateTimeLong } from "../lib/format";
 import { getLineTotals, getOverBudgetLines, getProjectLines, matchQuestion } from "../lib/derive";
 
 let failures = 0;
@@ -119,6 +120,30 @@ check(
 check(
   "the no-PO exception amount matches the Voltix invoice",
   exceptions.find((e) => e.id === "EXC-03")?.amount === noPO[0]?.amount
+);
+
+console.log("\nDates render the same in every timezone");
+// Server-side rendering runs in UTC while the browser runs in the viewer's own
+// zone. If a date is converted rather than read off the ISO string, the two
+// disagree, React discards the server HTML, and the demo's NZ dates shift a day.
+check(
+  "a +12:00 timestamp keeps its written calendar day",
+  formatDateShort("2026-09-12T08:14:00+12:00") === "12 Sep",
+  formatDateShort("2026-09-12T08:14:00+12:00")
+);
+check(
+  "an early-morning NZ timestamp does not roll back to the previous day",
+  formatDateTimeLong("2026-09-10T13:51:00+12:00") === "10 Sep 2026, 1:51 pm",
+  formatDateTimeLong("2026-09-10T13:51:00+12:00")
+);
+check("a plain date renders as written", formatDateLong("2026-09-12") === "12 Sep 2026", formatDateLong("2026-09-12"));
+check(
+  "every invoice date renders to its own written day",
+  invoices.every((i) => formatDateShort(i.date) === `${Number(i.date.slice(8, 10))} Sep`)
+);
+check(
+  "every email timestamp renders to its own written day",
+  emails.every((e) => formatDateShort(e.receivedAt) === `${Number(e.receivedAt.slice(8, 10))} Sep`)
 );
 
 console.log("\nAssistant");

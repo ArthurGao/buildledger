@@ -1,9 +1,9 @@
 "use client";
 
-import { format } from "date-fns";
 import { Check, Clock, X } from "lucide-react";
 import { useApprovalChain } from "@/lib/demo-state";
 import { cn } from "@/lib/utils";
+import { formatDateTimeShort } from "@/lib/format";
 
 /** Step-by-step approval trail, straight out of ApprovalMax. */
 export function ApprovalChain({ invoiceId, compact = false }: { invoiceId: string; compact?: boolean }) {
@@ -52,7 +52,7 @@ export function ApprovalChain({ invoiceId, compact = false }: { invoiceId: strin
               <p className="mt-0.5 text-xs text-muted-foreground">
                 {s.status === "Waiting"
                   ? "Waiting"
-                  : `${s.status} · ${s.timestamp ? format(new Date(s.timestamp), "d MMM, h:mm a") : ""}`}
+                  : `${s.status} · ${s.timestamp ? formatDateTimeShort(s.timestamp) : ""}`}
               </p>
             </div>
           </li>

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { format } from "date-fns";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/page-header";
@@ -9,7 +8,7 @@ import { KpiCard } from "@/components/kpi-card";
 import { ClassBadge, ConfidenceBar } from "@/components/inbox/class-badge";
 import { EmailDialog } from "@/components/inbox/email-dialog";
 import { useDemoState } from "@/lib/demo-state";
-import { formatConfidence } from "@/lib/format";
+import { formatConfidence, formatDateShort } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { EmailItem } from "@/lib/types";
 
@@ -83,7 +82,7 @@ export default function InboxPage() {
                   </div>
 
                   <span className="tabular w-20 shrink-0 text-right text-xs text-muted-foreground">
-                    {format(new Date(email.receivedAt), "d MMM")}
+                    {formatDateShort(email.receivedAt)}
                   </span>
                 </button>
               </li>

@@ -1,13 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { format } from "date-fns";
 import { Mail, Upload } from "lucide-react";
 import { FlagBadge } from "@/components/status-badge";
 import { InvoiceDialog } from "@/components/invoices/invoice-dialog";
 import { PIPELINE, useDemoState } from "@/lib/demo-state";
 import { getProjectName } from "@/lib/derive";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDateShort } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Invoice, InvoiceStatus } from "@/lib/types";
 
@@ -50,7 +49,7 @@ function InvoiceCard({
         <span className="tabular font-mono text-[11px] text-muted-foreground">{invoice.invoiceNumber}</span>
         <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
           <SourceIcon className="h-3 w-3" />
-          {format(new Date(invoice.date), "d MMM")}
+          {formatDateShort(invoice.date)}
         </span>
       </div>
       {flagged ? (

@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { Check, FileText, Mail, Upload, X } from "lucide-react";
 import {
   Dialog,
@@ -17,7 +16,7 @@ import { FlagBadge, InvoiceStatusBadge } from "@/components/status-badge";
 import { ApprovalChain } from "@/components/approvals/approval-chain";
 import { useDemoState } from "@/lib/demo-state";
 import { getProjectName } from "@/lib/derive";
-import { formatCurrencyPrecise } from "@/lib/format";
+import { formatCurrencyPrecise, formatDateLong } from "@/lib/format";
 import type { Invoice } from "@/lib/types";
 
 function Field({ label, value, source }: { label: string; value: React.ReactNode; source?: "EzzyBills" | "Xero" }) {
@@ -69,7 +68,7 @@ export function InvoiceDialog({
             </p>
             <div className="grid grid-cols-2 gap-4">
               <Field label="Supplier" value={invoice.supplier} source="EzzyBills" />
-              <Field label="Invoice date" value={format(new Date(invoice.date), "d MMM yyyy")} source="EzzyBills" />
+              <Field label="Invoice date" value={formatDateLong(invoice.date)} source="EzzyBills" />
               <Field
                 label="Amount (incl. GST)"
                 value={<span className="tabular">{formatCurrencyPrecise(invoice.amount)}</span>}
