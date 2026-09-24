@@ -353,7 +353,8 @@ KPI 与角标只统计我方。
 |---|---|
 | `npm run check:days` | 41 项:周末、假期、地区差异、圣诞停工、正反向换算、时钟位置、日历覆盖范围 |
 | `npm run check:data` | 全量:合同与投标毛利一致、cost code 映射完整、时钟归属、retention 不超合同上限、claim 行加总、变更未写回、低置信度商机不得自动确认 |
-| `npm run check` | 两者依次执行 |
+| `npm run check:import` | 对 `samples/` 的三份导出执行 join,核对是否还原对账表,并报出映射二义性 |
+| `npm run check` | 三者依次执行 |
 
 `check:data` 在编写过程中查出四个真实缺陷:一个未映射的 cost code、四个超出合同上限的
 retention、上述归属建模错误,以及一处 KPI 引用了错误的时钟。四者现均有断言看守。
@@ -386,6 +387,21 @@ source badge 全局一致、Riverside 超支 6% 的叙事不能破。
 | ② CostX | 出 | **预算导出的实际文件**(Excel / CSV / OData,非截图) | 是否含 cost code、description、budget、quantity |
 | ④ Xero | 出 | **成本明细导出**(按项目 + tracking category 或 account code) | 能否对上同一套 cost code |
 | ④ 全栈 | 入 | **项目 + cost code 映射表** —— 现在在哪、谁维护 | 映射是否已存在,还是要从零建 |
+
+**这三份已经有样例了。** `samples/` 下是按猜测做出来的版本,金额与演示中的
+Riverside 精确一致(预算 $742,000、实际 $610,000)。用途是把一个不好回答的
+抽象问题换成一个十秒能回答的具体问题:
+
+> 你们的导出是不是长这样?哪里不一样?
+
+`npm run check:import` 会读这三份文件、执行 join、并逐行核对结果是否还原出
+对账表。**拿到真实导出后替换文件再跑一次即可** —— 它就是导入路径本身。
+
+样例里刻意留了一处问题:`03-100` 与 `03-200` 映射到同一个 Xero 键
+(`320 | Concrete`),校验会报出 **$22,600 无法在两条线之间拆分**。这演示了
+真实导出中最常见的一类障碍 —— **估算端的颗粒度比记账端细**。解决方式有三条
+(Xero 侧加 tracking、映射表加第三个键、或接受合并),需要和对方一起定。
+详见 `samples/README.md`。
 
 其余:合同、分包合同、现行保留金台账、真实分包 payment claim、变更单及往来邮件、
 供应商发票 PDF、PO、ApprovalMax 规则与审批历史、脱敏收件箱样本、三个系统的只读账号。

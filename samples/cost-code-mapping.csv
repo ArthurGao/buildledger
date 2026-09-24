@@ -1,0 +1,19 @@
+﻿Cost Code,Description,Xero Account Code,Xero Account Name,Xero Tracking (Trade)
+01-100,Preliminaries & site,310,Site Establishment,Preliminaries
+02-100,Demolition & strip-out,312,Demolition,Demolition
+03-100,Concrete floor slab,320,Concrete,Concrete
+03-200,Reinforcement steel,320,Concrete,Concrete
+04-100,Blockwork,325,Masonry,Masonry
+05-100,Structural steel,330,Structural Steel,Structural steel
+06-100,Carpentry & joinery,340,Carpentry,Carpentry
+07-100,Insulation & fire-stopping,345,Insulation,
+08-100,Windows & glazing,350,Glazing,Glazing
+09-100,Plasterboard & painting,355,Finishes,Painting
+10-100,Partitions & ceilings,356,Finishes,Partitions
+12-100,Floor coverings,358,Finishes,Flooring
+15-100,Mechanical / HVAC,370,Mechanical,Mechanical
+15-200,Plumbing,372,Plumbing,Plumbing
+16-100,Electrical,380,Electrical,Electrical
+17-100,Fit-out & fixtures,390,Fitout,
+26-100,Data & security cabling,382,Data & Security,Data
+31-100,External works & landscaping,395,External Works,

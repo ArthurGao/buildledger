@@ -9,7 +9,8 @@
     "lint": "next lint",
     "check:data": "tsx scripts/check-data.ts",
     "check:days": "tsx scripts/check-working-days.ts",
-    "check": "npm run check:days && npm run check:data"
+    "check": "npm run check:days && npm run check:data && npm run check:import",
+    "check:import": "tsx scripts/check-import.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.2.6",

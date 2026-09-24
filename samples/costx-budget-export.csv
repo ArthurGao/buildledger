@@ -1,0 +1,19 @@
+﻿Job Code,Job Name,Cost Code,Description,Unit,Quantity,Rate,Total
+RIV-01,Riverside Office Fitout,01-100,Preliminaries & site,Week,20,4750.00,95000.00
+RIV-01,Riverside Office Fitout,02-100,Demolition & strip-out,Item,1,34000.00,34000.00
+RIV-01,Riverside Office Fitout,03-100,Concrete floor slab,m2,500,34.00,17000.00
+RIV-01,Riverside Office Fitout,03-200,Reinforcement steel,t,4,1200.00,4800.00
+RIV-01,Riverside Office Fitout,04-100,Blockwork,m2,240,70.00,16800.00
+RIV-01,Riverside Office Fitout,05-100,Structural steel,t,12,3000.00,36000.00
+RIV-01,Riverside Office Fitout,06-100,Carpentry & joinery,Item,1,52000.00,52000.00
+RIV-01,Riverside Office Fitout,07-100,Insulation & fire-stopping,m2,920,20.00,18400.00
+RIV-01,Riverside Office Fitout,08-100,Windows & glazing,m2,110,400.00,44000.00
+RIV-01,Riverside Office Fitout,09-100,Plasterboard & painting,m2,1300,30.00,39000.00
+RIV-01,Riverside Office Fitout,10-100,Partitions & ceilings,m2,940,50.00,47000.00
+RIV-01,Riverside Office Fitout,12-100,Floor coverings,m2,820,50.00,41000.00
+RIV-01,Riverside Office Fitout,15-100,Mechanical / HVAC,Item,1,88000.00,88000.00
+RIV-01,Riverside Office Fitout,15-200,Plumbing,Item,1,28000.00,28000.00
+RIV-01,Riverside Office Fitout,16-100,Electrical,Item,1,61000.00,61000.00
+RIV-01,Riverside Office Fitout,17-100,Fit-out & fixtures,Item,1,71000.00,71000.00
+RIV-01,Riverside Office Fitout,26-100,Data & security cabling,Point,100,250.00,25000.00
+RIV-01,Riverside Office Fitout,31-100,External works & landscaping,Item,1,24000.00,24000.00
