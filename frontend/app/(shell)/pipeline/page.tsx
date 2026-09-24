@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/page-header";
 import { KpiCard } from "@/components/kpi-card";
 import { SourceBadge } from "@/components/source-badge";
 import { ConfidenceBar } from "@/components/inbox/class-badge";
+import { AiBadge } from "@/components/ai-badge";
 import { getOpportunities, getPipelineValue } from "@/lib/derive";
 import { formatCompactCurrency, formatConfidence, formatCurrency, formatDateLong } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -47,6 +48,7 @@ function OpportunityCard({ opportunity }: { opportunity: Opportunity }) {
           <Icon className="h-3 w-3 shrink-0" />
           Extracted from {opportunity.extractedFrom.toLowerCase()}
         </p>
+        <AiBadge label="Fields extracted" confidence={opportunity.confidence} />
         <div className="flex items-center gap-2">
           <ConfidenceBar value={opportunity.confidence} className="flex-1" />
           <span className="tabular text-[11px] text-muted-foreground">

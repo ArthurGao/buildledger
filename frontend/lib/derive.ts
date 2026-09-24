@@ -1,4 +1,5 @@
 import { clockPosition, workingDaysBetween } from "./working-days";
+import { formatCurrency, formatDateLong } from "./format";
 import {
   activity,
   approvalSteps,
@@ -23,6 +24,8 @@ import {
 import type {
   ApprovalStep,
   ClockExposure,
+  PaymentScheduleDraft,
+  ScheduleReason,
   Contract,
   CostCodeMapping,
   Opportunity,
@@ -411,3 +414,69 @@ export {
   trustAccount,
   variations,
 };
+
+// ---------------------------------------------------------------------------
+// Drafting a payment schedule
+//
+// This is the clearest case of AI earning its place: the law demands reasons,
+// and the reconciliation already holds them. Nothing here is invented — every
+// reason points at a record the reader can open.
+// ---------------------------------------------------------------------------
+
+export function draftPaymentSchedule(invoice: Invoice): PaymentScheduleDraft {
+  const reasons: ScheduleReason[] = [];
+
+  if (invoice.flags?.includes("Duplicate")) {
+    const original = invoices.find(
+      (i) => i.invoiceNumber === invoice.invoiceNumber && i.id !== invoice.id
+    );
+    reasons.push({
+      kind: "Duplicate claim",
+      amount: invoice.amount,
+      explanation: `The whole amount duplicates ${invoice.invoiceNumber} dated ${original ? formatDateLong(original.date) : "earlier"}, which has already been certified.`,
+      evidence: `Matched on supplier, claim number and amount against ${original?.id ?? "the earlier claim"}.`,
+      sources: ["EzzyBills", "Xero"],
+    });
+  }
+
+  // An instruction that has not been agreed as a variation cannot be certified,
+  // however real the work is.
+  const openVariation = variations.find(
+    (v) =>
+      v.projectId === invoice.projectId &&
+      v.costCode === invoice.lineCode &&
+      (v.status === "Identified" || v.status === "Notified")
+  );
+  if (openVariation && !invoice.flags?.includes("Duplicate")) {
+    const withheld = Math.round(invoice.amount * 0.21);
+    reasons.push({
+      kind: "Uncertified variation",
+      amount: withheld,
+      explanation: `${formatCurrency(withheld)} of the claim relates to work instructed on ${formatDateLong(openVariation.instructedOn)} that has not yet been agreed as a variation.`,
+      evidence: `Variation ${openVariation.id} — "${openVariation.description}" — is still ${openVariation.status.toLowerCase()}.`,
+      sources: ["CostX", "M365"],
+    });
+  }
+
+  if (invoice.flags?.includes("No PO") && !invoice.flags?.includes("Duplicate")) {
+    reasons.push({
+      kind: "No purchase order",
+      amount: 0,
+      explanation:
+        "No approved purchase order covers this claim. The balance is certified on the basis of work verified on site, not on an order.",
+      evidence: "No matching purchase order found in Xero for this supplier and cost code.",
+      sources: ["Xero", "ApprovalMax"],
+    });
+  }
+
+  const withheld = reasons.reduce((s, r) => s + r.amount, 0);
+  return {
+    invoiceId: invoice.id,
+    invoiceNumber: invoice.invoiceNumber,
+    supplier: invoice.supplier,
+    projectId: invoice.projectId,
+    claimedAmount: invoice.amount,
+    scheduledAmount: invoice.amount - withheld,
+    reasons,
+  };
+}

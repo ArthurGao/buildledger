@@ -352,3 +352,31 @@ export interface CostCodeMapping {
   xeroAccountCode?: string;
   xeroTrackingOption?: string;
 }
+
+/**
+ * A reason a payment schedule certifies less than was claimed.
+ *
+ * The Act requires a payment schedule to state how the scheduled amount was
+ * calculated and why it differs from the claim. The reconciliation already
+ * knows why — an unmatched purchase order, an uncertified variation, a
+ * duplicate — so the draft is assembled from evidence rather than written from
+ * scratch. `evidence` names where each reason came from, because a reason a
+ * person cannot check is a reason they cannot sign.
+ */
+export interface ScheduleReason {
+  kind: "No purchase order" | "Uncertified variation" | "Duplicate claim";
+  amount: number;
+  explanation: string;
+  evidence: string;
+  sources: System[];
+}
+
+export interface PaymentScheduleDraft {
+  invoiceId: string;
+  invoiceNumber: string;
+  supplier: string;
+  projectId: string;
+  claimedAmount: number;
+  scheduledAmount: number;
+  reasons: ScheduleReason[];
+}

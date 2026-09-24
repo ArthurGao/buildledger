@@ -29,7 +29,7 @@ import {
   trustAccount,
   variations,
 } from "../lib/mock-data";
-import { getLiveClocks, getRetentionPosition } from "../lib/derive";
+import { draftPaymentSchedule, getLiveClocks, getRetentionPosition } from "../lib/derive";
 import { formatDateShort, formatDateLong, formatDateTimeLong } from "../lib/format";
 import { getLineTotals, getOverBudgetLines, getProjectLines, matchQuestion } from "../lib/derive";
 
@@ -335,6 +335,33 @@ check(
   opportunities.filter((o) => o.confidence < 0.8).every((o) => !o.confirmed)
 );
 check("every opportunity records where it was extracted from", opportunities.every((o) => o.extractedFrom));
+
+console.log("\nDrafting a payment schedule");
+const voltix = invoices.find((i) => i.id === "INV-001")!;
+const voltixDraft = draftPaymentSchedule(voltix);
+check(
+  "the Voltix draft withholds against an uncertified variation",
+  voltixDraft.reasons.some((r) => r.kind === "Uncertified variation")
+);
+check(
+  "and cites the variation record as evidence",
+  voltixDraft.reasons.some((r) => r.evidence.includes("VAR-001"))
+);
+check(
+  "scheduled plus withheld equals claimed",
+  voltixDraft.scheduledAmount + voltixDraft.reasons.reduce((s, r) => s + r.amount, 0) ===
+    voltixDraft.claimedAmount
+);
+const dupDraft = draftPaymentSchedule(invoices.find((i) => i.id === "INV-004")!);
+check("a duplicate claim is scheduled at nil", dupDraft.scheduledAmount === 0);
+check(
+  "a clean claim needs no statement of difference",
+  draftPaymentSchedule(invoices.find((i) => i.id === "INV-012")!).reasons.length === 0
+);
+check(
+  "every reason names the systems it was read from",
+  voltixDraft.reasons.every((r) => r.sources.length > 0)
+);
 
 console.log("\nStatutory exceptions");
 check("3 statutory exceptions", statutoryExceptions.length === 3, String(statutoryExceptions.length));

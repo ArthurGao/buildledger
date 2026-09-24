@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, Mail, MessageSquare, ScrollText, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Mail, MessageSquare, ScrollText, Users } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/page-header";
 import { KpiCard } from "@/components/kpi-card";
 import { SourceBadge } from "@/components/source-badge";
+import { AiBadge } from "@/components/ai-badge";
 import { ClockDetail } from "@/components/statutory-clock";
 import {
   getClockForSource,
@@ -50,11 +51,7 @@ function VariationCard({ variation }: { variation: Variation }) {
               <span className="text-xs text-muted-foreground">
                 {getProjectName(variation.projectId)}
               </span>
-              {variation.draftedByAi ? (
-                <span className="inline-flex items-center gap-1 text-[11px] text-primary">
-                  <Sparkles className="h-3 w-3" /> Drafted from a message
-                </span>
-              ) : null}
+              {variation.draftedByAi ? <AiBadge label="Drafted from a message" /> : null}
             </div>
             <p className="text-sm font-medium">{variation.description}</p>
             <p className="flex items-center gap-1.5 text-xs text-muted-foreground">

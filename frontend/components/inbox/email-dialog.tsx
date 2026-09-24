@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SourceBadge } from "@/components/source-badge";
+import { AiBadge } from "@/components/ai-badge";
 import { ClassBadge, ConfidenceBar } from "@/components/inbox/class-badge";
 import { useDemoState } from "@/lib/demo-state";
 import { formatConfidence, formatDateTimeLong } from "@/lib/format";
@@ -50,11 +51,11 @@ export function EmailDialog({
 
         <div className="space-y-4">
           <div className="rounded-lg border border-border bg-muted/40 p-4">
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
+            <div className="flex flex-wrap items-center gap-2">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Why it was classified this way
               </p>
+              <AiBadge label="Classified" confidence={email.confidence} />
             </div>
             <p className="mt-2 text-sm leading-relaxed">{email.reason}</p>
 

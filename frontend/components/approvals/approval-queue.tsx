@@ -12,14 +12,19 @@ import { EmptyState } from "@/components/empty-state";
 import { useDemoState } from "@/lib/demo-state";
 import { getClockForSource, getProjectName } from "@/lib/derive";
 import { ClockBadge } from "@/components/statutory-clock";
+import { PaymentScheduleDialog } from "@/components/approvals/payment-schedule-dialog";
+import { AiBadge } from "@/components/ai-badge";
+import { FileText } from "lucide-react";
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Invoice } from "@/lib/types";
 
 export function ApprovalQueue() {
-  const { invoices, approvalSteps, approveInvoice, rejectInvoice } = useDemoState();
+  const { invoices, approvalSteps, approveInvoice, rejectInvoice, schedulesIssued } = useDemoState();
   const [selected, setSelected] = React.useState<Invoice | null>(null);
   const [open, setOpen] = React.useState(false);
+  const [scheduleFor, setScheduleFor] = React.useState<Invoice | null>(null);
+  const [scheduleOpen, setScheduleOpen] = React.useState(false);
 
   const queue = invoices.filter((i) => i.status === "Pending approval");
   const live = selected ? (invoices.find((i) => i.id === selected.id) ?? null) : null;
@@ -102,8 +107,26 @@ export function ApprovalQueue() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {clock ? (
-                    <ClockBadge clock={clock} />
+                  {schedulesIssued.includes(invoice.id) ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-ok-border bg-ok-soft px-2 py-0.5 text-xs font-medium text-ok whitespace-nowrap">
+                      Payment schedule issued
+                    </span>
+                  ) : clock ? (
+                    <div className="space-y-1.5">
+                      <ClockBadge clock={clock} />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setScheduleFor(invoice);
+                          setScheduleOpen(true);
+                        }}
+                        className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+                      >
+                        <FileText className="h-3 w-3" />
+                        Draft payment schedule
+                        <AiBadge label="AI" className="ml-0.5" />
+                      </button>
+                    </div>
                   ) : (
                     <span className="text-xs text-muted-foreground">Not under a statutory clock</span>
                   )}
@@ -127,6 +150,11 @@ export function ApprovalQueue() {
       </Table>
 
       <InvoiceDialog invoice={live} open={open} onOpenChange={setOpen} />
+      <PaymentScheduleDialog
+        invoice={scheduleFor ? (invoices.find((i) => i.id === scheduleFor.id) ?? null) : null}
+        open={scheduleOpen}
+        onOpenChange={setScheduleOpen}
+      />
     </>
   );
 }

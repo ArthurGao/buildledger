@@ -32,10 +32,13 @@ interface DemoState {
   activity: ActivityItem[];
   /** Ids touched this session — used to highlight what the viewer just did. */
   touched: string[];
+  /** Invoices a payment schedule has been issued against, meeting the deadline. */
+  schedulesIssued: string[];
   approveInvoice: (invoiceId: string) => void;
   rejectInvoice: (invoiceId: string) => void;
   advanceInvoice: (invoiceId: string) => void;
   routeEmail: (emailId: string, routedTo: string) => void;
+  issuePaymentSchedule: (invoiceId: string) => void;
   reset: () => void;
 }
 
@@ -58,6 +61,7 @@ export function DemoStateProvider({ children }: { children: React.ReactNode }) {
   const [emails, setEmails] = React.useState<EmailItem[]>(seedEmails);
   const [activity, setActivity] = React.useState<ActivityItem[]>(seedActivity);
   const [touched, setTouched] = React.useState<string[]>([]);
+  const [schedulesIssued, setSchedulesIssued] = React.useState<string[]>([]);
 
   const markTouched = React.useCallback((id: string) => {
     setTouched((prev) => (prev.includes(id) ? prev : [...prev, id]));
@@ -178,12 +182,31 @@ export function DemoStateProvider({ children }: { children: React.ReactNode }) {
     [emails, markTouched]
   );
 
+  const issuePaymentSchedule = React.useCallback(
+    (invoiceId: string) => {
+      const invoice = invoices.find((i) => i.id === invoiceId);
+      if (!invoice) return;
+      setSchedulesIssued((prev) => (prev.includes(invoiceId) ? prev : [...prev, invoiceId]));
+      markTouched(invoiceId);
+      setActivity((prev) => [
+        makeActivity({
+          kind: "approval",
+          system: "ApprovalMax",
+          message: `Payment schedule issued for ${invoice.invoiceNumber} — statutory deadline met`,
+        }),
+        ...prev,
+      ]);
+    },
+    [invoices, markTouched]
+  );
+
   const reset = React.useCallback(() => {
     setInvoices(seedInvoices);
     setApprovalSteps(seedApprovalSteps);
     setEmails(seedEmails);
     setActivity(seedActivity);
     setTouched([]);
+    setSchedulesIssued([]);
   }, []);
 
   const value = React.useMemo(
@@ -193,13 +216,15 @@ export function DemoStateProvider({ children }: { children: React.ReactNode }) {
       emails,
       activity,
       touched,
+      schedulesIssued,
       approveInvoice,
       rejectInvoice,
       advanceInvoice,
       routeEmail,
+      issuePaymentSchedule,
       reset,
     }),
-    [invoices, approvalSteps, emails, activity, touched, approveInvoice, rejectInvoice, advanceInvoice, routeEmail, reset]
+    [invoices, approvalSteps, emails, activity, touched, schedulesIssued, approveInvoice, rejectInvoice, advanceInvoice, routeEmail, issuePaymentSchedule, reset]
   );
 
   return <DemoStateContext.Provider value={value}>{children}</DemoStateContext.Provider>;
