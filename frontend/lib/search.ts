@@ -1,11 +1,30 @@
-import { budgetLines, emails, exceptions, invoices, projects } from "./mock-data";
-import { getProjectName } from "./derive";
+import {
+  budgetLines,
+  emails,
+  exceptions,
+  invoices,
+  opportunities,
+  projects,
+  purchaseRequests,
+  retentionEntries,
+  variations,
+} from "./mock-data";
+import { getContract, getProjectName } from "./derive";
 import { formatCurrency } from "./format";
 
 /** A single hit in the global search, already shaped for rendering. */
 export interface SearchResult {
   id: string;
-  group: "Projects" | "Invoices" | "Trades" | "Exceptions" | "Mail";
+  group:
+    | "Projects"
+    | "Invoices"
+    | "Trades"
+    | "Exceptions"
+    | "Mail"
+    | "Variations"
+    | "Retentions"
+    | "Purchases"
+    | "Pipeline";
   title: string;
   subtitle: string;
   href: string;
@@ -80,6 +99,55 @@ export function search(query: string, limit = 8): SearchResult[] {
         title: m.subject,
         subtitle: `${m.from} · routed to ${m.routedTo}`,
         href: "/inbox",
+      });
+    }
+  }
+
+  for (const v of variations) {
+    if (hit(v.description) || hit(v.costCode)) {
+      results.push({
+        id: `variation-${v.id}`,
+        group: "Variations",
+        title: v.description,
+        subtitle: `${v.status} · ${getProjectName(v.projectId)} · ${v.costCode}`,
+        href: "/variations",
+      });
+    }
+  }
+
+  for (const r of retentionEntries) {
+    const contract = getContract(r.contractId);
+    if (contract && (hit(contract.counterparty) || hit(r.claimRef))) {
+      results.push({
+        id: `retention-${r.id}`,
+        group: "Retentions",
+        title: `${contract.counterparty} — ${formatCurrency(r.amount)} retained`,
+        subtitle: `${r.claimRef} · ${getProjectName(r.projectId)}`,
+        href: "/retentions",
+      });
+    }
+  }
+
+  for (const r of purchaseRequests) {
+    if (hit(r.supplier) || hit(r.costCode) || (r.poNumber && hit(r.poNumber))) {
+      results.push({
+        id: `purchase-${r.id}`,
+        group: "Purchases",
+        title: `${r.supplier} · ${formatCurrency(r.amount)}`,
+        subtitle: `${r.status} · ${getProjectName(r.projectId)} · ${r.costCode}`,
+        href: "/purchases",
+      });
+    }
+  }
+
+  for (const o of opportunities) {
+    if (hit(o.name) || hit(o.principal)) {
+      results.push({
+        id: `opportunity-${o.id}`,
+        group: "Pipeline",
+        title: o.name,
+        subtitle: `${o.status} · ${o.principal}`,
+        href: "/pipeline",
       });
     }
   }

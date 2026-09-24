@@ -564,9 +564,11 @@ export const activity: ActivityItem[] = [
 export const suggestedQuestions: string[] = [
   "Which projects are over budget?",
   "Why is Riverside over budget?",
-  "What's committed vs budget on Kauri Apartments Stage 2?",
+  "What statutory deadlines are at risk?",
+  "Are we holding enough retention money on trust?",
   "Any duplicate invoices this month?",
   "What spend has no PO?",
+  "Which variations are not in the budget yet?",
   "Show me margin across all projects.",
 ];
 
@@ -609,8 +611,32 @@ export const chatQA: ChatQA[] = [
   },
 ];
 
+const statutoryQA: ChatQA[] = [
+  {
+    question: "What statutory deadlines are at risk?",
+    keywords: ["deadline", "statutory", "at risk", "overdue", "working day", "clock", "due"],
+    answer:
+      "One deadline has already been missed and one is about to be.\n\n- **Missed** — no payment schedule was issued for **Voltix VLX-4471** ($12,400, Riverside). The 20 working days ran out on 10 Sep, six working days ago. The full claimed amount is now recoverable as a debt.\n- **One working day left** — the switchboard upgrade instructed by Meridian on 24 Aug has not been notified as a variation. Miss it and the right to claim is lost.\n\nSeparately, **Southgate Logistics** has left claim 5 on Hobsonville unanswered for 14 working days. That one is in our favour — the amount is recoverable as a debt or can go to adjudication.",
+  },
+  {
+    question: "Are we holding enough retention money on trust?",
+    keywords: ["retention", "trust", "held on trust", "shortfall", "trust account"],
+    answer:
+      "No. The retention ledger shows **$40,200** held across 5 subcontracts, but the trust account holds **$34,600** — a shortfall of **$5,600**.\n\nUnder the Construction Contracts (Retention Money) Amendment Act 2023 retention money must sit in a compliant trust account from the moment it is withheld. Holding less than the ledger is an offence: up to $200,000, and up to $50,000 for each director.\n\nThe next quarterly report to all 5 subcontractors is due 30 Sep.",
+  },
+  {
+    question: "Which variations are not in the budget yet?",
+    keywords: ["variation", "not in the budget", "written back", "baseline", "change"],
+    answer:
+      "One approved variation has not been written back to the budget baseline:\n\n- **09-100 Plasterboard & painting**, Riverside — additional acoustic lining, **$6,800** approved.\n\nUntil it is written back, the reconciliation table measures that trade against the original budget, so it can read as an overrun when it is not.\n\nTwo further variations are still unpriced: the Riverside switchboard upgrade and the Hobsonville roof panel spec change.",
+  },
+];
+
 export const assistantFallback =
   "This is a demo — try one of the suggested questions above.";
+
+/** The statutory answers live with the rest so matching sees one list. */
+chatQA.push(...statutoryQA);
 
 // ---------------------------------------------------------------------------
 // Contracts

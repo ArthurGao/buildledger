@@ -308,58 +308,69 @@ export interface CostCodeMapping {
 
 ---
 
-## 6. 与现有前端的差距
+## 6. 前端实现状态
 
-现状:`frontend/` 下 9 条路由、10 个类型、9 组模拟数据,全部为**模拟数据、无后端、无真实集成**。
-它验证的是**呈现与交互**,不是与真实系统的对接。
+第 7 节列出的六步全部完成。前端现有 15 条路由、32 个类型、两套自动化校验。
+仍为**模拟数据、无后端、无真实集成** —— 验证的是呈现与交互,不是与真实系统的对接。
 
-### 6.1 可直接沿用(与新设计一致)
+### 6.1 已完成的改造
 
-| 已有 | 在新设计里的位置 |
-|---|---|
-| 项目详情的逐行对账表 | 贯穿层的核心,不用改 |
-| 异常面板(3 类) | 贯穿层,需扩展类型(见 6.2) |
-| 发票六段流水线 + 审批链 | ④ 黑盒的可视化 |
-| 邮件分诊 + 置信度 + 人工改派 | ① 的前身,分类/路由边界已经立对了 |
-| Source badge(5 个系统) | 黑盒边界的可视化基础 |
-| 只读问答的措辞与边界 | 5.3 的原则已体现 |
-
-### 6.2 需要改造(小改,叙事收益最大)
-
-| # | 文件 | 现状 | 应改为 |
+| # | 位置 | 原状 | 现状 |
 |---|---|---|---|
-| 1 | `lib/derive.ts` `ageInDays()` | 自然日:`ms / 86400000` | **working day 计算**,含周末、公共假期、anniversary day、12/24–1/5 |
-| 2 | `app/(shell)/approvals/page.tsx` | 「8d」+ 7 天变琥珀(内部经验值) | **20 working day 法定倒计时** + 逾期后果文案 |
-| 3 | `lib/types.ts` `ExceptionType` | 3 类 | 增加 `Payment schedule overdue`、`Variation notice overdue` |
-| 4 | UI 术语 | `Code` / `Description` | 统一为 **cost code**,与接口契约一致 |
-| 5 | `lib/mock-data.ts` | 无合同数据 | 增加 `Contract`,让 retention 比例与付款周期有来源 |
+| 1 | `lib/working-days.ts` | 不存在 | NZ working day 日历:周末、公共假期、regional anniversary day、24 Dec–5 Jan。附 41 项测试 |
+| 2 | `lib/derive.ts` | `ageInDays()` 按自然日 | `ageInWorkingDays()`,法定期限一律按 working day |
+| 3 | Approvals | 「8d」+ 有人拍的 7 天阈值 | 20 working day 法定倒计时,并写明逾期后果 |
+| 4 | `ExceptionType` | 3 类 | 6 类,新增 payment schedule 逾期、变更通知逾期、retention 缺口 |
+| 5 | 对账表 | 列名 `Code` | `Cost code`;并标出已批准但未写回预算的变更 |
+| 6 | Dashboard | 只有预算对账 | 新增法定敞口 KPI 与 statutory deadlines 面板 |
+| 7 | 项目详情 | 无 | 接入该项目的法定时钟与变更数 |
+| 8 | 全局搜索 | 5 类实体 | 9 类,覆盖变更、retention、采购、商机 |
+| 9 | 助手 | 6 组问答 | 9 组,新增法定期限、retention 缺口、未写回变更 |
 
-> **第 1、2 条是整个改造里性价比最高的一处**:改动很小,但把「效率问题」变成「法律后果」,
-> 而这正是 §3 的全部说服力所在。
+### 6.2 新增的页面
 
-### 6.3 需要新增
+| 路由 | 内容 |
+|---|---|
+| `/retentions` | 台账 vs 信托账户、缺口告警、按 subcontract 的上限占比、季度报告入口 |
+| `/variations` | 20 working day 通知倒计时、成本与工期分列、未写回预算的标记 |
+| `/claims` | progress claim,逐行复用 CostX 的 schedule of values,retention 联动 |
+| `/purchases` | 采购申请 → PO,含 cost code 到 Xero account code 的映射展示 |
+| `/pipeline` | 商机看板,抽取置信度与人工确认门槛 |
 
-| 优先级 | 新增 | 说明 |
-|---|---|---|
-| 高 | **保留金台账页** | `RetentionEntry` + 信托账户余额比对 + 季度报告生成。无前置依赖,可独立交付 |
-| 高 | **法定时钟组件** | `StatutoryClock`,贯穿显示在审批、变更、应收三处 |
-| 中 | **变更(Variation)** | 带 20 working day 时钟;批准后写回预算基线 |
-| 中 | **进度款 / 应收** | `ProgressClaim`,复用 `BudgetLine` 当 schedule of values |
-| 中 | 采购申请 | `PurchaseRequest` → PO,补上 ④ 的 PO 来源 |
-| 低 | 商机 / CRM | 卡在数据源(微信),不是技术难度 |
+### 6.3 一处模型修正
 
----
+实现过程中发现原设计把**我方义务**与**对方义务**混为一谈。
+`Payment due` 逾期意味着对方没付我们 —— 那是**权利**,不是我方失误。
+把两者一起计入「错过的法定期限」会高估风险、并且掩盖了可追讨的债权。
 
-## 7. 建议的前端更新顺序
+因此 `StatutoryClock` 增加了 `ClockExposure: "Ours" | "Theirs"` 维度:
+我方逾期为红色告警,对方逾期为蓝色信息(`Unanswered 14 working days`),
+KPI 与角标只统计我方。
 
-1. **working day 日历 + 测试**(`lib/working-days.ts`)—— 其余一切的地基
-2. **`ageInDays` → working days**,Approvals 页换成法定倒计时 + 逾期后果
-3. **保留金台账页** —— 独立、可单独演示、有刑责叙事
-4. **变更**,带时钟与写回预算基线
-5. **进度款 / 应收**
-6. 采购申请、商机
+### 6.4 校验
 
-前两步做完,演示的叙事就从「我们能对账」升级为「我们不会漏掉法定期限」。
+| 命令 | 覆盖 |
+|---|---|
+| `npm run check:days` | 41 项:周末、假期、地区差异、圣诞停工、正反向换算、时钟位置、日历覆盖范围 |
+| `npm run check:data` | 全量:合同与投标毛利一致、cost code 映射完整、时钟归属、retention 不超合同上限、claim 行加总、变更未写回、低置信度商机不得自动确认 |
+| `npm run check` | 两者依次执行 |
+
+`check:data` 在编写过程中查出四个真实缺陷:一个未映射的 cost code、四个超出合同上限的
+retention、上述归属建模错误,以及一处 KPI 引用了错误的时钟。四者现均有断言看守。
+
+## 7. 前端更新顺序(已执行)
+
+1. ~~working day 日历 + 测试~~ ✅
+2. ~~`ageInDays` → working days,Approvals 换成法定倒计时~~ ✅
+3. ~~保留金台账页~~ ✅
+4. ~~变更,带时钟与写回预算基线~~ ✅
+5. ~~进度款 / 应收~~ ✅
+6. ~~采购申请、商机~~ ✅
+
+演示的叙事已从「我们能对账」升级为「我们不会漏掉法定期限」。
+
+**下一步不在前端**,而在第 8 节:在取得真实样本之前,接口契约仍属推断,
+再往下做只会在假设之上叠加假设。
 
 **约束**:`demo-frontend-spec.md` 的演示护栏继续有效 —— 无后端、模拟数据、UI 文案英文、
 source badge 全局一致、Riverside 超支 6% 的叙事不能破。

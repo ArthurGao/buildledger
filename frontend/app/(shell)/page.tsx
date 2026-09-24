@@ -5,11 +5,14 @@ import { PortfolioChart } from "@/components/dashboard/portfolio-chart";
 import { ProjectsTable } from "@/components/dashboard/projects-table";
 import { RecentExceptions } from "@/components/dashboard/recent-exceptions";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
-import { getPortfolioTotals } from "@/lib/derive";
+import { StatutoryPanel } from "@/components/dashboard/statutory-panel";
+import { getClockCounts, getPortfolioTotals, getRetentionPosition } from "@/lib/derive";
 import { formatCompactCurrency, formatPct } from "@/lib/format";
 
 export default function DashboardPage() {
   const totals = getPortfolioTotals();
+  const clocks = getClockCounts();
+  const retention = getRetentionPosition();
   const marginDelta = totals.forecastMarginPct - totals.budgetMarginPct;
 
   return (
@@ -44,11 +47,15 @@ export default function DashboardPage() {
           sub={`from ${formatPct(totals.budgetMarginPct)} at tender`}
         />
         <KpiCard
-          label="Open exceptions"
-          value={String(totals.openExceptions)}
-          sources={["EzzyBills", "ApprovalMax"]}
+          label="Statutory exposure"
+          value={String(clocks.overdue + (retention.compliant ? 0 : 1))}
+          sources={["ApprovalMax", "Xero"]}
           tone="over"
-          sub="2 high · 2 medium"
+          sub={
+            clocks.recoverable > 0
+              ? `${clocks.dueSoon} due soon · ${clocks.recoverable} recoverable from others`
+              : `${clocks.dueSoon} due within 3 working days`
+          }
         />
       </div>
 
@@ -65,7 +72,10 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <RecentExceptions />
+        <div className="space-y-4">
+          <StatutoryPanel />
+          <RecentExceptions />
+        </div>
       </div>
 
       <Card>

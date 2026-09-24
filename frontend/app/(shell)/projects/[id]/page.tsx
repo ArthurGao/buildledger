@@ -14,8 +14,11 @@ import {
   getLinesByVariance,
   getOverBudgetLines,
   getProject,
+  getProjectClocks,
   getProjectExceptions,
+  getVariations,
 } from "@/lib/derive";
+import { ClockBadge } from "@/components/statutory-clock";
 import { projects } from "@/lib/mock-data";
 import { formatCurrency, formatSignedCurrency } from "@/lib/format";
 
@@ -30,6 +33,8 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const linesByVariance = getLinesByVariance(project.id);
   const overLines = getOverBudgetLines(project.id);
   const projectExceptions = getProjectExceptions(project.id);
+  const projectClocks = getProjectClocks(project.id).filter((c) => !c.satisfied);
+  const projectVariations = getVariations(project.id);
   const totalOverrun = overLines.reduce((sum, l) => sum + l.variance, 0);
 
   const askQuestion =
@@ -125,6 +130,37 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
           </CardHeader>
           <CardContent>
             <VarianceChart lines={linesByVariance} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Statutory deadlines</CardTitle>
+            <CardDescription>
+              {projectVariations.length} variation{projectVariations.length === 1 ? "" : "s"} on this
+              project.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2.5">
+            {projectClocks.length === 0 ? (
+              <p className="py-4 text-center text-sm text-muted-foreground">
+                Nothing running against a statutory clock.
+              </p>
+            ) : (
+              projectClocks.map((c) => (
+                <Link
+                  key={c.id}
+                  href={c.kind === "Variation notice due" ? "/variations" : "/approvals"}
+                  className="block rounded-md border border-border p-3 transition-colors hover:bg-accent/50"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-sm font-medium leading-snug">{c.sourceLabel}</span>
+                    <ClockBadge clock={c} className="shrink-0" />
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{c.kind}</p>
+                </Link>
+              ))
+            )}
           </CardContent>
         </Card>
 

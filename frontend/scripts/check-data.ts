@@ -25,6 +25,7 @@ import {
   retentionEntries,
   statutoryClocks,
   statutoryExceptions,
+  suggestedQuestions,
   trustAccount,
   variations,
 } from "../lib/mock-data";
@@ -166,7 +167,14 @@ check(
 );
 
 console.log("\nAssistant");
-check("6 canned answers", chatQA.length === 6, String(chatQA.length));
+check("every suggested question has an answer", suggestedQuestions.every((q) => matchQuestion(q)),
+  suggestedQuestions.filter((q) => !matchQuestion(q)).join(" | "));
+check(
+  "the statutory topics are answerable, not just the budget ones",
+  ["deadline", "retention", "variation"].every((topic) =>
+    chatQA.some((qa) => qa.keywords.some((k) => k.includes(topic)))
+  )
+);
 check("every suggested question matches itself", chatQA.every((qa) => matchQuestion(qa.question) === qa));
 check("a paraphrase still matches", matchQuestion("which jobs are over budget?")?.question === "Which projects are over budget?");
 check("nonsense falls through to the fallback", matchQuestion("what is the weather") === undefined);
