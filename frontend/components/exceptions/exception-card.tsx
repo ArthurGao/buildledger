@@ -14,6 +14,11 @@ const detectedBy: Record<ExceptionItem["type"], System[]> = {
   "Duplicate invoice": ["EzzyBills", "Xero"],
   "No PO spend": ["Xero", "ApprovalMax"],
   "Over budget": ["CostX", "Xero"],
+  // The statutory exceptions come from a clock running against a received
+  // document — contract terms from CostX, the document from the AP stack.
+  "Payment schedule overdue": ["EzzyBills", "ApprovalMax"],
+  "Variation notice overdue": ["M365", "CostX"],
+  "Retention shortfall": ["Xero"],
 };
 
 export function ExceptionCard({ exception }: { exception: ExceptionItem }) {

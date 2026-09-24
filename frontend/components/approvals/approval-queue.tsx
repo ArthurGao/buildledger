@@ -10,7 +10,8 @@ import { ApprovalChain } from "@/components/approvals/approval-chain";
 import { InvoiceDialog } from "@/components/invoices/invoice-dialog";
 import { EmptyState } from "@/components/empty-state";
 import { useDemoState } from "@/lib/demo-state";
-import { ageInDays, getProjectName } from "@/lib/derive";
+import { getClockForSource, getProjectName } from "@/lib/derive";
+import { ClockBadge } from "@/components/statutory-clock";
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Invoice } from "@/lib/types";
@@ -47,18 +48,25 @@ export function ApprovalQueue() {
                 Current approver <SourceBadge system="ApprovalMax" short />
               </span>
             </TableHead>
-            <TableHead className="text-right">Age</TableHead>
+            <TableHead>
+              <span className="inline-flex items-center gap-1.5">
+                Statutory deadline <SourceBadge system="ApprovalMax" short />
+              </span>
+            </TableHead>
             <TableHead className="w-[172px] text-right">Decision</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {queue.map((invoice) => {
             const current = approvalSteps.find((s) => s.invoiceId === invoice.id && s.status === "Waiting");
-            const age = ageInDays(invoice.date);
+            const clock = getClockForSource(invoice.id);
             const flagged = (invoice.flags?.length ?? 0) > 0;
 
             return (
-              <TableRow key={invoice.id} className={cn(flagged && "bg-over-soft/40")}>
+              <TableRow
+                key={invoice.id}
+                className={cn((flagged || clock?.overdue) && "bg-over-soft/40")}
+              >
                 <TableCell className="py-3">
                   <button
                     type="button"
@@ -93,10 +101,12 @@ export function ApprovalQueue() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="tabular text-right">
-                  <span className={cn("text-sm", age >= 7 ? "font-medium text-warn" : "text-muted-foreground")}>
-                    {age}d
-                  </span>
+                <TableCell>
+                  {clock ? (
+                    <ClockBadge clock={clock} />
+                  ) : (
+                    <span className="text-xs text-muted-foreground">Not under a statutory clock</span>
+                  )}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1.5">

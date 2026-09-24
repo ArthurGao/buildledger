@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { isActive, navItems } from "@/components/layout/nav-items";
-import { getExceptionCounts } from "@/lib/derive";
+import { getClockCounts, getExceptionCounts, getRetentionPosition } from "@/lib/derive";
 import { useDemoState } from "@/lib/demo-state";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +25,8 @@ export function MobileNav() {
   const counts = {
     approvals: invoices.filter((i) => i.status === "Pending approval").length,
     exceptions: getExceptionCounts().total,
+    variationClocks: getClockCounts().overdue,
+    retentionAlert: getRetentionPosition().compliant ? 0 : 1,
   };
 
   return (

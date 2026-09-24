@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Layers } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isActive, navItems } from "@/components/layout/nav-items";
-import { getExceptionCounts } from "@/lib/derive";
+import { getClockCounts, getExceptionCounts, getRetentionPosition } from "@/lib/derive";
 import { useDemoState } from "@/lib/demo-state";
 
 export function Sidebar() {
@@ -16,6 +16,8 @@ export function Sidebar() {
   const counts = {
     approvals: invoices.filter((i) => i.status === "Pending approval").length,
     exceptions: getExceptionCounts().total,
+    variationClocks: getClockCounts().overdue,
+    retentionAlert: getRetentionPosition().compliant ? 0 : 1,
   };
 
   return (

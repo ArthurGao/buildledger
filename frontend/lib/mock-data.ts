@@ -3,11 +3,20 @@ import type {
   ApprovalStep,
   BudgetLine,
   ChatQA,
+  Contract,
+  CostCodeMapping,
   EmailItem,
   ExceptionItem,
   IntegrationStatus,
   Invoice,
+  Opportunity,
+  ProgressClaim,
   Project,
+  PurchaseRequest,
+  RetentionEntry,
+  StatutoryClock,
+  TrustAccount,
+  Variation,
 } from "./types";
 
 /**
@@ -602,3 +611,587 @@ export const chatQA: ChatQA[] = [
 
 export const assistantFallback =
   "This is a demo — try one of the suggested questions above.";
+
+// ---------------------------------------------------------------------------
+// Contracts
+//
+// Head contract values are derived from the tender margin: a project budgeted
+// at cost C with margin m was won at C / (1 - m).
+// ---------------------------------------------------------------------------
+
+export const contracts: Contract[] = [
+  {
+    id: "HC-RIV-01",
+    projectId: "RIV-01",
+    side: "Principal",
+    counterparty: "Meridian Property Group",
+    value: 843_000,
+    paymentScheduleWorkingDays: 20,
+    paymentDueWorkingDays: 20,
+    retentionPct: 10,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 50,
+    defectsLiabilityMonths: 12,
+  },
+  {
+    id: "HC-KAU-02",
+    projectId: "KAU-02",
+    side: "Principal",
+    counterparty: "Kauri Living Ltd",
+    value: 3_481_000,
+    paymentScheduleWorkingDays: 20,
+    paymentDueWorkingDays: 20,
+    retentionPct: 10,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 50,
+    defectsLiabilityMonths: 12,
+  },
+  {
+    id: "HC-HOB-03",
+    projectId: "HOB-03",
+    side: "Principal",
+    counterparty: "Southgate Logistics",
+    value: 2_112_000,
+    paymentScheduleWorkingDays: 15,
+    paymentDueWorkingDays: 20,
+    retentionPct: 10,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 50,
+    defectsLiabilityMonths: 6,
+  },
+  {
+    id: "HC-NEW-04",
+    projectId: "NEW-04",
+    side: "Principal",
+    counterparty: "Vantage Retail",
+    value: 541_000,
+    paymentScheduleWorkingDays: 20,
+    paymentDueWorkingDays: 20,
+    retentionPct: 5,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 100,
+    defectsLiabilityMonths: 12,
+  },
+
+  // Subcontracts we let. These are the ones that create a retention trust
+  // obligation, and the ones whose payment claims start a 20-day clock on us.
+  {
+    id: "SC-RIV-VLX",
+    projectId: "RIV-01",
+    side: "Subcontractor",
+    counterparty: "Voltix Electrical",
+    value: 70_000,
+    paymentScheduleWorkingDays: 20,
+    paymentDueWorkingDays: 20,
+    retentionPct: 10,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 50,
+    defectsLiabilityMonths: 12,
+  },
+  {
+    id: "SC-RIV-NST",
+    projectId: "RIV-01",
+    side: "Subcontractor",
+    counterparty: "Northern Steel Supplies",
+    value: 40_000,
+    paymentScheduleWorkingDays: 20,
+    paymentDueWorkingDays: 20,
+    retentionPct: 10,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 50,
+    defectsLiabilityMonths: 12,
+  },
+  {
+    id: "SC-RIV-AIR",
+    projectId: "RIV-01",
+    side: "Subcontractor",
+    counterparty: "AirStream Mechanical",
+    value: 84_000,
+    paymentScheduleWorkingDays: 20,
+    paymentDueWorkingDays: 20,
+    retentionPct: 10,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 50,
+    defectsLiabilityMonths: 12,
+  },
+  {
+    id: "SC-KAU-TMB",
+    projectId: "KAU-02",
+    side: "Subcontractor",
+    counterparty: "TimberYard Co",
+    value: 190_000,
+    paymentScheduleWorkingDays: 20,
+    paymentDueWorkingDays: 20,
+    retentionPct: 10,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 50,
+    defectsLiabilityMonths: 12,
+  },
+  {
+    id: "SC-HOB-STL",
+    projectId: "HOB-03",
+    side: "Subcontractor",
+    counterparty: "Southern Steelworks",
+    value: 515_000,
+    paymentScheduleWorkingDays: 20,
+    paymentDueWorkingDays: 20,
+    retentionPct: 10,
+    retentionCapPct: 5,
+    retentionReleaseAtPCPct: 50,
+    defectsLiabilityMonths: 12,
+  },
+];
+
+// ---------------------------------------------------------------------------
+// cost code mapping — the key that joins CostX to Xero
+// ---------------------------------------------------------------------------
+
+export const costCodeMappings: CostCodeMapping[] = [
+  { costCode: "01-100", description: "Preliminaries & site", xeroAccountCode: "310", xeroTrackingOption: "Preliminaries" },
+  { costCode: "02-100", description: "Demolition & strip-out", xeroAccountCode: "312", xeroTrackingOption: "Demolition" },
+  { costCode: "03-100", description: "Concrete floor slab", xeroAccountCode: "320", xeroTrackingOption: "Concrete" },
+  { costCode: "03-200", description: "Reinforcement steel", xeroAccountCode: "320", xeroTrackingOption: "Concrete" },
+  { costCode: "04-100", description: "Blockwork", xeroAccountCode: "325", xeroTrackingOption: "Masonry" },
+  { costCode: "05-100", description: "Structural steel", xeroAccountCode: "330", xeroTrackingOption: "Structural steel" },
+  { costCode: "06-100", description: "Carpentry & joinery", xeroAccountCode: "340", xeroTrackingOption: "Carpentry" },
+  { costCode: "07-100", description: "Insulation & fire-stopping", xeroAccountCode: "345" },
+  { costCode: "07-200", description: "Roofing & cladding", xeroAccountCode: "348", xeroTrackingOption: "Roofing" },
+  { costCode: "08-100", description: "Windows & glazing", xeroAccountCode: "350", xeroTrackingOption: "Glazing" },
+  { costCode: "09-100", description: "Plasterboard & painting", xeroAccountCode: "355", xeroTrackingOption: "Finishes" },
+  { costCode: "10-100", description: "Partitions & ceilings", xeroAccountCode: "356", xeroTrackingOption: "Finishes" },
+  { costCode: "12-100", description: "Floor coverings", xeroAccountCode: "358", xeroTrackingOption: "Finishes" },
+  { costCode: "15-100", description: "Mechanical / HVAC", xeroAccountCode: "370", xeroTrackingOption: "Mechanical" },
+  { costCode: "15-200", description: "Plumbing", xeroAccountCode: "372", xeroTrackingOption: "Mechanical" },
+  { costCode: "16-100", description: "Electrical", xeroAccountCode: "380", xeroTrackingOption: "Electrical" },
+  { costCode: "17-100", description: "Fit-out & fixtures", xeroAccountCode: "390" },
+  { costCode: "26-100", description: "Data & security cabling", xeroAccountCode: "382", xeroTrackingOption: "Electrical" },
+  { costCode: "31-100", description: "External works & landscaping", xeroAccountCode: "395" },
+];
+
+// ---------------------------------------------------------------------------
+// Variations
+//
+// The one that matters: a Meridian instruction to upgrade the switchboard,
+// spotted by the assistant in an email and not yet formally notified. It lands
+// on 16-100 Electrical — the trade already driving the Riverside overrun.
+// ---------------------------------------------------------------------------
+
+export const variations: Variation[] = [
+  {
+    id: "VAR-001",
+    projectId: "RIV-01",
+    costCode: "16-100",
+    description:
+      "Principal instructed an upgrade to the main switchboard and additional sub-circuits to level 2.",
+    origin: "Email",
+    originRef: "EM-07",
+    instructedOn: "2026-08-24",
+    status: "Identified",
+    costImpact: null,
+    timeImpactDays: null,
+    writtenBackToBudget: false,
+    draftedByAi: true,
+  },
+  {
+    id: "VAR-002",
+    projectId: "RIV-01",
+    costCode: "08-100",
+    description: "Substitution to double-glazed units on the north elevation at the principal's request.",
+    origin: "Site instruction",
+    instructedOn: "2026-09-08",
+    status: "Notified",
+    costImpact: 9_400,
+    timeImpactDays: 3,
+    writtenBackToBudget: false,
+  },
+  {
+    id: "VAR-003",
+    projectId: "RIV-01",
+    costCode: "09-100",
+    description: "Additional acoustic lining to meeting rooms 3 and 4.",
+    origin: "Meeting",
+    instructedOn: "2026-08-11",
+    status: "Approved",
+    costImpact: 6_800,
+    timeImpactDays: 0,
+    // Approved but never written back — the reconciliation table is still
+    // measuring this trade against the original budget.
+    writtenBackToBudget: false,
+  },
+  {
+    id: "VAR-004",
+    projectId: "HOB-03",
+    costCode: "07-200",
+    description: "Upgrade to insulated roof panel following a revised thermal spec.",
+    origin: "Email",
+    originRef: "EM-08",
+    instructedOn: "2026-09-14",
+    status: "Identified",
+    costImpact: null,
+    timeImpactDays: null,
+    writtenBackToBudget: false,
+    draftedByAi: true,
+  },
+  {
+    id: "VAR-005",
+    projectId: "KAU-02",
+    costCode: "06-100",
+    description: "Revised balustrade detail to stairs, levels 2 to 5.",
+    origin: "Site instruction",
+    instructedOn: "2026-07-20",
+    status: "Approved",
+    costImpact: 18_200,
+    timeImpactDays: 5,
+    writtenBackToBudget: true,
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Progress claims
+// ---------------------------------------------------------------------------
+
+export const progressClaims: ProgressClaim[] = [
+  {
+    id: "PC-RIV-07",
+    projectId: "RIV-01",
+    contractId: "HC-RIV-01",
+    claimNumber: 7,
+    periodEnd: "2026-08-31",
+    servedOn: "2026-09-02",
+    lines: [
+      { costCode: "01-100", description: "Preliminaries & site", contractValue: 108_000, percentComplete: 92, previouslyClaimed: 92_200, thisClaim: 7_160 },
+      { costCode: "05-100", description: "Structural steel", contractValue: 40_900, percentComplete: 100, previouslyClaimed: 38_900, thisClaim: 2_000 },
+      { costCode: "15-100", description: "Mechanical / HVAC", contractValue: 100_000, percentComplete: 88, previouslyClaimed: 79_000, thisClaim: 9_000 },
+      { costCode: "16-100", description: "Electrical", contractValue: 69_300, percentComplete: 96, previouslyClaimed: 62_100, thisClaim: 4_400 },
+    ],
+    grossClaimed: 22_560,
+    retentionWithheld: 2_256,
+    netClaimed: 20_304,
+    status: "Paid",
+  },
+  {
+    id: "PC-RIV-08",
+    projectId: "RIV-01",
+    contractId: "HC-RIV-01",
+    claimNumber: 8,
+    periodEnd: "2026-09-30",
+    servedOn: null,
+    lines: [
+      { costCode: "09-100", description: "Plasterboard & painting", contractValue: 44_300, percentComplete: 74, previouslyClaimed: 26_100, thisClaim: 6_680 },
+      { costCode: "10-100", description: "Partitions & ceilings", contractValue: 53_400, percentComplete: 62, previouslyClaimed: 25_900, thisClaim: 7_210 },
+      { costCode: "12-100", description: "Floor coverings", contractValue: 46_600, percentComplete: 28, previouslyClaimed: 6_400, thisClaim: 6_650 },
+      { costCode: "17-100", description: "Fit-out & fixtures", contractValue: 80_700, percentComplete: 55, previouslyClaimed: 33_400, thisClaim: 10_985 },
+    ],
+    grossClaimed: 31_525,
+    retentionWithheld: 3_152,
+    netClaimed: 28_373,
+    status: "Draft",
+  },
+  {
+    id: "PC-KAU-12",
+    projectId: "KAU-02",
+    contractId: "HC-KAU-02",
+    claimNumber: 12,
+    periodEnd: "2026-08-31",
+    servedOn: "2026-09-01",
+    lines: [
+      { costCode: "03-100", description: "Concrete structure", contractValue: 751_000, percentComplete: 86, previouslyClaimed: 601_000, thisClaim: 44_860 },
+      { costCode: "04-100", description: "Precast panels & blockwork", contractValue: 436_000, percentComplete: 76, previouslyClaimed: 296_000, thisClaim: 35_360 },
+    ],
+    grossClaimed: 80_220,
+    retentionWithheld: 8_022,
+    netClaimed: 72_198,
+    status: "Scheduled",
+    scheduledAmount: 78_400,
+  },
+  {
+    id: "PC-HOB-05",
+    projectId: "HOB-03",
+    contractId: "HC-HOB-03",
+    claimNumber: 5,
+    periodEnd: "2026-08-31",
+    // Served 3 Aug and the principal has still not responded. That gives us a
+    // right, not a risk — the amount is recoverable as a debt.
+    servedOn: "2026-08-03",
+    lines: [
+      { costCode: "05-100", description: "Structural steel & portal frames", contractValue: 587_000, percentComplete: 89, previouslyClaimed: 470_000, thisClaim: 52_430 },
+      { costCode: "07-200", description: "Roofing & cladding", contractValue: 331_000, percentComplete: 19, previouslyClaimed: 41_000, thisClaim: 21_890 },
+    ],
+    grossClaimed: 74_320,
+    retentionWithheld: 7_432,
+    netClaimed: 66_888,
+    status: "Served",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Retention ledger and the trust account
+//
+// The ledger totals more than the trust account holds. That gap is the point of
+// the page: under the 2023 amendment it is a criminal exposure, not a tidy-up.
+// ---------------------------------------------------------------------------
+
+export const retentionEntries: RetentionEntry[] = [
+  { id: "RET-01", contractId: "SC-RIV-VLX", projectId: "RIV-01", claimRef: "VLX claim 5", withheldOn: "2026-06-30", amount: 1_800, releasedOn: null, releaseTrigger: null },
+  { id: "RET-02", contractId: "SC-RIV-VLX", projectId: "RIV-01", claimRef: "VLX claim 6", withheldOn: "2026-07-31", amount: 1_100, releasedOn: null, releaseTrigger: null },
+  { id: "RET-03", contractId: "SC-RIV-VLX", projectId: "RIV-01", claimRef: "VLX claim 7", withheldOn: "2026-08-31", amount: 600, releasedOn: null, releaseTrigger: null },
+  { id: "RET-04", contractId: "SC-RIV-NST", projectId: "RIV-01", claimRef: "NST claim 4", withheldOn: "2026-07-31", amount: 1_400, releasedOn: null, releaseTrigger: null },
+  { id: "RET-05", contractId: "SC-RIV-NST", projectId: "RIV-01", claimRef: "NST claim 5", withheldOn: "2026-08-31", amount: 600, releasedOn: null, releaseTrigger: null },
+  { id: "RET-06", contractId: "SC-RIV-AIR", projectId: "RIV-01", claimRef: "AIR claim 6", withheldOn: "2026-08-31", amount: 4_200, releasedOn: null, releaseTrigger: null },
+  { id: "RET-07", contractId: "SC-KAU-TMB", projectId: "KAU-02", claimRef: "TMB claim 9", withheldOn: "2026-07-31", amount: 5_200, releasedOn: null, releaseTrigger: null },
+  { id: "RET-08", contractId: "SC-KAU-TMB", projectId: "KAU-02", claimRef: "TMB claim 10", withheldOn: "2026-08-31", amount: 1_800, releasedOn: null, releaseTrigger: null },
+  { id: "RET-09", contractId: "SC-HOB-STL", projectId: "HOB-03", claimRef: "STL claim 7", withheldOn: "2026-06-30", amount: 10_000, releasedOn: null, releaseTrigger: null },
+  { id: "RET-10", contractId: "SC-HOB-STL", projectId: "HOB-03", claimRef: "STL claim 8", withheldOn: "2026-07-31", amount: 8_000, releasedOn: null, releaseTrigger: null },
+  { id: "RET-11", contractId: "SC-HOB-STL", projectId: "HOB-03", claimRef: "STL claim 9", withheldOn: "2026-08-31", amount: 5_500, releasedOn: null, releaseTrigger: null },
+  // Already released — kept so the ledger shows movement both ways.
+  { id: "RET-12", contractId: "SC-KAU-TMB", projectId: "KAU-02", claimRef: "TMB claim 6", withheldOn: "2026-04-30", amount: 6_400, releasedOn: "2026-08-15", releaseTrigger: "Practical completion" },
+];
+
+export const trustAccount: TrustAccount = {
+  bank: "ANZ New Zealand",
+  accountName: "Retention money on trust — Construction Contracts Act 2002",
+  accountNumber: "01-0242-••••••-00",
+  balance: 34_600,
+  lastReconciled: "2026-09-17",
+  bankNotified: true,
+};
+
+// ---------------------------------------------------------------------------
+// Purchase requests — the execution hub's feed into the payables stack
+// ---------------------------------------------------------------------------
+
+export const purchaseRequests: PurchaseRequest[] = [
+  { id: "PR-001", projectId: "RIV-01", costCode: "12-100", supplier: "Ashfield Flooring", amount: 15_200, requestedBy: "Tom Baker", requestedOn: "2026-09-15", status: "Pending approval", poNumber: null },
+  { id: "PR-002", projectId: "RIV-01", costCode: "17-100", supplier: "Meridian Fitout Supply", amount: 23_000, requestedBy: "Sarah Chen", requestedOn: "2026-09-12", status: "Approved", poNumber: null },
+  { id: "PR-003", projectId: "RIV-01", costCode: "26-100", supplier: "Netlink Cabling", amount: 8_800, requestedBy: "Tom Baker", requestedOn: "2026-09-08", status: "PO raised", poNumber: "PO-4471" },
+  { id: "PR-004", projectId: "HOB-03", costCode: "07-200", supplier: "Roofline Systems", amount: 96_000, requestedBy: "Tom Baker", requestedOn: "2026-09-16", status: "Draft", poNumber: null },
+  { id: "PR-005", projectId: "NEW-04", costCode: "06-100", supplier: "Woodgrain Joinery", amount: 11_750, requestedBy: "Tom Baker", requestedOn: "2026-09-04", status: "PO raised", poNumber: "PO-4468" },
+  { id: "PR-006", projectId: "KAU-02", costCode: "16-100", supplier: "Voltix Electrical", amount: 64_000, requestedBy: "Sarah Chen", requestedOn: "2026-09-17", status: "Pending approval", poNumber: null },
+];
+
+// ---------------------------------------------------------------------------
+// Opportunities — extracted from unstructured messages, confirmed by a person
+// ---------------------------------------------------------------------------
+
+export const opportunities: Opportunity[] = [
+  {
+    id: "OPP-001",
+    principal: "Newmarket Developments",
+    name: "Newmarket retail refit — electrical package",
+    location: "Newmarket, Auckland",
+    estimatedValue: 240_000,
+    closesOn: "2026-10-02",
+    extractedFrom: "Email",
+    sourceRef: "EM-02",
+    confidence: 0.94,
+    confirmed: true,
+    status: "Bid",
+  },
+  {
+    id: "OPP-002",
+    principal: "Harbour Point Trust",
+    name: "Devonport community hall refurbishment",
+    location: "Devonport, Auckland",
+    estimatedValue: 610_000,
+    closesOn: "2026-10-16",
+    extractedFrom: "Meeting minutes",
+    confidence: 0.81,
+    confirmed: false,
+    status: "Opportunity",
+  },
+  {
+    id: "OPP-003",
+    principal: "Southgate Logistics",
+    name: "Hobsonville warehouse — stage 2 extension",
+    location: "Hobsonville, Auckland",
+    estimatedValue: 1_450_000,
+    closesOn: "2026-11-06",
+    extractedFrom: "Meeting minutes",
+    confidence: 0.88,
+    confirmed: true,
+    status: "Opportunity",
+  },
+  {
+    id: "OPP-004",
+    principal: "Vantage Retail",
+    name: "Botany store fitout",
+    location: "Botany, Auckland",
+    estimatedValue: null,
+    closesOn: null,
+    extractedFrom: "Email",
+    confidence: 0.63,
+    confirmed: false,
+    status: "Lead",
+  },
+  {
+    id: "OPP-005",
+    principal: "Meridian Property Group",
+    name: "Albany office tower — level 4 to 6 fitout",
+    location: "Albany, Auckland",
+    estimatedValue: 980_000,
+    closesOn: "2026-09-25",
+    extractedFrom: "Email",
+    confidence: 0.91,
+    confirmed: true,
+    status: "Submitted",
+  },
+  {
+    id: "OPP-006",
+    principal: "Kauri Living Ltd",
+    name: "Kauri Apartments stage 3",
+    location: "Mt Eden, Auckland",
+    estimatedValue: 3_800_000,
+    closesOn: null,
+    extractedFrom: "Chat",
+    confidence: 0.72,
+    confirmed: false,
+    status: "Lead",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Statutory clocks
+//
+// Three kinds, one mechanism. Dates are chosen against DEMO_TODAY (18 Sep 2026)
+// so the board shows one overdue, one about to expire, and several comfortable.
+// ---------------------------------------------------------------------------
+
+export const statutoryClocks: StatutoryClock[] = [
+  {
+    // Overdue. Voltix served on 13 Aug; the 20 working days ran out on 10 Sep.
+    id: "CLK-001",
+    kind: "Payment schedule due",
+    sourceId: "INV-001",
+    sourceLabel: "Voltix Electrical — payment claim VLX-4471",
+    projectId: "RIV-01",
+    contractId: "SC-RIV-VLX",
+    triggeredOn: "2026-08-13",
+    workingDays: 20,
+    consequence: "The full claimed amount becomes recoverable as a debt.",
+  },
+  {
+    // Two working days left when the demo opens.
+    id: "CLK-002",
+    kind: "Variation notice due",
+    sourceId: "VAR-001",
+    sourceLabel: "Switchboard upgrade instruction — Meridian",
+    projectId: "RIV-01",
+    contractId: "HC-RIV-01",
+    triggeredOn: "2026-08-24",
+    workingDays: 20,
+    consequence: "The right to claim this variation is lost.",
+  },
+  {
+    id: "CLK-003",
+    kind: "Payment schedule due",
+    sourceId: "INV-004",
+    sourceLabel: "Pacific Concrete — payment claim PAC-2231",
+    projectId: "RIV-01",
+    contractId: "SC-RIV-NST",
+    triggeredOn: "2026-09-09",
+    workingDays: 20,
+    consequence: "The full claimed amount becomes recoverable as a debt.",
+  },
+  {
+    // Ours to enforce: Southgate never responded, so the amount is now a debt.
+    id: "CLK-004",
+    kind: "Payment due",
+    sourceId: "PC-HOB-05",
+    sourceLabel: "Claim 5 to Southgate Logistics",
+    projectId: "HOB-03",
+    contractId: "HC-HOB-03",
+    triggeredOn: "2026-08-03",
+    workingDays: 20,
+    consequence: "We may recover the amount as a debt or refer it to adjudication.",
+  },
+  {
+    id: "CLK-005",
+    kind: "Variation notice due",
+    sourceId: "VAR-004",
+    sourceLabel: "Roof panel thermal spec change — Southgate",
+    projectId: "HOB-03",
+    contractId: "HC-HOB-03",
+    triggeredOn: "2026-09-14",
+    workingDays: 20,
+    consequence: "The right to claim this variation is lost.",
+  },
+  {
+    id: "CLK-006",
+    kind: "Payment due",
+    sourceId: "PC-KAU-12",
+    sourceLabel: "Claim 12 to Kauri Living",
+    projectId: "KAU-02",
+    contractId: "HC-KAU-02",
+    triggeredOn: "2026-09-01",
+    workingDays: 20,
+    consequence: "We may recover the amount as a debt or refer it to adjudication.",
+    satisfiedOn: "2026-09-16",
+  },
+  {
+    id: "CLK-007",
+    kind: "Payment schedule due",
+    sourceId: "INV-006",
+    sourceLabel: "PlumbRight Ltd — payment claim PLR-5567",
+    projectId: "HOB-03",
+    contractId: "SC-HOB-STL",
+    triggeredOn: "2026-09-14",
+    workingDays: 20,
+    consequence: "The full claimed amount becomes recoverable as a debt.",
+  },
+];
+
+/** Two more emails, referenced by the AI-drafted variations above. */
+export const variationSourceEmails: EmailItem[] = [
+  {
+    id: "EM-07",
+    from: "p.mcleod@meridianproperty.co.nz",
+    subject: "Re: Riverside level 2 — switchboard",
+    receivedAt: "2026-08-24T15:32:00+12:00",
+    classifiedAs: "Client query",
+    routedTo: "PM (Sarah Chen)",
+    confidence: 0.86,
+    reason:
+      "The message instructs a change to the switchboard and additional sub-circuits. That is an instruction from the principal, not a query — it was drafted as a variation and a notification clock was started.",
+  },
+  {
+    id: "EM-08",
+    from: "ops@southgatelogistics.co.nz",
+    subject: "Revised thermal spec — roof panels",
+    receivedAt: "2026-09-14T09:12:00+12:00",
+    classifiedAs: "Client query",
+    routedTo: "PM (Sarah Chen)",
+    confidence: 0.79,
+    reason:
+      "A revised specification attached to an otherwise routine message. Treated as a possible variation and flagged for confirmation.",
+  },
+];
+
+/** Statutory exceptions, appended to the three the demo already had. */
+export const statutoryExceptions: ExceptionItem[] = [
+  {
+    id: "EXC-05",
+    type: "Payment schedule overdue",
+    severity: "High",
+    projectId: "RIV-01",
+    description:
+      "No payment schedule was issued for Voltix VLX-4471 within 20 working days. The claimed amount is now recoverable as a debt.",
+    relatedInvoiceId: "INV-001",
+    amount: 12_400,
+  },
+  {
+    id: "EXC-06",
+    type: "Variation notice overdue",
+    severity: "High",
+    projectId: "RIV-01",
+    description:
+      "The switchboard upgrade instruction of 24 Aug has not been notified as a variation. Two working days remain before the right to claim is lost.",
+  },
+  {
+    id: "EXC-07",
+    type: "Retention shortfall",
+    severity: "High",
+    projectId: "RIV-01",
+    description:
+      "Retention money held on trust is short of the ledger balance. Holding less than the retention liability is an offence under the 2023 amendment.",
+  },
+];

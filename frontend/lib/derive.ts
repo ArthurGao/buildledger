@@ -1,16 +1,36 @@
+import { clockPosition, workingDaysBetween } from "./working-days";
 import {
   activity,
   approvalSteps,
   budgetLines,
   chatQA,
+  contracts,
+  costCodeMappings,
   emails,
   exceptions,
   integrations,
   invoices,
+  opportunities,
+  progressClaims,
   projects,
+  purchaseRequests,
+  retentionEntries,
+  statutoryClocks,
+  statutoryExceptions,
+  trustAccount,
+  variations,
 } from "./mock-data";
 import type {
   ApprovalStep,
+  ClockExposure,
+  Contract,
+  CostCodeMapping,
+  Opportunity,
+  ProgressClaim,
+  PurchaseRequest,
+  RetentionEntry,
+  StatutoryClock,
+  Variation,
   BudgetLine,
   BudgetLineWithVariance,
   ChatQA,
@@ -110,29 +130,45 @@ export function getCurrentApprover(invoiceId: string): ApprovalStep | undefined 
 }
 
 export function getProjectExceptions(projectId: string): ExceptionItem[] {
-  return exceptions.filter((e) => e.projectId === projectId);
+  return getAllExceptions().filter((e) => e.projectId === projectId);
+}
+
+/** Every exception, including the statutory ones raised by the clocks. */
+export function getAllExceptions(): ExceptionItem[] {
+  return [...exceptions, ...statutoryExceptions];
 }
 
 /** High severity first — the exceptions panel leads with what matters. */
 export function getExceptionsBySeverity(): ExceptionItem[] {
   const rank = { High: 0, Medium: 1 };
-  return [...exceptions].sort((a, b) => rank[a.severity] - rank[b.severity]);
+  return getAllExceptions().sort((a, b) => rank[a.severity] - rank[b.severity]);
 }
 
 export function getExceptionCounts() {
+  const all = getAllExceptions();
   return {
-    high: exceptions.filter((e) => e.severity === "High").length,
-    medium: exceptions.filter((e) => e.severity === "Medium").length,
-    total: exceptions.length,
+    high: all.filter((e) => e.severity === "High").length,
+    medium: all.filter((e) => e.severity === "Medium").length,
+    total: all.length,
   };
 }
 
-/** Days since an invoice was dated, as of the demo's "today". */
-export const DEMO_TODAY = new Date("2026-09-18T09:00:00+12:00");
+/**
+ * The demo's "today", as a plain calendar date. Statutory deadlines are counted
+ * in working days from a calendar date, so no time or timezone is involved.
+ */
+export const DEMO_TODAY = "2026-09-18";
 
-export function ageInDays(isoDate: string): number {
-  const ms = DEMO_TODAY.getTime() - new Date(isoDate).getTime();
-  return Math.max(0, Math.floor(ms / 86_400_000));
+/**
+ * Working days elapsed since a document was dated.
+ *
+ * This used to count calendar days. Every deadline that matters here is
+ * measured in working days under the Construction Contracts Act, and those
+ * exclude weekends, public holidays, the region's anniversary day, and the
+ * whole 24 December to 5 January period — so a calendar count is simply wrong.
+ */
+export function ageInWorkingDays(isoDate: string): number {
+  return workingDaysBetween(isoDate, DEMO_TODAY);
 }
 
 /**
@@ -155,3 +191,223 @@ export function matchQuestion(input: string): ChatQA | undefined {
 }
 
 export { activity, budgetLines, chatQA, emails, exceptions, integrations, invoices, projects };
+
+// ---------------------------------------------------------------------------
+// Statutory clocks
+// ---------------------------------------------------------------------------
+
+/** Payment falling due is the other side's obligation; the rest are ours. */
+export function clockExposure(kind: StatutoryClock["kind"]): ClockExposure {
+  return kind === "Payment due" ? "Theirs" : "Ours";
+}
+
+export interface LiveClock extends StatutoryClock {
+  exposure: ClockExposure;
+  dueOn: string;
+  elapsed: number;
+  remaining: number;
+  overdue: boolean;
+  uncertain: boolean;
+  satisfied: boolean;
+  /** Ordering key: overdue first, then fewest days remaining. */
+  urgency: number;
+}
+
+/** Resolve a clock against the demo's today. */
+export function resolveClock(clock: StatutoryClock): LiveClock {
+  const pos = clockPosition(clock.triggeredOn, clock.workingDays, DEMO_TODAY);
+  const satisfied = Boolean(clock.satisfiedOn);
+  return {
+    ...clock,
+    ...pos,
+    exposure: clockExposure(clock.kind),
+    overdue: pos.overdue && !satisfied,
+    satisfied,
+    urgency: satisfied ? 1000 : pos.remaining,
+  };
+}
+
+export function getLiveClocks(): LiveClock[] {
+  return statutoryClocks.map(resolveClock).sort((a, b) => a.urgency - b.urgency);
+}
+
+export function getOpenClocks(): LiveClock[] {
+  return getLiveClocks().filter((c) => !c.satisfied);
+}
+
+export function getProjectClocks(projectId: string): LiveClock[] {
+  return getLiveClocks().filter((c) => c.projectId === projectId);
+}
+
+/** The clock attached to a given source document, if there is one. */
+export function getClockForSource(sourceId: string): LiveClock | undefined {
+  return getLiveClocks().find((c) => c.sourceId === sourceId);
+}
+
+export function getClockCounts() {
+  const open = getOpenClocks();
+  const ours = open.filter((c) => c.exposure === "Ours");
+  return {
+    total: open.length,
+    /** Deadlines we have missed. Excludes the other side failing to pay us. */
+    overdue: ours.filter((c) => c.overdue).length,
+    /** Three working days or fewer left on one of our obligations. */
+    dueSoon: ours.filter((c) => !c.overdue && c.remaining <= 3).length,
+    /** Claims the other side has left unanswered — recoverable as a debt. */
+    recoverable: open.filter((c) => c.exposure === "Theirs" && c.overdue).length,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Contracts
+// ---------------------------------------------------------------------------
+
+export function getContract(id: string): Contract | undefined {
+  return contracts.find((c) => c.id === id);
+}
+
+export function getHeadContract(projectId: string): Contract | undefined {
+  return contracts.find((c) => c.projectId === projectId && c.side === "Principal");
+}
+
+export function getSubcontracts(projectId?: string): Contract[] {
+  return contracts.filter((c) => c.side === "Subcontractor" && (!projectId || c.projectId === projectId));
+}
+
+// ---------------------------------------------------------------------------
+// Retention ledger
+// ---------------------------------------------------------------------------
+
+export interface RetentionPosition {
+  contract: Contract;
+  withheld: number;
+  released: number;
+  balance: number;
+  /** Cap expressed in dollars, from the contract. */
+  cap: number;
+  entries: RetentionEntry[];
+}
+
+export function getRetentionByContract(): RetentionPosition[] {
+  return getSubcontracts()
+    .map((contract) => {
+      const entries = retentionEntries.filter((e) => e.contractId === contract.id);
+      const withheld = entries.reduce((s, e) => s + e.amount, 0);
+      const released = entries.filter((e) => e.releasedOn).reduce((s, e) => s + e.amount, 0);
+      return {
+        contract,
+        entries,
+        withheld,
+        released,
+        balance: withheld - released,
+        cap: (contract.value * contract.retentionCapPct) / 100,
+      };
+    })
+    .filter((p) => p.entries.length > 0)
+    .sort((a, b) => b.balance - a.balance);
+}
+
+/**
+ * The number that carries criminal exposure: what the ledger says is held on
+ * trust, against what the trust account actually contains.
+ */
+export function getRetentionPosition() {
+  const positions = getRetentionByContract();
+  const liability = positions.reduce((s, p) => s + p.balance, 0);
+  const shortfall = liability - trustAccount.balance;
+  return {
+    positions,
+    liability,
+    held: trustAccount.balance,
+    shortfall,
+    compliant: shortfall <= 0,
+    subcontractorCount: positions.length,
+  };
+}
+
+/** Quarterly reporting is due every three months for each subcontractor. */
+export function getRetentionReportDue(): { quarterEnd: string; subcontractors: number } {
+  return { quarterEnd: "2026-09-30", subcontractors: getRetentionByContract().length };
+}
+
+// ---------------------------------------------------------------------------
+// Variations
+// ---------------------------------------------------------------------------
+
+export function getVariations(projectId?: string): Variation[] {
+  return variations.filter((v) => !projectId || v.projectId === projectId);
+}
+
+/** Approved but not yet written back — the reconciliation table is stale for these. */
+export function getUnwrittenVariations(projectId?: string): Variation[] {
+  return getVariations(projectId).filter((v) => v.status === "Approved" && !v.writtenBackToBudget);
+}
+
+export function getVariationValue(projectId?: string) {
+  const list = getVariations(projectId);
+  return {
+    approved: list.filter((v) => v.status === "Approved").reduce((s, v) => s + (v.costImpact ?? 0), 0),
+    pending: list
+      .filter((v) => v.status === "Notified" || v.status === "Priced")
+      .reduce((s, v) => s + (v.costImpact ?? 0), 0),
+    unpriced: list.filter((v) => v.costImpact === null).length,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Progress claims
+// ---------------------------------------------------------------------------
+
+export function getProgressClaims(projectId?: string): ProgressClaim[] {
+  return progressClaims
+    .filter((c) => !projectId || c.projectId === projectId)
+    .sort((a, b) => (a.periodEnd < b.periodEnd ? 1 : -1));
+}
+
+export function getClaimTotals() {
+  const list = getProgressClaims();
+  const outstanding = list.filter((c) => c.status === "Served" || c.status === "Scheduled");
+  return {
+    outstandingCount: outstanding.length,
+    outstandingValue: outstanding.reduce((s, c) => s + c.netClaimed, 0),
+    draftValue: list.filter((c) => c.status === "Draft").reduce((s, c) => s + c.netClaimed, 0),
+    retentionThisRound: list.reduce((s, c) => s + c.retentionWithheld, 0),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Purchase requests and opportunities
+// ---------------------------------------------------------------------------
+
+export function getPurchaseRequests(projectId?: string): PurchaseRequest[] {
+  return purchaseRequests.filter((r) => !projectId || r.projectId === projectId);
+}
+
+export function getOpportunities(): Opportunity[] {
+  return opportunities;
+}
+
+export function getPipelineValue() {
+  const live = opportunities.filter((o) => o.status !== "Lost" && o.status !== "No bid");
+  return {
+    count: live.length,
+    value: live.reduce((s, o) => s + (o.estimatedValue ?? 0), 0),
+    unconfirmed: opportunities.filter((o) => !o.confirmed).length,
+  };
+}
+
+export function getCostCodeMapping(costCode: string): CostCodeMapping | undefined {
+  return costCodeMappings.find((m) => m.costCode === costCode);
+}
+
+export {
+  contracts,
+  costCodeMappings,
+  opportunities,
+  progressClaims,
+  purchaseRequests,
+  retentionEntries,
+  statutoryClocks,
+  trustAccount,
+  variations,
+};

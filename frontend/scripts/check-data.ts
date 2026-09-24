@@ -9,7 +9,26 @@
  *
  * Run with: npm run check:data
  */
-import { emails, exceptions, invoices, projects, budgetLines, chatQA, GST_RATE } from "../lib/mock-data";
+import {
+  budgetLines,
+  chatQA,
+  contracts,
+  costCodeMappings,
+  emails,
+  exceptions,
+  GST_RATE,
+  invoices,
+  opportunities,
+  progressClaims,
+  projects,
+  purchaseRequests,
+  retentionEntries,
+  statutoryClocks,
+  statutoryExceptions,
+  trustAccount,
+  variations,
+} from "../lib/mock-data";
+import { getLiveClocks, getRetentionPosition } from "../lib/derive";
 import { formatDateShort, formatDateLong, formatDateTimeLong } from "../lib/format";
 import { getLineTotals, getOverBudgetLines, getProjectLines, matchQuestion } from "../lib/derive";
 
@@ -154,6 +173,171 @@ check("nonsense falls through to the fallback", matchQuestion("what is the weath
 check(
   "Riverside answer quotes the real line figures",
   chatQA[1].answer.includes("$72,300") && chatQA[1].answer.includes("$61,000") && chatQA[1].answer.includes("+$11,300")
+);
+
+console.log("\nContracts");
+check(
+  "every project has a head contract",
+  projects.every((p) => contracts.some((c) => c.projectId === p.id && c.side === "Principal"))
+);
+check(
+  "every contract sits on a real project",
+  contracts.every((c) => projects.some((p) => p.id === c.projectId))
+);
+check(
+  "head contract value is consistent with the tender margin",
+  projects.every((p) => {
+    const hc = contracts.find((c) => c.projectId === p.id && c.side === "Principal")!;
+    const implied = p.budgetTotal / (1 - p.budgetMarginPct / 100);
+    return Math.abs(hc.value - implied) / implied < 0.01;
+  })
+);
+check("retention is capped, never unlimited", contracts.every((c) => c.retentionCapPct > 0));
+
+console.log("\ncost code mapping");
+check(
+  "every Riverside budget line has a cost code mapping",
+  budgetLines
+    .filter((l) => l.projectId === "RIV-01")
+    .every((l) => costCodeMappings.some((m) => m.costCode === l.code))
+);
+check(
+  "every purchase request codes to a mapped cost code",
+  purchaseRequests.every((r) => costCodeMappings.some((m) => m.costCode === r.costCode))
+);
+
+console.log("\nStatutory clocks");
+const live = getLiveClocks();
+check("7 clocks", live.length === 7, String(live.length));
+check(
+  "every clock points at a real project and contract",
+  live.every(
+    (c) =>
+      projects.some((p) => p.id === c.projectId) && contracts.some((k) => k.id === c.contractId)
+  )
+);
+const oursOverdue = live.filter((c) => c.overdue && c.exposure === "Ours");
+check("exactly one of our own deadlines is missed", oursOverdue.length === 1, String(oursOverdue.length));
+check(
+  "and it is the Voltix payment schedule",
+  oursOverdue[0]?.sourceId === "INV-001",
+  oursOverdue[0]?.sourceId
+);
+check(
+  "a claim the other side left unanswered is counted as our entitlement, not our failure",
+  live.some((c) => c.overdue && c.exposure === "Theirs" && c.kind === "Payment due")
+);
+check(
+  "at least one clock is inside three working days",
+  live.some((c) => !c.overdue && !c.satisfied && c.remaining <= 3)
+);
+check(
+  "every clock states what happens if it is missed",
+  live.every((c) => c.consequence.length > 10)
+);
+check(
+  "no clock falls outside the holiday calendar",
+  live.every((c) => !c.uncertain)
+);
+
+check(
+  "the worst of our own overdue clocks is the Voltix one, not the unanswered claim",
+  live.filter((c) => c.exposure === "Ours" && c.overdue).sort((a, b) => a.remaining - b.remaining)[0]
+    ?.sourceId === "INV-001"
+);
+
+console.log("\nRetentions");
+const ret = getRetentionPosition();
+check(
+  "every retention entry belongs to a subcontract we let",
+  retentionEntries.every((e) =>
+    contracts.some((c) => c.id === e.contractId && c.side === "Subcontractor")
+  )
+);
+check("the ledger is short of the trust account — that is the point of the page", !ret.compliant);
+check(
+  "the shortfall equals ledger balance minus the account balance",
+  ret.shortfall === ret.liability - trustAccount.balance
+);
+check(
+  "no subcontract holds more retention than its contractual cap",
+  ret.positions.every((p) => p.balance <= p.cap),
+  ret.positions.filter((p) => p.balance > p.cap).map((p) => p.contract.counterparty).join(", ")
+);
+check("the bank has been told the account holds money on trust", trustAccount.bankNotified);
+
+console.log("\nVariations");
+check(
+  "every variation codes to a real budget line on its project",
+  variations.every((v) =>
+    budgetLines.some((l) => l.projectId === v.projectId && l.code === v.costCode)
+  )
+);
+check(
+  "an approved variation exists that has not been written back",
+  variations.some((v) => v.status === "Approved" && !v.writtenBackToBudget)
+);
+check(
+  "unpriced variations have no cost and no time determination",
+  variations
+    .filter((v) => v.status === "Identified")
+    .every((v) => v.costImpact === null && v.timeImpactDays === null)
+);
+check(
+  "AI-drafted variations cite the message they came from",
+  variations.filter((v) => v.draftedByAi).every((v) => Boolean(v.originRef))
+);
+
+console.log("\nProgress claims");
+check(
+  "claim lines sum to the gross claimed",
+  progressClaims.every(
+    (c) => Math.abs(c.lines.reduce((s, l) => s + l.thisClaim, 0) - c.grossClaimed) < 1
+  ),
+  progressClaims
+    .filter((c) => Math.abs(c.lines.reduce((s, l) => s + l.thisClaim, 0) - c.grossClaimed) >= 1)
+    .map((c) => c.id)
+    .join(", ")
+);
+check(
+  "net equals gross less retention",
+  progressClaims.every((c) => Math.abs(c.grossClaimed - c.retentionWithheld - c.netClaimed) < 1)
+);
+check(
+  "retention withheld matches the contract rate",
+  progressClaims.every((c) => {
+    const k = contracts.find((x) => x.id === c.contractId)!;
+    return Math.abs(c.retentionWithheld - (c.grossClaimed * k.retentionPct) / 100) < 2;
+  })
+);
+check(
+  "no line claims more than its contract value",
+  progressClaims.every((c) =>
+    c.lines.every((l) => l.previouslyClaimed + l.thisClaim <= l.contractValue)
+  )
+);
+check(
+  "percent complete never exceeds 100",
+  progressClaims.every((c) => c.lines.every((l) => l.percentComplete <= 100))
+);
+
+console.log("\nPipeline");
+check(
+  "low-confidence opportunities are not silently confirmed",
+  opportunities.filter((o) => o.confidence < 0.8).every((o) => !o.confirmed)
+);
+check("every opportunity records where it was extracted from", opportunities.every((o) => o.extractedFrom));
+
+console.log("\nStatutory exceptions");
+check("3 statutory exceptions", statutoryExceptions.length === 3, String(statutoryExceptions.length));
+check(
+  "each one corresponds to a real condition",
+  statutoryExceptions.every((e) => projects.some((p) => p.id === e.projectId))
+);
+check(
+  "the overdue payment schedule exception matches our overdue clock",
+  statutoryExceptions.find((e) => e.type === "Payment schedule overdue")?.relatedInvoiceId ===
+    oursOverdue[0]?.sourceId
 );
 
 console.log(`\n${failures === 0 ? "All data checks passed." : `${failures} check(s) FAILED.`}\n`);
