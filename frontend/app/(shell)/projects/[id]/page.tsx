@@ -1,26 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MessageSquareText } from "lucide-react";
+import { ChevronRight, MessageSquareText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ProjectStatusBadge } from "@/components/status-badge";
-import { ProjectSummary } from "@/components/projects/project-summary";
-import { ReconciliationTable } from "@/components/projects/reconciliation-table";
-import { VarianceChart } from "@/components/projects/variance-chart";
-import { ExceptionIcon } from "@/components/exception-icon";
-import { SourceBadge } from "@/components/source-badge";
-import {
-  getLinesByVariance,
-  getOverBudgetLines,
-  getProject,
-  getProjectClocks,
-  getProjectExceptions,
-  getVariations,
-} from "@/lib/derive";
+import { ProjectLedger } from "@/components/projects/project-ledger";
 import { ClockBadge } from "@/components/statutory-clock";
+import { getProject, getProjectClocks, getProjectExceptions, getVariations } from "@/lib/derive";
 import { projects } from "@/lib/mock-data";
-import { formatCurrency, formatSignedCurrency } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ id: p.id }));
@@ -30,180 +18,126 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
   const project = getProject(params.id);
   if (!project) notFound();
 
-  const linesByVariance = getLinesByVariance(project.id);
-  const overLines = getOverBudgetLines(project.id);
   const projectExceptions = getProjectExceptions(project.id);
   const projectClocks = getProjectClocks(project.id).filter((c) => !c.satisfied);
   const projectVariations = getVariations(project.id);
-  const totalOverrun = overLines.reduce((sum, l) => sum + l.variance, 0);
 
   const askQuestion =
     project.id === "RIV-01" ? "Why is Riverside over budget?" : `What's committed vs budget on ${project.name}?`;
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <Link
-          href="/projects"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          All projects
-        </Link>
-
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="space-y-1.5">
-            <div className="flex flex-wrap items-center gap-2.5">
-              <h1 className="text-2xl font-semibold tracking-tight">{project.name}</h1>
-              <ProjectStatusBadge status={project.status} />
-              <Badge variant="outline" className="font-mono text-[11px]">
-                {project.id}
-              </Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">{project.client}</p>
-          </div>
-
-          <Button asChild variant="outline">
-            <Link href={`/assistant?q=${encodeURIComponent(askQuestion)}`}>
-              <MessageSquareText className="h-4 w-4" />
-              Ask about this project
+    <div className="mx-auto max-w-[1440px] space-y-4">
+      <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 pb-1">
+        <div className="min-w-0 space-y-1.5">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-[12px] text-muted-foreground">
+            <Link href="/projects" className="hover:text-foreground hover:underline">
+              Projects
             </Link>
-          </Button>
-        </div>
-      </div>
-
-      <ProjectSummary project={project} />
-
-      {overLines.length > 0 ? (
-        <Card className="border-over-border bg-over-soft/40">
-          <CardContent className="flex flex-wrap items-center gap-x-6 gap-y-2 py-4">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-md bg-over-soft text-over">
-                <ExceptionIcon type="Over budget" className="h-4 w-4" />
-              </span>
-              <div>
-                <p className="text-sm font-medium text-over">
-                  {overLines.length} {overLines.length === 1 ? "trade is" : "trades are"} over budget —{" "}
-                  {formatSignedCurrency(totalOverrun)} in total
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {overLines
-                    .slice(0, 3)
-                    .map((l) => `${l.description} ${formatSignedCurrency(l.variance)}`)
-                    .join(" · ")}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
-
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-sm">Budget vs actual — line by line</CardTitle>
-              <CardDescription>
-                Joined on trade code. Budgets come from CostX, commitments from ApprovalMax, actuals from Xero.
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <SourceBadge system="CostX" />
-              <SourceBadge system="ApprovalMax" />
-              <SourceBadge system="Xero" />
-            </div>
+            <ChevronRight className="h-3 w-3" aria-hidden="true" />
+            <span className="font-mono text-[11.5px] text-foreground">{project.id}</span>
+          </nav>
+          <h1 className="text-[26px] font-semibold leading-tight tracking-[-0.02em] sm:text-[30px]">{project.name}</h1>
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px] text-muted-foreground">
+            <span>{project.client}</span>
+            <span aria-hidden="true" className="h-3 w-px bg-border" />
+            <ProjectStatusBadge status={project.status} />
+            <span aria-hidden="true" className="h-3 w-px bg-border" />
+            <span>
+              {projectVariations.length} variation{projectVariations.length === 1 ? "" : "s"}
+            </span>
           </div>
-        </CardHeader>
-        <CardContent className="px-1">
-          <ReconciliationTable projectId={project.id} />
-        </CardContent>
-      </Card>
+        </div>
 
-      <div className="grid gap-4 xl:grid-cols-3">
-        <Card className="xl:col-span-2">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Variance by trade</CardTitle>
-            <CardDescription>
-              Worst overrun first. Red is over budget; the muted green below the line is mostly work not
-              yet invoiced rather than a saving.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <VarianceChart lines={linesByVariance} />
-          </CardContent>
-        </Card>
+        <Button asChild variant="outline" size="sm">
+          <Link href={`/assistant?q=${encodeURIComponent(askQuestion)}`}>
+            <MessageSquareText />
+            Ask about this project
+          </Link>
+        </Button>
+      </header>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Statutory deadlines</CardTitle>
-            <CardDescription>
-              {projectVariations.length} variation{projectVariations.length === 1 ? "" : "s"} on this
-              project.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2.5">
-            {projectClocks.length === 0 ? (
-              <p className="py-4 text-center text-sm text-muted-foreground">
-                Nothing running against a statutory clock.
-              </p>
-            ) : (
-              projectClocks.map((c) => (
-                <Link
-                  key={c.id}
-                  href={c.kind === "Variation notice due" ? "/variations" : "/approvals"}
-                  className="block rounded-md border border-border p-3 transition-colors hover:bg-accent/50"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="text-sm font-medium leading-snug">{c.sourceLabel}</span>
-                    <ClockBadge clock={c} className="shrink-0" />
-                  </div>
-                  <p className="mt-1 text-xs text-muted-foreground">{c.kind}</p>
-                </Link>
-              ))
-            )}
-          </CardContent>
-        </Card>
+      {/* One ruled sheet: the bridge, the cost codes and the project's exceptions
+          and clocks are sections of the same page, not separate cards. */}
+      <div className="divide-y divide-border border border-border bg-card">
+        <ProjectLedger project={project} />
 
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Exceptions on this project</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2.5">
+        {/* Same 12-column lines as the bridge and the table: the split at 8 runs
+            down from the bridge | figures division and the table's spend-to-date
+            | at-completion edge. */}
+        <div className="grid lg:grid-cols-12">
+          <section aria-labelledby="exceptions-title" className="min-w-0 lg:col-span-8">
+            <header className="flex items-baseline justify-between border-b border-foreground px-4 pb-2.5 pt-4 md:px-5">
+              <h2 id="exceptions-title" className="text-[15px] font-semibold tracking-[-0.01em]">
+                Exceptions
+              </h2>
+              <Link href="/exceptions" className="text-[12px] text-muted-foreground hover:text-foreground hover:underline">
+                All exceptions
+              </Link>
+            </header>
             {projectExceptions.length === 0 ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">
-                Nothing flagged on this project.
-              </p>
+              <p className="px-5 py-6 text-[13px] text-muted-foreground">Nothing flagged on this project.</p>
             ) : (
-              projectExceptions.map((e) => (
-                <Link
-                  key={e.id}
-                  href="/exceptions"
-                  className="flex gap-3 rounded-md border border-border p-3 transition-colors hover:border-foreground/20 hover:bg-accent/50"
-                >
-                  <span
-                    className={
-                      e.severity === "High"
-                        ? "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-over-soft text-over"
-                        : "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-warn-soft text-warn"
-                    }
-                  >
-                    <ExceptionIcon type={e.type} className="h-3.5 w-3.5" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{e.type}</span>
-                      <Badge variant={e.severity === "High" ? "over" : "warn"}>{e.severity}</Badge>
-                    </div>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{e.description}</p>
-                    {e.amount ? (
-                      <p className="tabular mt-1 text-xs font-medium">{formatCurrency(e.amount)}</p>
-                    ) : null}
-                  </div>
-                </Link>
-              ))
+              <ul className="divide-y divide-border">
+                {projectExceptions.map((e) => (
+                  <li key={e.id}>
+                    <Link
+                      href="/exceptions"
+                      className="grid grid-cols-[1rem_minmax(0,1fr)_auto] gap-x-3 px-4 py-2.5 transition-colors duration-150 hover:bg-foreground/[0.03] md:px-5"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={cn("mt-[5px] h-2 w-2", e.severity === "High" ? "bg-over" : "bg-warn")}
+                      />
+                      <span className="min-w-0">
+                        <span className="flex items-center gap-2 text-[13px] font-medium">
+                          {e.type}
+                          {e.severity === "High" ? <span className="sr-only">(high severity)</span> : null}
+                        </span>
+                        <span className="mt-0.5 block text-[12.5px] leading-snug text-muted-foreground">{e.description}</span>
+                      </span>
+                      <span className="tabular text-right text-[13px] font-medium">
+                        {e.amount ? formatCurrency(e.amount) : ""}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             )}
-          </CardContent>
-        </Card>
+          </section>
+
+          <section
+            aria-labelledby="deadlines-title"
+            className="min-w-0 border-t border-border lg:col-span-4 lg:border-l lg:border-t-0"
+          >
+            <header className="flex items-baseline justify-between border-b border-foreground px-4 pb-2.5 pt-4 md:px-5">
+              <h2 id="deadlines-title" className="text-[15px] font-semibold tracking-[-0.01em]">
+                Statutory deadlines
+              </h2>
+              <span className="text-[12px] text-muted-foreground">NZ working days</span>
+            </header>
+            {projectClocks.length === 0 ? (
+              <p className="px-5 py-6 text-[13px] text-muted-foreground">Nothing running against a statutory clock.</p>
+            ) : (
+              <ul className="divide-y divide-border">
+                {projectClocks.map((c) => (
+                  <li key={c.id}>
+                    <Link
+                      href={c.kind === "Variation notice due" ? "/variations" : "/approvals"}
+                      className="block px-4 py-2.5 transition-colors duration-150 hover:bg-foreground/[0.03] md:px-5"
+                    >
+                      <span className="block text-[13px] font-medium leading-snug">{c.sourceLabel}</span>
+                      {/* A four-column measure: the clock sits beside its kind and wraps under it when narrow. */}
+                      <span className="mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                        <span className="text-[12.5px] text-muted-foreground">{c.kind}</span>
+                        <ClockBadge clock={c} />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
       </div>
     </div>
   );

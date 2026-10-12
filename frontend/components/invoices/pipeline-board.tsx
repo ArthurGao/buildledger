@@ -10,8 +10,8 @@ import { formatCurrency, formatDateShort } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Invoice, InvoiceStatus } from "@/lib/types";
 
-/** Which system owns each stage — drives the column accent colour. */
-const stageAccent: Record<InvoiceStatus, string> = {
+/** Which system owns each stage — shown as a small square in that system's hue. */
+const stageSystem: Record<InvoiceStatus, string> = {
   Captured: "bg-src-ezzybills",
   Coded: "bg-src-ezzybills",
   "Pending approval": "bg-src-approvalmax",
@@ -20,49 +20,75 @@ const stageAccent: Record<InvoiceStatus, string> = {
   Paid: "bg-src-xero",
 };
 
-function InvoiceCard({
-  invoice,
-  highlighted,
-  onOpen,
-}: {
-  invoice: Invoice;
-  highlighted: boolean;
-  onOpen: () => void;
-}) {
+/**
+ * Columns shared by every invoice row. From lg they are the sheet's 12 lines:
+ * supplier and project 1-4 · invoice number 5-6 · received 7-8 · flags 9-10 ·
+ * amount 11-12.
+ */
+const rowColumns =
+  "grid grid-cols-[0.375rem_minmax(0,1fr)_auto] gap-x-3 px-4 md:px-5 lg:grid-cols-12 lg:gap-x-0 lg:px-0";
+const cells = {
+  lead: "contents lg:col-span-4 lg:grid lg:grid-cols-[0.375rem_minmax(0,1fr)] lg:gap-x-3 lg:pl-5 lg:pr-3",
+  number: "hidden lg:col-span-2 lg:block lg:pr-3",
+  received: "hidden lg:col-span-2 lg:block lg:pr-3",
+  flags: "hidden lg:col-span-2 lg:flex lg:pr-3",
+  amount: "lg:col-span-2 lg:pr-5",
+};
+
+function InvoiceRow({ invoice, highlighted, onOpen }: { invoice: Invoice; highlighted: boolean; onOpen: () => void }) {
   const SourceIcon = invoice.source === "Email" ? Mail : Upload;
   const flagged = (invoice.flags?.length ?? 0) > 0;
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className={cn(
-        "w-full rounded-md border bg-card p-3 text-left shadow-card transition-all hover:-translate-y-px hover:shadow-card-hover",
-        flagged ? "border-over-border" : "border-border",
-        highlighted && "ring-2 ring-primary ring-offset-1"
-      )}
-    >
-      <p className="truncate text-sm font-medium">{invoice.supplier}</p>
-      <p className="tabular mt-1 text-base font-semibold">{formatCurrency(invoice.amount)}</p>
-      <p className="mt-0.5 truncate text-xs text-muted-foreground">{getProjectName(invoice.projectId)}</p>
-      <div className="mt-2 flex items-center justify-between gap-2">
-        <span className="tabular font-mono text-[11px] text-muted-foreground">{invoice.invoiceNumber}</span>
-        <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-          <SourceIcon className="h-3 w-3" />
-          {formatDateShort(invoice.date)}
+    <li>
+      <button
+        type="button"
+        onClick={onOpen}
+        className={cn(
+          rowColumns,
+          "w-full items-start py-2.5 text-left transition-colors duration-150 hover:bg-foreground/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+          // What the viewer just moved stays marked for the rest of the session.
+          highlighted && "bg-foreground/[0.04]"
+        )}
+      >
+        <span className={cells.lead}>
+          <span aria-hidden="true" className={cn("mt-[6px] h-1.5 w-1.5", flagged ? "bg-over" : "bg-transparent")} />
+          <span className="min-w-0">
+            <span className="block truncate text-[13px] font-medium">{invoice.supplier}</span>
+            <span className="block truncate text-[12px] text-muted-foreground">{getProjectName(invoice.projectId)}</span>
+            {/* Below lg the reference, date and flags fold under the supplier. */}
+            <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px] text-muted-foreground lg:hidden">
+              <span className="font-mono text-[11px]">{invoice.invoiceNumber}</span>
+              <span className="inline-flex items-center gap-1">
+                <SourceIcon className="h-3 w-3" />
+                {formatDateShort(invoice.date)}
+              </span>
+              {invoice.flags?.map((f) => <FlagBadge key={f} flag={f} />)}
+            </span>
+          </span>
         </span>
-      </div>
-      {flagged ? (
-        <div className="mt-2 flex flex-wrap gap-1">
-          {invoice.flags!.map((f) => (
-            <FlagBadge key={f} flag={f} />
-          ))}
-        </div>
-      ) : null}
-    </button>
+        <span className={cn(cells.number, "pt-0.5 font-mono text-[11.5px] text-muted-foreground")}>
+          {invoice.invoiceNumber}
+        </span>
+        <span className={cn(cells.received, "items-center gap-1 pt-0.5 text-[12px] text-muted-foreground lg:flex")}>
+          <SourceIcon className="h-3 w-3" />
+          {invoice.source === "Email" ? "Email" : "Upload"} · {formatDateShort(invoice.date)}
+        </span>
+        <span className={cn(cells.flags, "flex-wrap gap-1")}>
+          {invoice.flags?.map((f) => <FlagBadge key={f} flag={f} />)}
+        </span>
+        <span className={cn(cells.amount, "tabular text-right text-[13px] font-medium")}>
+          {formatCurrency(invoice.amount)}
+        </span>
+      </button>
+    </li>
   );
 }
 
+/**
+ * The invoice run as one ruled ledger, a section per stage in pipeline order.
+ * Each stage head names the system that owns it and carries its count and total.
+ */
 export function PipelineBoard() {
   const { invoices, touched } = useDemoState();
   const [selected, setSelected] = React.useState<Invoice | null>(null);
@@ -73,34 +99,29 @@ export function PipelineBoard() {
 
   return (
     <>
-      <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
+      <div className="divide-y divide-border">
         {PIPELINE.map((stage) => {
           const items = invoices.filter((i) => i.status === stage);
           const total = items.reduce((sum, i) => sum + i.amount, 0);
+          const id = `stage-${stage.toLowerCase().replace(/\s+/g, "-")}`;
 
           return (
-            <section key={stage} className="flex min-w-0 flex-col rounded-lg bg-muted/50 p-2.5">
-              <header className="mb-2.5 px-1">
-                <div className="flex items-center gap-1.5">
-                  <span className={cn("h-2 w-2 shrink-0 rounded-full", stageAccent[stage])} />
-                  <h2 className="truncate text-xs font-semibold">{stage}</h2>
-                  <span className="tabular ml-auto rounded bg-card px-1.5 text-[11px] font-medium text-muted-foreground">
-                    {items.length}
-                  </span>
-                </div>
-                <p className="tabular mt-1 pl-3.5 text-[11px] text-muted-foreground">
-                  {total > 0 ? formatCurrency(total) : "—"}
-                </p>
+            <section key={stage} aria-labelledby={id}>
+              <header className="flex items-baseline gap-2 bg-foreground/[0.02] px-4 py-2 md:px-5">
+                <span aria-hidden="true" className={cn("h-1.5 w-1.5 shrink-0 self-center", stageSystem[stage])} />
+                <h3 id={id} className="text-[12px] font-semibold">
+                  {stage}
+                </h3>
+                <span className="tabular text-[12px] text-muted-foreground">{items.length}</span>
+                <span className="tabular ml-auto text-[12px] font-medium">{total > 0 ? formatCurrency(total) : "—"}</span>
               </header>
 
-              <div className="flex flex-col gap-2">
-                {items.length === 0 ? (
-                  <p className="rounded-md border border-dashed border-border px-2 py-6 text-center text-[11px] text-muted-foreground">
-                    Nothing here
-                  </p>
-                ) : (
-                  items.map((invoice) => (
-                    <InvoiceCard
+              {items.length === 0 ? (
+                <p className="border-t border-border px-4 py-2.5 text-[12px] text-muted-foreground md:px-5">Nothing here</p>
+              ) : (
+                <ul className="divide-y divide-border border-t border-border">
+                  {items.map((invoice) => (
+                    <InvoiceRow
                       key={invoice.id}
                       invoice={invoice}
                       highlighted={touched.includes(invoice.id)}
@@ -109,9 +130,9 @@ export function PipelineBoard() {
                         setOpen(true);
                       }}
                     />
-                  ))
-                )}
-              </div>
+                  ))}
+                </ul>
+              )}
             </section>
           );
         })}

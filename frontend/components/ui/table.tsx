@@ -24,14 +24,14 @@ TableBody.displayName = "TableBody";
 
 const TableFooter = React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>(
   ({ className, ...props }, ref) => (
-    <tfoot ref={ref} className={cn("border-t bg-muted/40 font-medium", className)} {...props} />
+    <tfoot ref={ref} className={cn("border-t border-foreground font-medium", className)} {...props} />
   )
 );
 TableFooter.displayName = "TableFooter";
 
 const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTableRowElement>>(
   ({ className, ...props }, ref) => (
-    <tr ref={ref} className={cn("border-b transition-colors hover:bg-muted/40", className)} {...props} />
+    <tr ref={ref} className={cn("border-b transition-colors hover:bg-foreground/[0.03]", className)} {...props} />
   )
 );
 TableRow.displayName = "TableRow";
@@ -41,7 +41,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<
     <th
       ref={ref}
       className={cn(
-        "h-10 px-3 text-left align-middle text-xs font-medium uppercase tracking-wide text-muted-foreground",
+        "h-9 px-3 text-left align-bottom pb-2 text-[11.5px] font-medium leading-tight text-muted-foreground",
         className
       )}
       {...props}
@@ -51,7 +51,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<
 TableHead.displayName = "TableHead";
 
 const TableCell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLTableCellElement>>(
-  ({ className, ...props }, ref) => <td ref={ref} className={cn("px-3 py-2.5 align-middle", className)} {...props} />
+  ({ className, ...props }, ref) => <td ref={ref} className={cn("px-3 py-2 align-middle", className)} {...props} />
 );
 TableCell.displayName = "TableCell";
 

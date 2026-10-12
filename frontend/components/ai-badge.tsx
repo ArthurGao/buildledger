@@ -20,7 +20,7 @@ export function AiBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded border border-primary/25 bg-primary/10 px-1.5 py-px text-[11px] font-medium text-primary",
+        "inline-flex items-center gap-1 rounded-sm border border-primary/35 px-1.5 py-px text-[11px] font-medium text-primary",
         className
       )}
     >

@@ -51,15 +51,16 @@ export function AnswerMarkdown({ content, className }: { content: string; classN
         i += 1;
       }
       blocks.push(
-        <div key={`t-${i}`} className="overflow-hidden rounded-md border border-border">
-          <table className="w-full text-sm">
-            <thead className="bg-muted/60">
-              <tr>
+        <div key={`t-${i}`} className="overflow-x-auto">
+          {/* Ruled like the ledger: header on an ink rule, hairlines between rows. */}
+          <table className="tabular w-full text-[13px]">
+            <thead>
+              <tr className="border-b border-foreground">
                 {header.map((h, hi) => (
                   <th
                     key={hi}
                     className={cn(
-                      "px-3 py-1.5 text-xs font-medium text-muted-foreground",
+                      "py-1.5 pr-3 text-[11.5px] font-medium text-muted-foreground last:pr-0",
                       hi === 0 ? "text-left" : "text-right"
                     )}
                   >
@@ -70,11 +71,11 @@ export function AnswerMarkdown({ content, className }: { content: string; classN
             </thead>
             <tbody>
               {rows.map((r, ri) => (
-                <tr key={ri} className="border-t border-border">
+                <tr key={ri} className="border-b border-border">
                   {r.map((c, ci) => (
                     <td
                       key={ci}
-                      className={cn("px-3 py-1.5", ci === 0 ? "text-left" : "tabular text-right")}
+                      className={cn("py-[7px] pr-3 last:pr-0", ci === 0 ? "text-left font-medium" : "text-right")}
                     >
                       {inline(c, `c-${ri}-${ci}`)}
                     </td>
@@ -109,5 +110,5 @@ export function AnswerMarkdown({ content, className }: { content: string; classN
     i += 1;
   }
 
-  return <div className={cn("space-y-2.5 text-sm leading-relaxed", className)}>{blocks}</div>;
+  return <div className={cn("max-w-[72ch] space-y-2.5 text-[13.5px] leading-relaxed", className)}>{blocks}</div>;
 }

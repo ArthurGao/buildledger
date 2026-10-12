@@ -2,13 +2,13 @@
 
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
-import { Lock, SendHorizonal, Sparkles } from "lucide-react";
+import { Lock, SendHorizonal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AnswerMarkdown } from "@/components/assistant/answer-markdown";
+import { SourceBadge } from "@/components/source-badge";
 import { assistantFallback, suggestedQuestions } from "@/lib/mock-data";
 import { matchQuestion } from "@/lib/derive";
-import { cn } from "@/lib/utils";
 
 interface Message {
   id: number;
@@ -62,52 +62,59 @@ export function Chat() {
   }, [prefill, ask]);
 
   React.useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    if (messages.length === 1) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    endRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "end" });
   }, [messages]);
 
+  const [greeting, ...exchange] = messages;
+
   return (
-    <div className="flex h-[calc(100vh-15rem)] min-h-[440px] flex-col overflow-hidden rounded-lg border border-border bg-card shadow-card">
-      <div className="flex-1 space-y-4 overflow-y-auto p-5">
-        {messages.map((m) =>
+    <div className="flex h-[calc(100dvh-16rem)] min-h-[460px] flex-col">
+      {/* A ruled transcript, not a chat app: each question heads its answer, and
+          every sourced answer closes with where it was read from. */}
+      <div className="flex-1 overflow-y-auto" aria-live="polite">
+        <p className="max-w-[72ch] px-4 pb-4 pt-4 text-[13px] leading-relaxed text-muted-foreground md:px-5">
+          {greeting.content}
+        </p>
+        {exchange.map((m) =>
           m.role === "user" ? (
-            <div key={m.id} className="flex justify-end">
-              <div className="max-w-[80%] rounded-lg rounded-br-sm bg-primary px-3.5 py-2.5 text-sm text-primary-foreground">
-                {m.content}
-              </div>
-            </div>
+            <h2
+              key={m.id}
+              className="border-t border-border px-4 pt-4 text-[15px] font-semibold leading-snug tracking-[-0.01em] md:px-5"
+            >
+              {m.content}
+            </h2>
           ) : (
-            <div key={m.id} className="flex gap-3">
-              <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                <Sparkles className="h-3.5 w-3.5" />
-              </span>
-              <div className="min-w-0 max-w-[88%] space-y-2">
-                <div className="rounded-lg rounded-tl-sm border border-border bg-muted/40 px-3.5 py-2.5">
-                  <AnswerMarkdown content={m.content} />
-                </div>
-                {m.sourced ? (
-                  <p className="flex items-center gap-1 pl-1 text-[11px] text-muted-foreground">
-                    <Lock className="h-3 w-3" />
-                    Read-only · sourced from CostX + Xero
-                  </p>
-                ) : null}
-              </div>
+            <div key={m.id} className="space-y-2.5 px-4 pb-4 pt-2 md:px-5">
+              <AnswerMarkdown content={m.content} />
+              {m.sourced ? (
+                <p className="flex flex-wrap items-center gap-1 text-[11.5px] text-muted-foreground">
+                  <Lock className="h-3 w-3" aria-hidden="true" />
+                  Read-only · sourced from
+                  <SourceBadge system="CostX" short />
+                  <SourceBadge system="Xero" short />
+                </p>
+              ) : null}
             </div>
           )
         )}
         <div ref={endRef} />
       </div>
 
-      <div className="space-y-3 border-t border-border p-4">
-        <div className="flex flex-wrap gap-2">
+      <div className="space-y-3 border-t border-foreground px-4 pb-4 pt-3 md:px-5">
+        {/* On phones the suggestions scroll in one line so the transcript keeps the room. */}
+        <div
+          role="group"
+          aria-label="Suggested questions"
+          className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-0.5 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
+        >
           {suggestedQuestions.map((q) => (
             <button
               key={q}
               type="button"
               onClick={() => ask(q)}
-              className={cn(
-                "rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground",
-                "transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
-              )}
+              className="shrink-0 whitespace-nowrap rounded-sm border border-foreground/25 px-2.5 py-1 text-left text-[12px] sm:whitespace-normal text-muted-foreground transition-colors duration-150 hover:border-foreground/60 hover:bg-accent hover:text-foreground"
             >
               {q}
             </button>
@@ -127,8 +134,9 @@ export function Chat() {
             placeholder="Ask about budgets, spend, margins or exceptions…"
             aria-label="Ask a question"
           />
-          <Button type="submit" size="icon" disabled={!input.trim()} aria-label="Send">
-            <SendHorizonal className="h-4 w-4" />
+          <Button type="submit" disabled={!input.trim()}>
+            <SendHorizonal />
+            Ask
           </Button>
         </form>
       </div>

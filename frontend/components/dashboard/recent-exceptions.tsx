@@ -1,55 +1,46 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ExceptionIcon } from "@/components/exception-icon";
-import { getExceptionsBySeverity, getProjectName } from "@/lib/derive";
+import { SectionHead } from "@/components/ledger/section-head";
+import { getExceptionsBySeverity } from "@/lib/derive";
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-export function RecentExceptions() {
-  const items = getExceptionsBySeverity().slice(0, 3);
+/** The top exceptions across the portfolio, in the same ruled form as a project's own list. */
+export function RecentExceptions({ limit = 4 }: { limit?: number }) {
+  const all = getExceptionsBySeverity();
+  const items = all.slice(0, limit);
 
   return (
-    <Card>
-      <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-        <CardTitle className="text-sm">Recent exceptions</CardTitle>
-        <Link
-          href="/exceptions"
-          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-        >
-          View all <ArrowRight className="h-3 w-3" />
-        </Link>
-      </CardHeader>
-      <CardContent className="space-y-2.5">
-        {items.map((e) => (
-          <Link
-            key={e.id}
-            href="/exceptions"
-            className="flex gap-3 rounded-md border border-border p-3 transition-colors hover:border-foreground/20 hover:bg-accent/50"
-          >
-            <span
-              className={cn(
-                "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md",
-                e.severity === "High" ? "bg-over-soft text-over" : "bg-warn-soft text-warn"
-              )}
-            >
-              <ExceptionIcon type={e.type} className="h-3.5 w-3.5" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2">
-                <span className="truncate text-sm font-medium">{e.type}</span>
-                <Badge variant={e.severity === "High" ? "over" : "warn"}>{e.severity}</Badge>
-              </div>
-              <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{e.description}</p>
-              <p className="tabular mt-1 text-xs text-muted-foreground">
-                {getProjectName(e.projectId)}
-                {e.amount ? ` · ${formatCurrency(e.amount)}` : ""}
-              </p>
-            </div>
+    <section aria-labelledby="dash-exceptions-title" className="min-w-0">
+      <SectionHead
+        id="dash-exceptions-title"
+        title="Exceptions"
+        aside={
+          <Link href="/exceptions" className="hover:text-foreground hover:underline">
+            All {all.length} exceptions
           </Link>
+        }
+      />
+      <ul className="divide-y divide-border">
+        {items.map((e) => (
+          <li key={e.id}>
+            <Link
+              href="/exceptions"
+              className="grid grid-cols-[1rem_minmax(0,1fr)_auto] gap-x-3 px-4 py-2.5 transition-colors duration-150 hover:bg-foreground/[0.03] md:px-5"
+            >
+              <span aria-hidden="true" className={cn("mt-[5px] h-2 w-2", e.severity === "High" ? "bg-over" : "bg-warn")} />
+              <span className="min-w-0">
+                <span className="flex flex-wrap items-baseline gap-x-2 text-[13px] font-medium">
+                  {e.type}
+                  <span className="font-mono text-[11px] font-normal text-muted-foreground">{e.projectId}</span>
+                  {e.severity === "High" ? <span className="sr-only">(high severity)</span> : null}
+                </span>
+                <span className="mt-0.5 block text-[12.5px] leading-snug text-muted-foreground">{e.description}</span>
+              </span>
+              <span className="tabular text-right text-[13px] font-medium">{e.amount ? formatCurrency(e.amount) : ""}</span>
+            </Link>
+          </li>
         ))}
-      </CardContent>
-    </Card>
+      </ul>
+    </section>
   );
 }

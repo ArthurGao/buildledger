@@ -56,20 +56,21 @@ export function ClockBadge({ clock, className }: { clock: LiveClock; className?:
 }
 
 /** The full statement: deadline, what happens if it passes, and where it came from. */
-export function ClockDetail({ clock, className }: { clock: LiveClock; className?: string }) {
-  const t = tone(clock);
+/** The working-day basis, said once per list rather than under every clock. */
+export const workingDayNote =
+  "Calculated on New Zealand working days — weekends, public holidays, the regional anniversary day and 24 Dec to 5 Jan are excluded. Confirm against the contract before relying on it.";
 
+/**
+ * A clock set out in full: badge, basis and consequence. It sits on the sheet
+ * under a hairline rather than in a tinted box; red text is kept for our own
+ * missed obligations. Pass `note={false}` when the list states the basis once.
+ */
+export function ClockDetail({ clock, className, note = true }: { clock: LiveClock; className?: string; note?: boolean }) {
   return (
-    <div
-      className={cn(
-        "rounded-md border p-3",
-        t === "over" ? "border-over-border bg-over-soft/50" : "border-border bg-muted/40",
-        className
-      )}
-    >
+    <div className={cn("border-t border-border pt-2.5", className)}>
       <div className="flex flex-wrap items-center gap-2">
         <ClockBadge clock={clock} />
-        <span className="tabular text-xs text-muted-foreground">
+        <span className="tabular text-[12px] text-muted-foreground">
           {clock.workingDays} working days from {formatDateShort(clock.triggeredOn)} · due{" "}
           {formatDateShort(clock.dueOn)}
         </span>
@@ -77,20 +78,23 @@ export function ClockDetail({ clock, className }: { clock: LiveClock; className?
 
       <p
         className={cn(
-          "mt-2 text-sm",
+          "mt-1.5 text-[12.5px] leading-snug",
           clock.overdue && clock.exposure === "Ours" && "font-medium text-over",
-          clock.overdue && clock.exposure === "Theirs" && "font-medium text-primary",
+          clock.overdue && clock.exposure === "Theirs" && "font-medium",
           !clock.overdue && "text-muted-foreground"
         )}
       >
         {clock.overdue ? clock.consequence : `If missed: ${clock.consequence.toLowerCase()}`}
       </p>
 
-      <p className="mt-2 text-[11px] text-muted-foreground">
-        Calculated on New Zealand working days — weekends, public holidays, the regional anniversary
-        day and 24 Dec to 5 Jan are excluded. Confirm against the contract before relying on it.
-        {clock.uncertain ? " Calendar data does not cover this period." : ""}
-      </p>
+      {note ? (
+        <p className="mt-1.5 text-[11.5px] text-muted-foreground">
+          {workingDayNote}
+          {clock.uncertain ? " Calendar data does not cover this period." : ""}
+        </p>
+      ) : clock.uncertain ? (
+        <p className="mt-1.5 text-[11.5px] text-muted-foreground">Calendar data does not cover this period.</p>
+      ) : null}
     </div>
   );
 }

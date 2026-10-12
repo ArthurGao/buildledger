@@ -1,0 +1,623 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T06:14:23.353Z",
+  "title": "Design System: BuildLedger",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Ledger Ink",
+        "canonical": "hsl(30 8% 9%)",
+        "darkCanonical": "hsl(40 14% 91%)",
+        "tonalRamp": [
+          "hsl(30 8% 15%)",
+          "hsl(30 8% 26%)",
+          "hsl(30 8% 37%)",
+          "hsl(30 8% 48%)",
+          "hsl(30 8% 59%)",
+          "hsl(30 8% 70%)",
+          "hsl(30 8% 82%)",
+          "hsl(30 8% 95%)"
+        ]
+      },
+      "over": {
+        "role": "secondary",
+        "displayName": "Overrun Red",
+        "canonical": "hsl(352 85% 44%)",
+        "darkCanonical": "hsl(352 85% 64%)",
+        "tonalRamp": [
+          "hsl(352 85% 15%)",
+          "hsl(352 85% 26%)",
+          "hsl(352 85% 37%)",
+          "hsl(352 85% 48%)",
+          "hsl(352 85% 59%)",
+          "hsl(352 85% 70%)",
+          "hsl(352 85% 82%)",
+          "hsl(352 85% 95%)"
+        ]
+      },
+      "over-soft": {
+        "role": "secondary",
+        "displayName": "Overrun Red Tint",
+        "canonical": "hsl(352 70% 96%)",
+        "darkCanonical": "hsl(352 45% 14%)",
+        "tonalRamp": [
+          "hsl(352 70% 15%)",
+          "hsl(352 70% 26%)",
+          "hsl(352 70% 37%)",
+          "hsl(352 70% 48%)",
+          "hsl(352 70% 59%)",
+          "hsl(352 70% 70%)",
+          "hsl(352 70% 82%)",
+          "hsl(352 70% 95%)"
+        ]
+      },
+      "over-border": {
+        "role": "secondary",
+        "displayName": "Overrun Red Stroke",
+        "canonical": "hsl(352 60% 84%)",
+        "darkCanonical": "hsl(352 45% 30%)",
+        "tonalRamp": [
+          "hsl(352 60% 15%)",
+          "hsl(352 60% 26%)",
+          "hsl(352 60% 37%)",
+          "hsl(352 60% 48%)",
+          "hsl(352 60% 59%)",
+          "hsl(352 60% 70%)",
+          "hsl(352 60% 82%)",
+          "hsl(352 60% 95%)"
+        ]
+      },
+      "warn": {
+        "role": "secondary",
+        "displayName": "Pending Amber",
+        "canonical": "hsl(30 90% 33%)",
+        "darkCanonical": "hsl(38 85% 60%)",
+        "tonalRamp": [
+          "hsl(30 90% 15%)",
+          "hsl(30 90% 26%)",
+          "hsl(30 90% 37%)",
+          "hsl(30 90% 48%)",
+          "hsl(30 90% 59%)",
+          "hsl(30 90% 70%)",
+          "hsl(30 90% 82%)",
+          "hsl(30 90% 95%)"
+        ]
+      },
+      "warn-soft": {
+        "role": "secondary",
+        "displayName": "Pending Amber Tint",
+        "canonical": "hsl(40 85% 93%)",
+        "darkCanonical": "hsl(36 50% 13%)",
+        "tonalRamp": [
+          "hsl(40 85% 15%)",
+          "hsl(40 85% 26%)",
+          "hsl(40 85% 37%)",
+          "hsl(40 85% 48%)",
+          "hsl(40 85% 59%)",
+          "hsl(40 85% 70%)",
+          "hsl(40 85% 82%)",
+          "hsl(40 85% 95%)"
+        ]
+      },
+      "warn-border": {
+        "role": "secondary",
+        "displayName": "Pending Amber Stroke",
+        "canonical": "hsl(38 70% 76%)",
+        "darkCanonical": "hsl(38 50% 30%)",
+        "tonalRamp": [
+          "hsl(38 70% 15%)",
+          "hsl(38 70% 26%)",
+          "hsl(38 70% 37%)",
+          "hsl(38 70% 48%)",
+          "hsl(38 70% 59%)",
+          "hsl(38 70% 70%)",
+          "hsl(38 70% 82%)",
+          "hsl(38 70% 95%)"
+        ]
+      },
+      "ok": {
+        "role": "secondary",
+        "displayName": "Cleared Green",
+        "canonical": "hsl(152 55% 28%)",
+        "darkCanonical": "hsl(150 45% 55%)",
+        "tonalRamp": [
+          "hsl(152 55% 15%)",
+          "hsl(152 55% 26%)",
+          "hsl(152 55% 37%)",
+          "hsl(152 55% 48%)",
+          "hsl(152 55% 59%)",
+          "hsl(152 55% 70%)",
+          "hsl(152 55% 82%)",
+          "hsl(152 55% 95%)"
+        ]
+      },
+      "ok-soft": {
+        "role": "secondary",
+        "displayName": "Cleared Green Tint",
+        "canonical": "hsl(145 35% 93%)",
+        "darkCanonical": "hsl(150 30% 12%)",
+        "tonalRamp": [
+          "hsl(145 35% 15%)",
+          "hsl(145 35% 26%)",
+          "hsl(145 35% 37%)",
+          "hsl(145 35% 48%)",
+          "hsl(145 35% 59%)",
+          "hsl(145 35% 70%)",
+          "hsl(145 35% 82%)",
+          "hsl(145 35% 95%)"
+        ]
+      },
+      "ok-border": {
+        "role": "secondary",
+        "displayName": "Cleared Green Stroke",
+        "canonical": "hsl(148 30% 76%)",
+        "darkCanonical": "hsl(150 28% 26%)",
+        "tonalRamp": [
+          "hsl(148 30% 15%)",
+          "hsl(148 30% 26%)",
+          "hsl(148 30% 37%)",
+          "hsl(148 30% 48%)",
+          "hsl(148 30% 59%)",
+          "hsl(148 30% 70%)",
+          "hsl(148 30% 82%)",
+          "hsl(148 30% 95%)"
+        ]
+      },
+      "src-costx": {
+        "role": "tertiary",
+        "displayName": "CostX Slate Blue",
+        "canonical": "hsl(230 38% 42%)",
+        "darkCanonical": "hsl(230 55% 74%)",
+        "tonalRamp": [
+          "hsl(230 38% 15%)",
+          "hsl(230 38% 26%)",
+          "hsl(230 38% 37%)",
+          "hsl(230 38% 48%)",
+          "hsl(230 38% 59%)",
+          "hsl(230 38% 70%)",
+          "hsl(230 38% 82%)",
+          "hsl(230 38% 95%)"
+        ]
+      },
+      "src-xero": {
+        "role": "tertiary",
+        "displayName": "Xero Teal",
+        "canonical": "hsl(196 60% 31%)",
+        "darkCanonical": "hsl(196 55% 64%)",
+        "tonalRamp": [
+          "hsl(196 60% 15%)",
+          "hsl(196 60% 26%)",
+          "hsl(196 60% 37%)",
+          "hsl(196 60% 48%)",
+          "hsl(196 60% 59%)",
+          "hsl(196 60% 70%)",
+          "hsl(196 60% 82%)",
+          "hsl(196 60% 95%)"
+        ]
+      },
+      "src-ezzybills": {
+        "role": "tertiary",
+        "displayName": "EzzyBills Plum",
+        "canonical": "hsl(280 28% 43%)",
+        "darkCanonical": "hsl(280 35% 74%)",
+        "tonalRamp": [
+          "hsl(280 28% 15%)",
+          "hsl(280 28% 26%)",
+          "hsl(280 28% 37%)",
+          "hsl(280 28% 48%)",
+          "hsl(280 28% 59%)",
+          "hsl(280 28% 70%)",
+          "hsl(280 28% 82%)",
+          "hsl(280 28% 95%)"
+        ]
+      },
+      "src-approvalmax": {
+        "role": "tertiary",
+        "displayName": "ApprovalMax Lavender Grey",
+        "canonical": "hsl(248 22% 46%)",
+        "darkCanonical": "hsl(248 35% 76%)",
+        "tonalRamp": [
+          "hsl(248 22% 15%)",
+          "hsl(248 22% 26%)",
+          "hsl(248 22% 37%)",
+          "hsl(248 22% 48%)",
+          "hsl(248 22% 59%)",
+          "hsl(248 22% 70%)",
+          "hsl(248 22% 82%)",
+          "hsl(248 22% 95%)"
+        ]
+      },
+      "src-m365": {
+        "role": "tertiary",
+        "displayName": "Microsoft 365 Steel",
+        "canonical": "hsl(210 12% 36%)",
+        "darkCanonical": "hsl(210 12% 70%)",
+        "tonalRamp": [
+          "hsl(210 12% 15%)",
+          "hsl(210 12% 26%)",
+          "hsl(210 12% 37%)",
+          "hsl(210 12% 48%)",
+          "hsl(210 12% 59%)",
+          "hsl(210 12% 70%)",
+          "hsl(210 12% 82%)",
+          "hsl(210 12% 95%)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "hsl(40 12% 96%)",
+        "darkCanonical": "hsl(30 6% 8%)",
+        "tonalRamp": [
+          "hsl(40 12% 15%)",
+          "hsl(40 12% 26%)",
+          "hsl(40 12% 37%)",
+          "hsl(40 12% 48%)",
+          "hsl(40 12% 59%)",
+          "hsl(40 12% 70%)",
+          "hsl(40 12% 82%)",
+          "hsl(40 12% 95%)"
+        ]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet White",
+        "canonical": "hsl(40 25% 99%)",
+        "darkCanonical": "hsl(30 6% 10.5%)",
+        "tonalRamp": [
+          "hsl(40 25% 15%)",
+          "hsl(40 25% 26%)",
+          "hsl(40 25% 37%)",
+          "hsl(40 25% 48%)",
+          "hsl(40 25% 59%)",
+          "hsl(40 25% 70%)",
+          "hsl(40 25% 82%)",
+          "hsl(40 25% 95%)"
+        ]
+      },
+      "chrome": {
+        "role": "neutral",
+        "displayName": "Chrome Stone",
+        "canonical": "hsl(40 9% 93%)",
+        "darkCanonical": "hsl(30 6% 6.5%)",
+        "tonalRamp": [
+          "hsl(40 9% 15%)",
+          "hsl(40 9% 26%)",
+          "hsl(40 9% 37%)",
+          "hsl(40 9% 48%)",
+          "hsl(40 9% 59%)",
+          "hsl(40 9% 70%)",
+          "hsl(40 9% 82%)",
+          "hsl(40 9% 95%)"
+        ]
+      },
+      "quiet-fill": {
+        "role": "neutral",
+        "displayName": "Quiet Fill",
+        "canonical": "hsl(40 9% 92%)",
+        "darkCanonical": "hsl(30 5% 15%)",
+        "tonalRamp": [
+          "hsl(40 9% 15%)",
+          "hsl(40 9% 26%)",
+          "hsl(40 9% 37%)",
+          "hsl(40 9% 48%)",
+          "hsl(40 9% 59%)",
+          "hsl(40 9% 70%)",
+          "hsl(40 9% 82%)",
+          "hsl(40 9% 95%)"
+        ]
+      },
+      "accent-wash": {
+        "role": "neutral",
+        "displayName": "Accent Wash",
+        "canonical": "hsl(40 10% 91%)",
+        "darkCanonical": "hsl(30 5% 17%)",
+        "tonalRamp": [
+          "hsl(40 10% 15%)",
+          "hsl(40 10% 26%)",
+          "hsl(40 10% 37%)",
+          "hsl(40 10% 48%)",
+          "hsl(40 10% 59%)",
+          "hsl(40 10% 70%)",
+          "hsl(40 10% 82%)",
+          "hsl(40 10% 95%)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "hsl(30 5% 38%)",
+        "darkCanonical": "hsl(35 6% 63%)",
+        "tonalRamp": [
+          "hsl(30 5% 15%)",
+          "hsl(30 5% 26%)",
+          "hsl(30 5% 37%)",
+          "hsl(30 5% 48%)",
+          "hsl(30 5% 59%)",
+          "hsl(30 5% 70%)",
+          "hsl(30 5% 82%)",
+          "hsl(30 5% 95%)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "hsl(35 8% 84%)",
+        "darkCanonical": "hsl(30 5% 21%)",
+        "tonalRamp": [
+          "hsl(35 8% 15%)",
+          "hsl(35 8% 26%)",
+          "hsl(35 8% 37%)",
+          "hsl(35 8% 48%)",
+          "hsl(35 8% 59%)",
+          "hsl(35 8% 70%)",
+          "hsl(35 8% 82%)",
+          "hsl(35 8% 95%)"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Hairline",
+        "canonical": "hsl(35 8% 78%)",
+        "darkCanonical": "hsl(30 5% 27%)",
+        "tonalRamp": [
+          "hsl(35 8% 15%)",
+          "hsl(35 8% 26%)",
+          "hsl(35 8% 37%)",
+          "hsl(35 8% 48%)",
+          "hsl(35 8% 59%)",
+          "hsl(35 8% 70%)",
+          "hsl(35 8% 82%)",
+          "hsl(35 8% 95%)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The forecast overrun figure only; 34px below sm."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page title (project name); 26px below sm."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Ruled figures beside the bridge."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section heads on the sheet and the sidebar wordmark."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Table cells, list titles, nav items."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Section and exception descriptions, bridge rows."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Figure labels, breadcrumbs, status badges, record headings."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Column headers, footnotes, record meta."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Cost codes, project codes, PO and bill references only."
+      },
+      "tag": {
+        "displayName": "Tag",
+        "purpose": "Source tags."
+      }
+    },
+    "shadows": [
+      {
+        "name": "overlay",
+        "value": "0 2px 4px -1px rgb(24 20 16 / 0.08), 0 12px 28px -8px rgb(24 20 16 / 0.22)",
+        "purpose": "Menus, tooltips and the search popover only; nothing in the page flow casts a shadow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-color",
+        "value": "150ms ease",
+        "purpose": "Hover and active colour changes on rows, nav items, buttons and segments."
+      },
+      {
+        "name": "disclosure",
+        "value": "200ms ease-out",
+        "purpose": "Chevron rotation and records panel fade/slide-in; disabled under reduced motion."
+      },
+      {
+        "name": "reveal-flash",
+        "value": "instant on, 700ms fade, held 900ms",
+        "purpose": "One-time row flash after choosing a trade in the bridge."
+      },
+      {
+        "name": "accordion",
+        "value": "0.2s ease-out",
+        "purpose": "Radix accordion open and close."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "content-max",
+        "value": "1440px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink-inverted action; approve, confirm, submit.",
+      "html": "<button class=\"ds-btn-primary\">Approve</button>",
+      "css": ".ds-btn-primary { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 8px 16px; border: 0; border-radius: 2px; background: hsl(30 8% 9%); color: hsl(40 25% 99%); font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 150ms; } .ds-btn-primary:hover { background: hsl(30 8% 9% / 0.85); } .ds-btn-primary:focus-visible { outline: 2px solid hsl(30 8% 9%); outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The page-level action in the title band.",
+      "html": "<button class=\"ds-btn-outline\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/><path d=\"M13 8H7\"/><path d=\"M17 12H7\"/></svg>Ask about this project</button>",
+      "css": ".ds-btn-outline { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border: 1px solid hsl(30 8% 9% / 0.25); border-radius: 2px; background: hsl(40 25% 99%); color: hsl(30 8% 9%); font-size: 12px; font-weight: 500; cursor: pointer; transition: border-color 150ms, background-color 150ms; } .ds-btn-outline:hover { border-color: hsl(30 8% 9% / 0.6); background: hsl(40 10% 91%); } .ds-btn-outline:focus-visible { outline: 2px solid hsl(30 8% 9%); outline-offset: 2px; }"
+    },
+    {
+      "name": "Source Tags",
+      "kind": "chip",
+      "refersTo": "source-tag-costx",
+      "description": "Outlined provenance tag in each system's hue, beside every key figure.",
+      "html": "<span class=\"ds-src-row\"><span class=\"ds-src ds-src-costx\">CostX</span><span class=\"ds-src ds-src-approvalmax\">ApprovalMax</span><span class=\"ds-src ds-src-xero\">Xero</span><span class=\"ds-src ds-src-ezzybills\">EzzyBills</span><span class=\"ds-src ds-src-m365\">M365</span></span>",
+      "css": ".ds-src-row { display: inline-flex; gap: 4px; } .ds-src { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; white-space: nowrap; padding: 0 4px; border: 1px solid; border-radius: 1px; font-size: 10px; font-weight: 600; line-height: 15px; letter-spacing: 0.01em; } .ds-src-costx { color: hsl(230 38% 42%); border-color: hsl(230 38% 42% / 0.45); } .ds-src-xero { color: hsl(196 60% 31%); border-color: hsl(196 60% 31% / 0.45); } .ds-src-ezzybills { color: hsl(280 28% 43%); border-color: hsl(280 28% 43% / 0.45); } .ds-src-approvalmax { color: hsl(248 22% 46%); border-color: hsl(248 22% 46% / 0.45); } .ds-src-m365 { color: hsl(210 12% 36%); border-color: hsl(210 12% 36% / 0.45); }"
+    },
+    {
+      "name": "Status Badges",
+      "kind": "chip",
+      "refersTo": "status-badge-over",
+      "description": "Fixed status meanings: over, pending, approved.",
+      "html": "<span class=\"ds-badges\"><span class=\"ds-badge ds-badge-over\">Over budget</span><span class=\"ds-badge ds-badge-warn\">Pending approval</span><span class=\"ds-badge ds-badge-ok\">Approved</span></span>",
+      "css": ".ds-badges { display: inline-flex; gap: 6px; } .ds-badge { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; padding: 1px 6px; border: 1px solid; border-radius: 1px; font-size: 12px; font-weight: 500; line-height: 18px; white-space: nowrap; } .ds-badge-over { background: hsl(352 70% 96%); border-color: hsl(352 60% 84%); color: hsl(352 85% 44%); } .ds-badge-warn { background: hsl(40 85% 93%); border-color: hsl(38 70% 76%); color: hsl(30 90% 33%); } .ds-badge-ok { background: hsl(145 35% 93%); border-color: hsl(148 30% 76%); color: hsl(152 55% 28%); }"
+    },
+    {
+      "name": "Statutory Clock Badge",
+      "kind": "chip",
+      "refersTo": "clock-badge-over",
+      "description": "Working-day countdown; red when ours is overdue, amber within three days, neutral otherwise.",
+      "html": "<span class=\"ds-clocks\"><span class=\"ds-clock ds-clock-over\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg>6 working days overdue</span><span class=\"ds-clock ds-clock-warn\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg>1 working day left</span><span class=\"ds-clock ds-clock-neutral\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 6 12 12 16 14\"/></svg>13 working days left</span></span>",
+      "css": ".ds-clocks { display: inline-flex; flex-wrap: wrap; gap: 6px; } .ds-clock { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1px solid; border-radius: 2px; font-size: 12px; font-weight: 500; white-space: nowrap; } .ds-clock svg { flex-shrink: 0; } .ds-clock-over { background: hsl(352 70% 96%); border-color: hsl(352 60% 84%); color: hsl(352 85% 44%); } .ds-clock-warn { background: hsl(40 85% 93%); border-color: hsl(38 70% 76%); color: hsl(30 90% 33%); } .ds-clock-neutral { background: hsl(40 9% 92%); border-color: hsl(35 8% 84%); color: hsl(30 5% 38%); }"
+    },
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Chrome sidebar; active item inverts to ink, exception counts in red.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item\" href=\"#\">Dashboard</a><a class=\"ds-nav-item ds-nav-active\" href=\"#\" aria-current=\"page\">Projects</a><a class=\"ds-nav-item\" href=\"#\">Approvals<span class=\"ds-nav-count\">3</span></a><a class=\"ds-nav-item\" href=\"#\">Exceptions<span class=\"ds-nav-count ds-nav-count-over\">7</span></a></nav>",
+      "css": ".ds-nav { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; display: flex; flex-direction: column; gap: 1px; width: 208px; padding: 12px 8px; background: hsl(40 9% 93%); border-right: 1px solid hsl(35 8% 84%); } .ds-nav-item { display: flex; align-items: center; padding: 7px 10px; border-radius: 1px; font-size: 13px; font-weight: 500; color: hsl(30 5% 38%); text-decoration: none; transition: background-color 150ms, color 150ms; } .ds-nav-item:hover { background: hsl(30 8% 9% / 0.06); color: hsl(30 8% 9%); } .ds-nav-item:focus-visible { outline: 2px solid hsl(30 8% 9%); outline-offset: 2px; } .ds-nav-active, .ds-nav-active:hover { background: hsl(30 8% 9%); color: hsl(40 12% 96%); } .ds-nav-count { margin-left: auto; font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums; } .ds-nav-count-over { color: hsl(352 85% 44%); }"
+    },
+    {
+      "name": "Segmented Filter",
+      "kind": "custom",
+      "refersTo": "filter-segment-active",
+      "description": "Two-state filter on the cost-code section head.",
+      "html": "<div class=\"ds-seg\" role=\"group\"><button class=\"ds-seg-btn ds-seg-on\" aria-pressed=\"true\">All 18</button><button class=\"ds-seg-btn\" aria-pressed=\"false\">Over forecast 8</button></div>",
+      "css": ".ds-seg { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; display: inline-flex; padding: 2px; border: 1px solid hsl(30 8% 9% / 0.25); border-radius: 1px; } .ds-seg-btn { padding: 4px 10px; border: 0; border-radius: 2px; background: transparent; color: hsl(30 5% 38%); font: inherit; font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color 150ms, color 150ms; } .ds-seg-btn:hover { color: hsl(30 8% 9%); } .ds-seg-btn:focus-visible { outline: 2px solid hsl(30 8% 9%); outline-offset: 2px; } .ds-seg-on, .ds-seg-on:hover { background: hsl(30 8% 9%); color: hsl(40 12% 96%); }"
+    },
+    {
+      "name": "Ledger Table",
+      "kind": "custom",
+      "refersTo": "ledger-row",
+      "description": "Cost-code reconciliation: ink-ruled head, hairline rows, red only on overruns, double rule under the total.",
+      "html": "<div class=\"ds-ledger\"><div class=\"ds-ledger-head\">Cost codes</div><table class=\"ds-table\"><thead><tr><th></th><th class=\"l\">Code</th><th class=\"l\">Trade</th><th>Budget <span class=\"ds-src ds-src-costx\">CostX</span></th><th>Actual <span class=\"ds-src ds-src-xero\">Xero</span></th><th>Variance</th></tr></thead><tbody><tr><td class=\"chev\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></td><td class=\"code\"><span class=\"mk mk-over\"></span>05-100</td><td class=\"trade\">Structural steel</td><td>$36,000</td><td>$41,500</td><td class=\"over\">+$10,500</td></tr><tr><td class=\"chev\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></td><td class=\"code\"><span class=\"mk\"></span>08-100</td><td class=\"trade\">Windows &amp; glazing</td><td>$44,000</td><td>$38,200</td><td class=\"quiet\">&mdash;</td></tr><tr><td class=\"chev\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></td><td class=\"code\"><span class=\"mk mk-over\"></span>16-100</td><td class=\"trade\">Electrical <span class=\"ds-flag\">No PO</span></td><td>$61,000</td><td>$72,300</td><td class=\"over\">+$23,000</td></tr></tbody><tfoot><tr><td></td><td colspan=\"2\" class=\"l\">Total</td><td>$742,000</td><td>$610,000</td><td class=\"over\">+$44,000</td></tr></tfoot></table><div class=\"ds-double\"></div></div>",
+      "css": ".ds-ledger { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; background: hsl(40 25% 99%); border: 1px solid hsl(35 8% 84%); color: hsl(30 8% 9%); } .ds-ledger-head { padding: 16px 20px 12px; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; border-bottom: 1px solid hsl(30 8% 9%); } .ds-table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; } .ds-table th { padding: 8px 12px 8px 0; font-size: 11.5px; font-weight: 500; color: hsl(30 5% 38%); text-align: right; border-bottom: 1px solid hsl(35 8% 84%); white-space: nowrap; } .ds-table td { padding: 7px 12px 7px 0; text-align: right; border-bottom: 1px solid hsl(35 8% 84%); } .ds-table .l { text-align: left; } .ds-table tbody tr { cursor: pointer; transition: background-color 150ms; } .ds-table tbody tr:hover { background: hsl(30 8% 9% / 0.025); } .ds-table td.chev { width: 24px; padding-left: 12px; color: hsl(30 5% 38%); text-align: left; } .ds-table td.code { font-family: var(--font-mono, 'JetBrains Mono'), ui-monospace, monospace; font-size: 11.5px; color: hsl(30 5% 38%); text-align: left; white-space: nowrap; } .ds-table td.trade { font-weight: 500; text-align: left; } .mk { display: inline-block; width: 6px; height: 6px; margin-right: 6px; vertical-align: middle; } .mk-over { background: hsl(352 85% 44%); } .ds-table td.over { color: hsl(352 85% 44%); font-weight: 600; } .ds-table td.quiet { color: hsl(30 5% 38%); } .ds-flag { margin-left: 6px; padding: 0 4px; border: 1px solid hsl(352 60% 84%); border-radius: 1px; font-size: 10.5px; font-weight: 500; line-height: 15px; color: hsl(352 85% 44%); } .ds-table tfoot td { padding: 10px 12px 10px 0; font-weight: 600; border-top: 1px solid hsl(30 8% 9%); border-bottom: 0; } .ds-double { height: 5px; border-top: 1px solid hsl(30 8% 9%); border-bottom: 1px solid hsl(30 8% 9%); } .ds-src { display: inline-flex; padding: 0 4px; border: 1px solid; border-radius: 1px; font-size: 10px; font-weight: 600; line-height: 15px; } .ds-src-costx { color: hsl(230 38% 42%); border-color: hsl(230 38% 42% / 0.45); } .ds-src-xero { color: hsl(196 60% 31%); border-color: hsl(196 60% 31% / 0.45); }"
+    },
+    {
+      "name": "Budget-to-Forecast Bridge",
+      "kind": "custom",
+      "refersTo": "ledger-sheet",
+      "description": "Signature: CostX budget stepping to forecast at completion one trade at a time; overrun steps in red.",
+      "html": "<div class=\"ds-bridge\"><p class=\"ds-bridge-k\">Forecast at completion against budget</p><p class=\"ds-bridge-hl\">+$44,000</p><div class=\"ds-br\"><span class=\"lab\"><b>Budget</b></span><span class=\"trk\"><span class=\"bar tot\" style=\"left:0;width:30%\"></span></span><span class=\"val\"><b>$742,000</b></span></div><div class=\"ds-br step\"><span class=\"lab\"><i>16-100</i>Electrical</span><span class=\"trk\"><span class=\"bar ov\" style=\"left:30%;width:34%\"></span></span><span class=\"val ov\">+$23,000</span></div><div class=\"ds-br step\"><span class=\"lab\"><i>05-100</i>Structural steel</span><span class=\"trk\"><span class=\"bar ov\" style=\"left:64%;width:16%\"></span></span><span class=\"val ov\">+$10,500</span></div><div class=\"ds-br\"><span class=\"lab\"><b>Forecast at completion</b></span><span class=\"trk\"><span class=\"bar ov\" style=\"left:0;width:94%\"></span></span><span class=\"val ov\"><b>$786,000</b></span></div></div>",
+      "css": ".ds-bridge { font-family: var(--font-sans, Archivo), ui-sans-serif, system-ui, sans-serif; padding: 16px 20px; background: hsl(40 25% 99%); border: 1px solid hsl(35 8% 84%); color: hsl(30 8% 9%); font-variant-numeric: tabular-nums; } .ds-bridge-k { margin: 0; font-size: 12px; font-weight: 500; color: hsl(30 5% 38%); } .ds-bridge-hl { margin: 8px 0 16px; font-size: 42px; font-weight: 600; line-height: 1; letter-spacing: -0.02em; color: hsl(352 85% 44%); } .ds-br { display: grid; grid-template-columns: 12rem 1fr 5.5rem; min-height: 32px; align-items: center; font-size: 12.5px; padding: 0 8px; margin: 0 -8px; border-radius: 1px; } .ds-br.step { cursor: pointer; transition: background-color 150ms; } .ds-br.step:hover { background: hsl(30 8% 9% / 0.04); } .ds-br.step:hover .lab { text-decoration: underline; } .ds-br .lab i { font-style: normal; font-family: var(--font-mono, 'JetBrains Mono'), ui-monospace, monospace; font-size: 11px; color: hsl(30 5% 38%); margin-right: 6px; } .ds-br .trk { position: relative; height: 32px; background-image: linear-gradient(to right, hsl(35 8% 84% / 0.7) 1px, transparent 1px); background-size: 25% 100%; } .ds-br .bar { position: absolute; top: 9px; height: 14px; } .ds-br .bar.tot { background: hsl(30 8% 9%); } .ds-br .bar.ov { background: hsl(352 85% 44%); } .ds-br .val { text-align: right; font-weight: 500; color: hsl(30 5% 38%); } .ds-br .val.ov { color: hsl(352 85% 44%); } .ds-br .val b { font-weight: 600; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Reconciliation Sheet",
+    "overview": "BuildLedger is drawn as a single ruled sheet of a finance ledger laid on a Swiss grid, not as a dashboard of cards. Warm paper ground, near-black ink, and 1px rules do the structural work; there are no tinted panels, no card stacks and no shadows on the page. Density is high on purpose: a QS reads eighteen cost codes and nine columns at once, a director reads one large red figure. Both are served by the same sheet because emphasis is rationed, not because content is thinned.\n\nColour is semantic before it is anything else. One red owns overrun and exceptions; amber owns anything waiting on someone or approaching a statutory clock; green appears only when something is approved or connected. Everything else is ink and graphite. The five source systems each get a quiet, low-chroma hue used only as an outlined tag, so provenance is always present and never louder than status.\n\nType is one neo-grotesque (Archivo) in tight, small steps with tabular figures everywhere money appears, and one monospace (JetBrains Mono) reserved for identifiers: cost codes, project codes, PO and bill references. The signature component is the budget-to-forecast bridge, which steps from the CostX budget to the forecast at completion one trade at a time. The rest of the app currently inherits these tokens but has not yet been recomposed; the project detail page and the shell are the reference implementation.",
+    "keyCharacteristics": [
+      "One bordered sheet per page, divided by hairline rules; section heads sit on a 1px ink rule.",
+      "Red appears only on overrun figures, exception markers and overdue-on-us clocks.",
+      "Every key figure has an outlined source tag beside it or in its column header.",
+      "Tabular figures throughout; mono only for identifiers.",
+      "Near-square corners (1-3px); flat on the page, one shadow for floating layers only.",
+      "Light first, with a full warm-dark counterpart driven by the same token names."
+    ],
+    "rules": [
+      {
+        "name": "The One Red Rule",
+        "body": "Red means over budget or exception, and nothing else. A favourable or zero variance stays graphite (rendered as an em dash when zero), never green.",
+        "section": "colors"
+      },
+      {
+        "name": "The Provenance Recedes Rule",
+        "body": "Source tags are outlined in the system's own hue and never filled, never bolder than the figure they annotate; a red overrun must always read before its tag.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Is the Accent Rule",
+        "body": "There is no brand colour. Primary actions and active states are an ink inversion of the ground.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Every money figure, percentage and count is set with tabular numerals (the whole table inherits it) so columns align digit for digit.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Is for Identifiers Rule",
+        "body": "Mono marks something you could look up in a source system: a code or a reference number. Amounts, labels and headings never use it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Size of the Question Rule",
+        "body": "The answer to \"how much is this job losing\" is set larger than the job's name.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Sheet Rule",
+        "body": "Sections of a page are ruled divisions of one sheet, not separate cards with gaps between them.",
+        "section": "layout"
+      },
+      {
+        "name": "The Ruled Head Rule",
+        "body": "A section head sits on a 1px ink rule; rows within it are divided by hairlines; a total sits under a 1px ink rule and closes with an accountant's double rule.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Sheet Rule",
+        "body": "Nothing in the page flow casts a shadow; if a surface needs separating, give it a rule or a tone step.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Near-Square Rule",
+        "body": "No radius above 3px, and no pill shapes; status reads from colour and words, not from soft lozenges.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do set every money figure with tabular numerals and right-align it in columns.",
+      "Do put an outlined source tag next to every key figure or in its column header, in that system's hue at the tag size.",
+      "Do build pages as one bordered sheet divided by hairlines, with section heads on a 1px ink rule.",
+      "Do close totals with a 1px ink rule and the 5px double rule.",
+      "Do use square markers (6px or 8px) for severity and state, not dots.",
+      "Do keep favourable and zero variances graphite, with an em dash for zero.",
+      "Do use mono only for codes and reference numbers.",
+      "Do honour reduced motion for scroll and panel transitions."
+    ],
+    "donts": [
+      "Don't use red for anything other than over budget and exceptions, including selection, brand or emphasis.",
+      "Don't use green for a favourable variance; green means approved, paid, met or connected.",
+      "Don't fill source tags or give them a status hue.",
+      "Don't split a page into a row of KPI cards, chart cards and table cards with gaps between them.",
+      "Don't put a shadow on anything in the page flow; the overlay shadow is for menus, tooltips and popovers only.",
+      "Don't use corners above 3px or pill shapes, except the round user avatar.",
+      "Don't set uppercase tracked labels above headings."
+    ]
+  }
+}

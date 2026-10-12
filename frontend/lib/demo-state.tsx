@@ -7,7 +7,18 @@ import {
   emails as seedEmails,
   invoices as seedInvoices,
 } from "./mock-data";
-import type { ActivityItem, ApprovalStep, EmailItem, Invoice, InvoiceStatus } from "./types";
+import {
+  PIPELINE,
+  approve,
+  decisionProgress,
+  describeDecision,
+  nextStatus,
+  reject,
+  restore,
+  snapshot,
+  type DecisionSnapshot,
+} from "./approvals";
+import type { ActivityItem, ApprovalStep, EmailItem, Invoice } from "./types";
 
 /**
  * All "actions" in this demo — approve, reject, advance, re-route — mutate
@@ -15,15 +26,6 @@ import type { ActivityItem, ApprovalStep, EmailItem, Invoice, InvoiceStatus } fr
  * puts the demo back to its opening position, which is what you want when
  * showing it to a room.
  */
-
-const PIPELINE: InvoiceStatus[] = [
-  "Captured",
-  "Coded",
-  "Pending approval",
-  "Approved",
-  "Awaiting payment",
-  "Paid",
-];
 
 interface DemoState {
   invoices: Invoice[];
@@ -34,20 +36,33 @@ interface DemoState {
   touched: string[];
   /** Invoices a payment schedule has been issued against, meeting the deadline. */
   schedulesIssued: string[];
-  approveInvoice: (invoiceId: string) => void;
+  /** Approval decisions taken this session, newest first, each one undoable. */
+  decisions: Decision[];
+  /** `reason` is required by the UI when the invoice carries flags; it is kept in the activity log. */
+  approveInvoice: (invoiceId: string, reason?: string) => void;
   rejectInvoice: (invoiceId: string) => void;
+  /** Undo the latest decision on this invoice, restoring it and its chain exactly. */
+  undoDecision: (invoiceId: string) => void;
   advanceInvoice: (invoiceId: string) => void;
   routeEmail: (emailId: string, routedTo: string) => void;
   issuePaymentSchedule: (invoiceId: string) => void;
   reset: () => void;
 }
 
-const DemoStateContext = React.createContext<DemoState | null>(null);
-
-function nextStatus(status: InvoiceStatus): InvoiceStatus {
-  const i = PIPELINE.indexOf(status);
-  return i >= 0 && i < PIPELINE.length - 1 ? PIPELINE[i + 1] : status;
+export interface Decision {
+  invoiceId: string;
+  invoiceNumber: string;
+  outcome: "Approved" | "Rejected";
+  decidedBy?: string;
+  reason?: string;
+  /** "step 1 of 2, now with …" when the chain has more than one approver. */
+  progress?: string;
+  /** The activity entry this decision wrote, removed again on undo. */
+  activityId: string;
+  before: DecisionSnapshot;
 }
+
+const DemoStateContext = React.createContext<DemoState | null>(null);
 
 let activityCounter = 0;
 function makeActivity(item: Omit<ActivityItem, "id" | "at">): ActivityItem {
@@ -62,85 +77,67 @@ export function DemoStateProvider({ children }: { children: React.ReactNode }) {
   const [activity, setActivity] = React.useState<ActivityItem[]>(seedActivity);
   const [touched, setTouched] = React.useState<string[]>([]);
   const [schedulesIssued, setSchedulesIssued] = React.useState<string[]>([]);
+  const [decisions, setDecisions] = React.useState<Decision[]>([]);
 
   const markTouched = React.useCallback((id: string) => {
     setTouched((prev) => (prev.includes(id) ? prev : [...prev, id]));
   }, []);
 
-  const approveInvoice = React.useCallback(
-    (invoiceId: string) => {
+  const decide = React.useCallback(
+    (invoiceId: string, outcome: Decision["outcome"], reason?: string) => {
       const invoice = invoices.find((i) => i.id === invoiceId);
-      if (!invoice) return;
+      const before = snapshot(invoices, approvalSteps, invoiceId);
+      if (!invoice || !before) return;
 
-      // Stamp the next waiting approver in this invoice's chain.
-      let approvedBy: string | undefined;
-      let stillWaiting = false;
-      setApprovalSteps((prev) => {
-        let stamped = false;
-        const next = prev.map((s) => {
-          if (s.invoiceId !== invoiceId) return s;
-          if (!stamped && s.status === "Waiting") {
-            stamped = true;
-            approvedBy = s.approver;
-            return { ...s, status: "Approved" as const, timestamp: new Date().toISOString() };
-          }
-          return s;
-        });
-        stillWaiting = next.some((s) => s.invoiceId === invoiceId && s.status === "Waiting");
-        return next;
+      const at = new Date().toISOString();
+      const result =
+        outcome === "Approved"
+          ? approve(invoices, approvalSteps, invoiceId, at)
+          : reject(invoices, approvalSteps, invoiceId, at);
+      const entry = makeActivity({
+        kind: "approval",
+        system: "ApprovalMax",
+        message: describeDecision(invoice, outcome, result, reason),
       });
 
-      // The invoice only moves on once every approver in the chain has signed.
-      if (!stillWaiting) {
-        setInvoices((prev) =>
-          prev.map((i) => (i.id === invoiceId ? { ...i, status: nextStatus(i.status) } : i))
-        );
-      }
-
+      setInvoices(result.invoices);
+      setApprovalSteps(result.steps);
       markTouched(invoiceId);
-      setActivity((prev) => [
-        makeActivity({
-          kind: "approval",
-          system: "ApprovalMax",
-          message: `${invoice.invoiceNumber} approved${approvedBy ? ` by ${approvedBy}` : ""}`,
-        }),
+      setActivity((prev) => [entry, ...prev]);
+      setDecisions((prev) => [
+        {
+          invoiceId,
+          invoiceNumber: invoice.invoiceNumber,
+          outcome,
+          decidedBy: result.decidedBy,
+          reason,
+          progress: outcome === "Approved" ? decisionProgress(result) || undefined : undefined,
+          activityId: entry.id,
+          before,
+        },
         ...prev,
       ]);
     },
-    [invoices, markTouched]
+    [invoices, approvalSteps, markTouched]
   );
 
-  const rejectInvoice = React.useCallback(
+  const approveInvoice = React.useCallback(
+    (invoiceId: string, reason?: string) => decide(invoiceId, "Approved", reason),
+    [decide]
+  );
+  const rejectInvoice = React.useCallback((invoiceId: string) => decide(invoiceId, "Rejected"), [decide]);
+
+  const undoDecision = React.useCallback(
     (invoiceId: string) => {
-      const invoice = invoices.find((i) => i.id === invoiceId);
-      if (!invoice) return;
-
-      setApprovalSteps((prev) => {
-        let stamped = false;
-        return prev.map((s) => {
-          if (s.invoiceId !== invoiceId) return s;
-          if (!stamped && s.status === "Waiting") {
-            stamped = true;
-            return { ...s, status: "Rejected" as const, timestamp: new Date().toISOString() };
-          }
-          return s;
-        });
-      });
-
-      // A rejected invoice drops back to coding rather than leaving the pipeline.
-      setInvoices((prev) => prev.map((i) => (i.id === invoiceId ? { ...i, status: "Coded" } : i)));
-
-      markTouched(invoiceId);
-      setActivity((prev) => [
-        makeActivity({
-          kind: "approval",
-          system: "ApprovalMax",
-          message: `${invoice.invoiceNumber} rejected — returned for re-coding`,
-        }),
-        ...prev,
-      ]);
+      const latest = decisions.find((d) => d.invoiceId === invoiceId);
+      if (!latest) return;
+      const restored = restore(invoices, approvalSteps, latest.before);
+      setInvoices(restored.invoices);
+      setApprovalSteps(restored.steps);
+      setActivity((prev) => prev.filter((a) => a.id !== latest.activityId));
+      setDecisions((prev) => prev.filter((d) => d !== latest));
     },
-    [invoices, markTouched]
+    [decisions, invoices, approvalSteps]
   );
 
   const advanceInvoice = React.useCallback(
@@ -207,6 +204,7 @@ export function DemoStateProvider({ children }: { children: React.ReactNode }) {
     setActivity(seedActivity);
     setTouched([]);
     setSchedulesIssued([]);
+    setDecisions([]);
   }, []);
 
   const value = React.useMemo(
@@ -217,14 +215,31 @@ export function DemoStateProvider({ children }: { children: React.ReactNode }) {
       activity,
       touched,
       schedulesIssued,
+      decisions,
       approveInvoice,
       rejectInvoice,
+      undoDecision,
       advanceInvoice,
       routeEmail,
       issuePaymentSchedule,
       reset,
     }),
-    [invoices, approvalSteps, emails, activity, touched, schedulesIssued, approveInvoice, rejectInvoice, advanceInvoice, routeEmail, issuePaymentSchedule, reset]
+    [
+      invoices,
+      approvalSteps,
+      emails,
+      activity,
+      touched,
+      schedulesIssued,
+      decisions,
+      approveInvoice,
+      rejectInvoice,
+      undoDecision,
+      advanceInvoice,
+      routeEmail,
+      issuePaymentSchedule,
+      reset,
+    ]
   );
 
   return <DemoStateContext.Provider value={value}>{children}</DemoStateContext.Provider>;

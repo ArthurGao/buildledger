@@ -40,6 +40,11 @@ export interface BudgetLine {
   committedAmount: number;
   /** Xero. */
   actualAmount: number;
+  /**
+   * Forecast cost at completion for this trade — the PM's view of what the
+   * line will finally cost. Lines sum to the project's forecastFinal.
+   */
+  forecastAmount: number;
 }
 
 export type InvoiceStatus =
@@ -87,6 +92,7 @@ export type ExceptionType =
   | "No PO spend"
   | "Over budget"
   | "Payment schedule overdue"
+  | "Variation notice due"
   | "Variation notice overdue"
   | "Retention shortfall";
 
@@ -98,6 +104,11 @@ export interface ExceptionItem {
   description: string;
   relatedInvoiceId?: string;
   amount?: number;
+  /**
+   * Source document of the statutory clock behind this exception. When set,
+   * the type, severity and the days left are worded from the live clock.
+   */
+  clockSourceId?: string;
 }
 
 export type EmailClass = "Invoice" | "RFQ" | "Client query" | "Subbie quote" | "Noise";
@@ -117,14 +128,21 @@ export interface EmailItem {
   reason: string;
 }
 
+/**
+ * What the demo holds in place of a live connection. Nothing is connected: a
+ * system either has a sample export (our guess at the client's file, which the
+ * import check runs the join against) or its data is illustrative only.
+ */
+export type IntegrationSource = { kind: "Sample export"; file: string } | { kind: "Illustrative data" };
+
 export interface IntegrationStatus {
   system: System;
-  connected: boolean;
-  /** Relative, e.g. "2 min ago". */
-  lastSync: string;
   note?: string;
   /** What this platform reads out of the system. */
   reads: string;
+  source: IntegrationSource;
+  /** What the client would hand over to validate it (system-design §8.1). */
+  needed: string;
 }
 
 export interface ChatQA {
@@ -148,9 +166,38 @@ export interface ActivityItem {
 
 /** A budget line with its derived variance figures. */
 export interface BudgetLineWithVariance extends BudgetLine {
+  /** Actual to date minus budget. */
   variance: number;
   variancePct: number;
   isOver: boolean;
+  /** Forecast at completion minus budget — the variance that matters. */
+  forecastVariance: number;
+  forecastVariancePct: number;
+  isForecastOver: boolean;
+}
+
+/**
+ * One record behind a budget line: a purchase order raised in ApprovalMax, or
+ * a supplier bill in Xero (or still in EzzyBills when only captured). These are
+ * what the line's committed and actual figures are added up from.
+ */
+export interface LineRecord {
+  id: string;
+  projectId: string;
+  costCode: string;
+  kind: "Purchase order" | "Bill";
+  system: "ApprovalMax" | "Xero" | "EzzyBills";
+  reference: string;
+  supplier: string;
+  /** ISO date. */
+  date: string;
+  /** Excluding GST — costs are carried net. */
+  amount: number;
+  /** Whether a bill counts toward the line's actual. Always false for POs. */
+  inActual: boolean;
+  note?: string;
+  /** The pipeline invoice this bill is, when there is one. */
+  invoiceId?: string;
 }
 
 // ---------------------------------------------------------------------------

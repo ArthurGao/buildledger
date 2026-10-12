@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Landmark } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionHead } from "@/components/ledger/section-head";
 import { ClockBadge } from "@/components/statutory-clock";
 import { getOpenClocks, getProjectName, getRetentionPosition } from "@/lib/derive";
 import { formatCurrency } from "@/lib/format";
@@ -17,61 +16,50 @@ export function StatutoryPanel() {
   const retention = getRetentionPosition();
 
   return (
-    <Card>
-      <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-        <CardTitle className="text-sm">Statutory deadlines</CardTitle>
-        <Link
-          href="/variations"
-          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-        >
-          View all <ArrowRight className="h-3 w-3" />
-        </Link>
-      </CardHeader>
-      <CardContent className="space-y-2.5">
-        {clocks.map((c) => (
-          <Link
-            key={c.id}
-            href={c.kind === "Variation notice due" ? "/variations" : c.kind === "Payment due" ? "/claims" : "/approvals"}
-            className={cn(
-              "block rounded-md border p-3 transition-colors hover:bg-accent/50",
-              c.overdue && c.exposure === "Ours" ? "border-over-border" : "border-border"
-            )}
-          >
-            <div className="flex items-start justify-between gap-2">
-              <span className="text-sm font-medium leading-snug">{c.sourceLabel}</span>
-              <ClockBadge clock={c} className="shrink-0" />
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {c.kind} · {getProjectName(c.projectId)}
-            </p>
+    <section aria-labelledby="dash-deadlines-title" className="min-w-0">
+      <SectionHead
+        id="dash-deadlines-title"
+        title="Statutory deadlines"
+        aside={
+          <Link href="/variations" className="hover:text-foreground hover:underline">
+            View all
           </Link>
+        }
+      />
+      <ul className="divide-y divide-border">
+        {clocks.map((c) => (
+          <li key={c.id}>
+            <Link
+              href={c.kind === "Variation notice due" ? "/variations" : c.kind === "Payment due" ? "/claims" : "/approvals"}
+              className="block px-4 py-2.5 transition-colors duration-150 hover:bg-foreground/[0.03] md:px-5"
+            >
+              <span className="block text-[13px] font-medium leading-snug">{c.sourceLabel}</span>
+              <span className="mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <span className="text-[12.5px] text-muted-foreground">
+                  {c.kind} · {getProjectName(c.projectId)}
+                </span>
+                <ClockBadge clock={c} />
+              </span>
+            </Link>
+          </li>
         ))}
-
-        <Link
-          href="/retentions"
-          className={cn(
-            "flex items-start gap-3 rounded-md border p-3 transition-colors hover:bg-accent/50",
-            retention.compliant ? "border-border" : "border-over-border"
-          )}
-        >
-          <span
-            className={cn(
-              "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md",
-              retention.compliant ? "bg-muted text-muted-foreground" : "bg-over-soft text-over"
-            )}
+        <li>
+          <Link
+            href="/retentions"
+            className="grid grid-cols-[1rem_minmax(0,1fr)] gap-x-3 px-4 py-2.5 transition-colors duration-150 hover:bg-foreground/[0.03] md:px-5"
           >
-            <Landmark className="h-3.5 w-3.5" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium">Retention held on trust</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              {retention.compliant
-                ? `${formatCurrency(retention.liability)} fully backed by the trust account`
-                : `${formatCurrency(retention.shortfall)} short of the ledger — an offence under the 2023 amendment`}
-            </p>
-          </div>
-        </Link>
-      </CardContent>
-    </Card>
+            <span aria-hidden="true" className={cn("mt-[5px] h-2 w-2", retention.compliant ? "bg-ok" : "bg-over")} />
+            <span className="min-w-0">
+              <span className="block text-[13px] font-medium">Retention held on trust</span>
+              <span className={cn("mt-0.5 block text-[12.5px] leading-snug", retention.compliant ? "text-muted-foreground" : "text-over")}>
+                {retention.compliant
+                  ? `${formatCurrency(retention.liability)} fully backed by the trust account`
+                  : `${formatCurrency(retention.shortfall)} short of the ledger — an offence under the 2023 amendment`}
+              </span>
+            </span>
+          </Link>
+        </li>
+      </ul>
+    </section>
   );
 }

@@ -11,6 +11,7 @@ import {
   exceptions,
   integrations,
   invoices,
+  lineRecords,
   opportunities,
   progressClaims,
   projects,
@@ -39,6 +40,7 @@ import type {
   ChatQA,
   ExceptionItem,
   Invoice,
+  LineRecord,
   Project,
 } from "./types";
 
@@ -50,7 +52,17 @@ import type {
 export function withVariance(line: BudgetLine): BudgetLineWithVariance {
   const variance = line.actualAmount - line.budgetAmount;
   const variancePct = line.budgetAmount === 0 ? 0 : (variance / line.budgetAmount) * 100;
-  return { ...line, variance, variancePct, isOver: variance > 0 };
+  const forecastVariance = line.forecastAmount - line.budgetAmount;
+  const forecastVariancePct = line.budgetAmount === 0 ? 0 : (forecastVariance / line.budgetAmount) * 100;
+  return {
+    ...line,
+    variance,
+    variancePct,
+    isOver: variance > 0,
+    forecastVariance,
+    forecastVariancePct,
+    isForecastOver: forecastVariance > 0,
+  };
 }
 
 export function getProject(id: string): Project | undefined {
@@ -71,7 +83,7 @@ export function getProjectLines(projectId: string): BudgetLineWithVariance[] {
 
 /** Same lines, worst overrun first — this is what makes the story obvious. */
 export function getLinesByVariance(projectId: string): BudgetLineWithVariance[] {
-  return getProjectLines(projectId).sort((a, b) => b.variance - a.variance);
+  return getProjectLines(projectId).sort((a, b) => b.variancePct - a.variancePct);
 }
 
 /** The trades actually driving an overrun. */
@@ -86,9 +98,111 @@ export function getLineTotals(projectId: string) {
       budget: acc.budget + l.budgetAmount,
       committed: acc.committed + l.committedAmount,
       actual: acc.actual + l.actualAmount,
+      forecast: acc.forecast + l.forecastAmount,
     }),
-    { budget: 0, committed: 0, actual: 0 }
+    { budget: 0, committed: 0, actual: 0, forecast: 0 }
   );
+}
+
+/** The purchase orders and bills a line's committed and actual are summed from. */
+export function getLineRecords(projectId: string, costCode: string): LineRecord[] {
+  return lineRecords
+    .filter((r) => r.projectId === projectId && r.costCode === costCode)
+    .sort((a, b) => (a.kind === b.kind ? b.date.localeCompare(a.date) : a.kind === "Purchase order" ? -1 : 1));
+}
+
+export interface BridgeStep {
+  code: string;
+  description: string;
+  /** Forecast minus budget for the trade, or the netted sum for the rest. */
+  delta: number;
+  /** Several small trades folded into one step. */
+  folded?: number;
+}
+
+/**
+ * Budget to forecast, as a bridge: the trades that move the total each get a
+ * step, largest first, and everything smaller nets into one closing step so
+ * the picture stays readable. The steps always sum to forecast minus budget.
+ */
+export function getForecastBridge(projectId: string, maxSteps = 5): BridgeStep[] {
+  const lines = getProjectLines(projectId)
+    .filter((l) => l.forecastVariance !== 0)
+    .sort((a, b) => Math.abs(b.forecastVariance) - Math.abs(a.forecastVariance));
+  const named = lines.slice(0, maxSteps).map((l) => ({
+    code: l.code,
+    description: l.description,
+    delta: l.forecastVariance,
+  }));
+  const rest = lines.slice(maxSteps);
+  if (rest.length > 0) {
+    named.push({
+      code: "other",
+      description: `${rest.length} other trade${rest.length === 1 ? "" : "s"}`,
+      delta: rest.reduce((sum, l) => sum + l.forecastVariance, 0),
+      folded: rest.length,
+    } as BridgeStep);
+  }
+  return named;
+}
+
+/**
+ * The bridge's bar track spans four columns of the sheet's 12-column grid, so
+ * its axis always splits into exactly four intervals: every tick line then
+ * falls on a column line shared with the cost-code table below.
+ */
+export const BRIDGE_INTERVALS = 4;
+
+/** Smallest of 1, 2, 2.5, 5 × 10^n that is at least `raw`. */
+function niceStep(raw: number): number {
+  const exp = Math.floor(Math.log10(raw));
+  const base = 10 ** exp;
+  for (const m of [1, 2, 2.5, 5, 10]) if (m * base >= raw) return m * base;
+  return 10 * base;
+}
+
+/**
+ * Axis for the budget-to-forecast bridge, cut well above zero so a few thousand
+ * dollars on a trade stay visible against a total of hundreds of thousands.
+ * Leaves room below the lowest bar end (where the total bars carry their break
+ * mark) and a little above the highest.
+ */
+export function getBridgeAxis(projectId: string) {
+  const project = getProject(projectId);
+  if (!project) throw new Error(`Unknown project ${projectId}`);
+  const ends = [project.budgetTotal, project.forecastFinal];
+  let running = project.budgetTotal;
+  for (const s of getForecastBridge(projectId)) ends.push((running += s.delta));
+
+  const lo = Math.min(...ends);
+  const hi = Math.max(...ends);
+  const span = Math.max(hi - lo, project.budgetTotal * 0.01);
+  const floor = lo - span * 0.35;
+  const ceiling = hi + span * 0.1;
+
+  let step = niceStep((ceiling - floor) / BRIDGE_INTERVALS);
+  let min = Math.floor(floor / step) * step;
+  // Snapping the floor down can push the top past four steps; widen until it fits.
+  while (min + BRIDGE_INTERVALS * step < ceiling) {
+    step = niceStep(step * 1.01);
+    min = Math.floor(floor / step) * step;
+  }
+  const ticks = Array.from({ length: BRIDGE_INTERVALS + 1 }, (_, i) => min + i * step);
+  return { min, max: ticks[BRIDGE_INTERVALS], step, ticks };
+}
+
+/**
+ * Every project with its forecast variance, largest overrun by percentage
+ * first: a 6% overrun on a small job outranks 3% on a large one, because it
+ * says more about how the job is being run.
+ */
+export function getPortfolioLedger() {
+  return projects
+    .map((p) => {
+      const variance = p.forecastFinal - p.budgetTotal;
+      return { ...p, variance, variancePct: (variance / p.budgetTotal) * 100, over: variance > 0 };
+    })
+    .sort((a, b) => b.variancePct - a.variancePct);
 }
 
 /** Portfolio roll-up for the dashboard KPI row. */
@@ -138,13 +252,76 @@ export function getProjectExceptions(projectId: string): ExceptionItem[] {
 
 /** Every exception, including the statutory ones raised by the clocks. */
 export function getAllExceptions(): ExceptionItem[] {
-  return [...exceptions, ...statutoryExceptions];
+  return [...exceptions, ...getStatutoryExceptions()];
+}
+
+/**
+ * The clock-raised exceptions. One tied to a running clock takes its type,
+ * severity and days left from that clock, so the exceptions list can never
+ * call a deadline missed while the clock still shows a day to go.
+ */
+export function getStatutoryExceptions(): ExceptionItem[] {
+  return statutoryExceptions.map((e) => {
+    const clock = e.clockSourceId ? getClockForSource(e.clockSourceId) : undefined;
+    if (!clock || clock.satisfied) return e;
+    if (clock.overdue) {
+      return {
+        ...e,
+        type: "Variation notice overdue",
+        severity: "High",
+        description: `${e.description} The ${clock.workingDays} working days ran out on ${formatDateLong(clock.dueOn)}, so the right to claim may already be lost.`,
+      };
+    }
+    const days = `${clock.remaining} working day${clock.remaining === 1 ? "" : "s"}`;
+    return {
+      ...e,
+      type: "Variation notice due",
+      severity: "Medium",
+      description: `${e.description} ${days} ${clock.remaining === 1 ? "remains" : "remain"} — notice is due ${formatDateLong(clock.dueOn)}, or the right to claim is lost.`,
+    };
+  });
 }
 
 /** High severity first — the exceptions panel leads with what matters. */
 export function getExceptionsBySeverity(): ExceptionItem[] {
   const rank = { High: 0, Medium: 1 };
   return getAllExceptions().sort((a, b) => rank[a.severity] - rank[b.severity]);
+}
+
+/**
+ * Money at stake across all exceptions. One invoice can raise more than one
+ * exception (INV-001 has no PO and its payment schedule is overdue), so an
+ * amount tied to an invoice is counted once, however many exceptions cite it.
+ */
+export function getExceptionExposure(): number {
+  const byInvoice = new Map<string, number>();
+  let unlinked = 0;
+  for (const e of getAllExceptions()) {
+    if (!e.amount) continue;
+    if (e.relatedInvoiceId) {
+      byInvoice.set(e.relatedInvoiceId, Math.max(byInvoice.get(e.relatedInvoiceId) ?? 0, e.amount));
+    } else {
+      unlinked += e.amount;
+    }
+  }
+  return unlinked + Array.from(byInvoice.values()).reduce((sum, v) => sum + v, 0);
+}
+
+/**
+ * Exceptions split the way the firm acts on them: spend problems (duplicates,
+ * missing POs, overruns) and statutory ones raised by a running clock. Each
+ * group leads with High severity, then the largest amount.
+ */
+export function getExceptionGroups() {
+  const statutoryIds = new Set(statutoryExceptions.map((e) => e.id));
+  const rank = { High: 0, Medium: 1 };
+  const all = getAllExceptions().sort(
+    (a, b) => rank[a.severity] - rank[b.severity] || (b.amount ?? 0) - (a.amount ?? 0)
+  );
+  return {
+    spend: all.filter((e) => !statutoryIds.has(e.id)),
+    statutory: all.filter((e) => statutoryIds.has(e.id)),
+  };
 }
 
 export function getExceptionCounts() {
@@ -258,6 +435,18 @@ export function getClockCounts() {
     dueSoon: ours.filter((c) => !c.overdue && c.remaining <= 3).length,
     /** Claims the other side has left unanswered — recoverable as a debt. */
     recoverable: open.filter((c) => c.exposure === "Theirs" && c.overdue).length,
+  };
+}
+
+/**
+ * Variation notification clocks only — what the Variations nav badge counts.
+ * Missed notices are red; ones due within three working days are amber.
+ */
+export function getVariationClockCounts() {
+  const open = getOpenClocks().filter((c) => c.kind === "Variation notice due");
+  return {
+    missed: open.filter((c) => c.overdue).length,
+    dueSoon: open.filter((c) => !c.overdue && c.remaining <= 3).length,
   };
 }
 

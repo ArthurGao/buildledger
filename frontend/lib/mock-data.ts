@@ -9,6 +9,7 @@ import type {
   ExceptionItem,
   IntegrationStatus,
   Invoice,
+  LineRecord,
   Opportunity,
   ProgressClaim,
   Project,
@@ -23,8 +24,9 @@ import type {
  * All demo data lives here. Nothing in this app talks to a live system.
  *
  * The narrative the data has to tell, at a glance:
- *   Riverside Office Fitout is tracking 6% over budget, driven by
- *   Electrical (+$11,300) and Structural steel (+$5,500).
+ *   Riverside Office Fitout is forecast 6% over budget (+$44,000), driven by
+ *   Electrical (+$23,000 at completion, +$11,300 spent over budget to date)
+ *   and Structural steel (+$10,500, +$5,500 to date).
  * Budget lines for each project sum exactly to that project's totals, so a
  * quantity surveyor adding up the reconciliation table finds it balances.
  */
@@ -69,7 +71,7 @@ export const projects: Project[] = [
     id: "HOB-03",
     name: "Hobsonville Warehouse",
     client: "Southgate Logistics",
-    status: "At risk",
+    status: "Over budget",
     budgetTotal: 1_880_000,
     committedTotal: 1_510_000,
     actualTotal: 1_340_000,
@@ -96,56 +98,56 @@ export const projects: Project[] = [
 // ---------------------------------------------------------------------------
 
 const riversideLines: BudgetLine[] = [
-  { code: "01-100", description: "Preliminaries & site", budgetAmount: 95_000, committedAmount: 92_000, actualAmount: 88_000 },
-  { code: "02-100", description: "Demolition & strip-out", budgetAmount: 34_000, committedAmount: 33_500, actualAmount: 33_200 },
-  { code: "03-100", description: "Concrete floor slab", budgetAmount: 17_000, committedAmount: 17_000, actualAmount: 17_400 },
-  { code: "03-200", description: "Reinforcement steel", budgetAmount: 4_800, committedAmount: 5_000, actualAmount: 5_200 },
-  { code: "04-100", description: "Blockwork", budgetAmount: 16_800, committedAmount: 16_000, actualAmount: 15_900 },
-  { code: "05-100", description: "Structural steel", budgetAmount: 36_000, committedAmount: 40_000, actualAmount: 41_500 },
-  { code: "06-100", description: "Carpentry & joinery", budgetAmount: 52_000, committedAmount: 51_000, actualAmount: 49_000 },
-  { code: "07-100", description: "Insulation & fire-stopping", budgetAmount: 18_400, committedAmount: 17_000, actualAmount: 12_600 },
-  { code: "08-100", description: "Windows & glazing", budgetAmount: 44_000, committedAmount: 43_500, actualAmount: 38_200 },
-  { code: "09-100", description: "Plasterboard & painting", budgetAmount: 39_000, committedAmount: 38_000, actualAmount: 31_500 },
-  { code: "10-100", description: "Partitions & ceilings", budgetAmount: 47_000, committedAmount: 44_000, actualAmount: 31_000 },
-  { code: "12-100", description: "Floor coverings", budgetAmount: 41_000, committedAmount: 26_000, actualAmount: 9_800 },
-  { code: "15-100", description: "Mechanical / HVAC", budgetAmount: 88_000, committedAmount: 84_000, actualAmount: 79_300 },
-  { code: "15-200", description: "Plumbing", budgetAmount: 28_000, committedAmount: 27_000, actualAmount: 27_600 },
-  { code: "16-100", description: "Electrical", budgetAmount: 61_000, committedAmount: 70_000, actualAmount: 72_300 },
-  { code: "17-100", description: "Fit-out & fixtures", budgetAmount: 71_000, committedAmount: 68_000, actualAmount: 45_000 },
-  { code: "26-100", description: "Data & security cabling", budgetAmount: 25_000, committedAmount: 12_000, actualAmount: 4_200 },
-  { code: "31-100", description: "External works & landscaping", budgetAmount: 24_000, committedAmount: 14_000, actualAmount: 8_300 },
+  { code: "01-100", description: "Preliminaries & site", budgetAmount: 95_000, committedAmount: 92_000, actualAmount: 88_000, forecastAmount: 97_500 },
+  { code: "02-100", description: "Demolition & strip-out", budgetAmount: 34_000, committedAmount: 33_500, actualAmount: 33_200, forecastAmount: 33_500 },
+  { code: "03-100", description: "Concrete floor slab", budgetAmount: 17_000, committedAmount: 17_000, actualAmount: 17_400, forecastAmount: 17_400 },
+  { code: "03-200", description: "Reinforcement steel", budgetAmount: 4_800, committedAmount: 5_000, actualAmount: 5_200, forecastAmount: 5_200 },
+  { code: "04-100", description: "Blockwork", budgetAmount: 16_800, committedAmount: 16_000, actualAmount: 15_900, forecastAmount: 16_000 },
+  { code: "05-100", description: "Structural steel", budgetAmount: 36_000, committedAmount: 40_000, actualAmount: 41_500, forecastAmount: 46_500 },
+  { code: "06-100", description: "Carpentry & joinery", budgetAmount: 52_000, committedAmount: 51_000, actualAmount: 49_000, forecastAmount: 53_100 },
+  { code: "07-100", description: "Insulation & fire-stopping", budgetAmount: 18_400, committedAmount: 17_000, actualAmount: 12_600, forecastAmount: 18_000 },
+  { code: "08-100", description: "Windows & glazing", budgetAmount: 44_000, committedAmount: 43_500, actualAmount: 38_200, forecastAmount: 44_000 },
+  { code: "09-100", description: "Plasterboard & painting", budgetAmount: 39_000, committedAmount: 38_000, actualAmount: 31_500, forecastAmount: 45_800 },
+  { code: "10-100", description: "Partitions & ceilings", budgetAmount: 47_000, committedAmount: 44_000, actualAmount: 31_000, forecastAmount: 47_000 },
+  { code: "12-100", description: "Floor coverings", budgetAmount: 41_000, committedAmount: 26_000, actualAmount: 9_800, forecastAmount: 41_000 },
+  { code: "15-100", description: "Mechanical / HVAC", budgetAmount: 88_000, committedAmount: 84_000, actualAmount: 79_300, forecastAmount: 88_000 },
+  { code: "15-200", description: "Plumbing", budgetAmount: 28_000, committedAmount: 27_000, actualAmount: 27_600, forecastAmount: 28_000 },
+  { code: "16-100", description: "Electrical", budgetAmount: 61_000, committedAmount: 70_000, actualAmount: 72_300, forecastAmount: 84_000 },
+  { code: "17-100", description: "Fit-out & fixtures", budgetAmount: 71_000, committedAmount: 68_000, actualAmount: 45_000, forecastAmount: 72_000 },
+  { code: "26-100", description: "Data & security cabling", budgetAmount: 25_000, committedAmount: 12_000, actualAmount: 4_200, forecastAmount: 25_000 },
+  { code: "31-100", description: "External works & landscaping", budgetAmount: 24_000, committedAmount: 14_000, actualAmount: 8_300, forecastAmount: 24_000 },
 ].map((l) => ({ ...l, projectId: "RIV-01" }));
 
 const kauriLines: BudgetLine[] = [
-  { code: "01-100", description: "Preliminaries & site establishment", budgetAmount: 320_000, committedAmount: 300_000, actualAmount: 288_000 },
-  { code: "02-200", description: "Earthworks & piling", budgetAmount: 410_000, committedAmount: 405_000, actualAmount: 402_000 },
-  { code: "03-100", description: "Concrete structure", budgetAmount: 680_000, committedAmount: 620_000, actualAmount: 585_000 },
-  { code: "04-100", description: "Precast panels & blockwork", budgetAmount: 395_000, committedAmount: 330_000, actualAmount: 300_000 },
-  { code: "06-100", description: "Carpentry & joinery", budgetAmount: 288_000, committedAmount: 190_000, actualAmount: 142_000 },
-  { code: "08-100", description: "Windows & glazing", budgetAmount: 310_000, committedAmount: 205_000, actualAmount: 118_000 },
-  { code: "15-100", description: "Mechanical & plumbing", budgetAmount: 402_000, committedAmount: 120_000, actualAmount: 95_000 },
-  { code: "16-100", description: "Electrical", budgetAmount: 345_000, committedAmount: 70_000, actualAmount: 50_000 },
+  { code: "01-100", description: "Preliminaries & site establishment", budgetAmount: 320_000, committedAmount: 300_000, actualAmount: 288_000, forecastAmount: 315_000 },
+  { code: "02-200", description: "Earthworks & piling", budgetAmount: 410_000, committedAmount: 405_000, actualAmount: 402_000, forecastAmount: 404_000 },
+  { code: "03-100", description: "Concrete structure", budgetAmount: 680_000, committedAmount: 620_000, actualAmount: 585_000, forecastAmount: 668_000 },
+  { code: "04-100", description: "Precast panels & blockwork", budgetAmount: 395_000, committedAmount: 330_000, actualAmount: 300_000, forecastAmount: 392_000 },
+  { code: "06-100", description: "Carpentry & joinery", budgetAmount: 288_000, committedAmount: 190_000, actualAmount: 142_000, forecastAmount: 286_000 },
+  { code: "08-100", description: "Windows & glazing", budgetAmount: 310_000, committedAmount: 205_000, actualAmount: 118_000, forecastAmount: 312_000 },
+  { code: "15-100", description: "Mechanical & plumbing", budgetAmount: 402_000, committedAmount: 120_000, actualAmount: 95_000, forecastAmount: 400_000 },
+  { code: "16-100", description: "Electrical", budgetAmount: 345_000, committedAmount: 70_000, actualAmount: 50_000, forecastAmount: 343_000 },
 ].map((l) => ({ ...l, projectId: "KAU-02" }));
 
 const hobsonvilleLines: BudgetLine[] = [
-  { code: "01-100", description: "Preliminaries & site", budgetAmount: 180_000, committedAmount: 178_000, actualAmount: 175_000 },
-  { code: "02-200", description: "Earthworks & hardstand", budgetAmount: 245_000, committedAmount: 244_000, actualAmount: 243_000 },
-  { code: "03-100", description: "Concrete slab & footings", budgetAmount: 324_000, committedAmount: 328_000, actualAmount: 326_500 },
-  { code: "05-100", description: "Structural steel & portal frames", budgetAmount: 520_000, committedAmount: 515_000, actualAmount: 523_400 },
-  { code: "07-200", description: "Roofing & cladding", budgetAmount: 295_000, committedAmount: 180_000, actualAmount: 62_000 },
-  { code: "15-200", description: "Plumbing & drainage", budgetAmount: 96_000, committedAmount: 35_000, actualAmount: 8_600 },
-  { code: "16-100", description: "Electrical", budgetAmount: 134_000, committedAmount: 24_000, actualAmount: 1_500 },
-  { code: "31-100", description: "External works & yard", budgetAmount: 86_000, committedAmount: 6_000, actualAmount: 0 },
+  { code: "01-100", description: "Preliminaries & site", budgetAmount: 180_000, committedAmount: 178_000, actualAmount: 175_000, forecastAmount: 186_000 },
+  { code: "02-200", description: "Earthworks & hardstand", budgetAmount: 245_000, committedAmount: 244_000, actualAmount: 243_000, forecastAmount: 245_000 },
+  { code: "03-100", description: "Concrete slab & footings", budgetAmount: 324_000, committedAmount: 328_000, actualAmount: 326_500, forecastAmount: 328_500 },
+  { code: "05-100", description: "Structural steel & portal frames", budgetAmount: 520_000, committedAmount: 515_000, actualAmount: 523_400, forecastAmount: 531_000 },
+  { code: "07-200", description: "Roofing & cladding", budgetAmount: 295_000, committedAmount: 180_000, actualAmount: 62_000, forecastAmount: 312_000 },
+  { code: "15-200", description: "Plumbing & drainage", budgetAmount: 96_000, committedAmount: 35_000, actualAmount: 8_600, forecastAmount: 101_000 },
+  { code: "16-100", description: "Electrical", budgetAmount: 134_000, committedAmount: 24_000, actualAmount: 1_500, forecastAmount: 140_000 },
+  { code: "31-100", description: "External works & yard", budgetAmount: 86_000, committedAmount: 6_000, actualAmount: 0, forecastAmount: 88_500 },
 ].map((l) => ({ ...l, projectId: "HOB-03" }));
 
 const newmarketLines: BudgetLine[] = [
-  { code: "01-100", description: "Preliminaries", budgetAmount: 42_000, committedAmount: 41_000, actualAmount: 40_000 },
-  { code: "02-100", description: "Strip-out & demolition", budgetAmount: 38_000, committedAmount: 37_500, actualAmount: 37_200 },
-  { code: "06-100", description: "Shopfittings & joinery", budgetAmount: 145_000, committedAmount: 92_000, actualAmount: 58_000 },
-  { code: "09-100", description: "Plasterboard & painting", budgetAmount: 61_000, committedAmount: 40_000, actualAmount: 29_300 },
-  { code: "12-100", description: "Floor coverings", budgetAmount: 54_000, committedAmount: 22_000, actualAmount: 11_500 },
-  { code: "15-100", description: "Mechanical / HVAC", budgetAmount: 37_000, committedAmount: 16_500, actualAmount: 5_000 },
-  { code: "16-100", description: "Electrical & lighting", budgetAmount: 88_000, committedAmount: 41_000, actualAmount: 24_000 },
+  { code: "01-100", description: "Preliminaries", budgetAmount: 42_000, committedAmount: 41_000, actualAmount: 40_000, forecastAmount: 41_500 },
+  { code: "02-100", description: "Strip-out & demolition", budgetAmount: 38_000, committedAmount: 37_500, actualAmount: 37_200, forecastAmount: 37_500 },
+  { code: "06-100", description: "Shopfittings & joinery", budgetAmount: 145_000, committedAmount: 92_000, actualAmount: 58_000, forecastAmount: 143_000 },
+  { code: "09-100", description: "Plasterboard & painting", budgetAmount: 61_000, committedAmount: 40_000, actualAmount: 29_300, forecastAmount: 60_000 },
+  { code: "12-100", description: "Floor coverings", budgetAmount: 54_000, committedAmount: 22_000, actualAmount: 11_500, forecastAmount: 53_000 },
+  { code: "15-100", description: "Mechanical / HVAC", budgetAmount: 37_000, committedAmount: 16_500, actualAmount: 5_000, forecastAmount: 36_500 },
+  { code: "16-100", description: "Electrical & lighting", budgetAmount: 88_000, committedAmount: 41_000, actualAmount: 24_000, forecastAmount: 86_500 },
 ].map((l) => ({ ...l, projectId: "NEW-04" }));
 
 export const budgetLines: BudgetLine[] = [
@@ -410,7 +412,8 @@ export const exceptions: ExceptionItem[] = [
     type: "Over budget",
     severity: "High",
     projectId: "RIV-01",
-    description: "Electrical (16-100) is $11,300 over budget — $72,300 actual against $61,000.",
+    description:
+      "Electrical (16-100) has spent $72,300 against a $61,000 budget (+$11,300) and is forecast +$23,000 at completion.",
     amount: 11_300,
   },
   {
@@ -512,35 +515,35 @@ export const emails: EmailItem[] = [
 
 export const integrations: IntegrationStatus[] = [
   {
-    system: "Xero",
-    connected: true,
-    lastSync: "2 min ago",
-    reads: "Actual costs, purchase orders, supplier bills, payment status",
-  },
-  {
     system: "CostX",
-    connected: true,
-    lastSync: "15 min ago",
     note: "OData API",
     reads: "Tender budgets by trade code, quantities, margin baseline",
+    source: { kind: "Sample export", file: "costx-budget-export.csv" },
+    needed: "A real budget export by cost code (Excel, CSV or OData), then read-only access",
+  },
+  {
+    system: "Xero",
+    reads: "Actual costs, purchase orders, supplier bills, payment status",
+    source: { kind: "Sample export", file: "xero-account-transactions.csv" },
+    needed: "The Account Transactions report filtered by project, then read-only access",
   },
   {
     system: "EzzyBills",
-    connected: true,
-    lastSync: "1 min ago",
     reads: "Captured invoice fields — supplier, amount, GST, line coding",
+    source: { kind: "Illustrative data" },
+    needed: "A handful of supplier invoice PDFs with their captured fields",
   },
   {
     system: "ApprovalMax",
-    connected: true,
-    lastSync: "3 min ago",
     reads: "Approval chains, approver decisions and timestamps",
+    source: { kind: "Illustrative data" },
+    needed: "Your approval rules and an extract of approval history",
   },
   {
     system: "M365",
-    connected: true,
-    lastSync: "live",
     reads: "Incoming mail for classification and routing",
+    source: { kind: "Illustrative data" },
+    needed: "A de-identified sample of the accounts inbox",
   },
 ];
 
@@ -577,13 +580,13 @@ export const chatQA: ChatQA[] = [
     question: "Which projects are over budget?",
     keywords: ["over budget", "which project", "overrun", "losing money", "over"],
     answer:
-      "**Riverside Office Fitout** is tracking **6% over** — forecast final $786,000 against a $742,000 budget. The overrun is driven by **Electrical (+$11,300)** and **Structural steel (+$5,500)**.\n\n**Hobsonville Warehouse** is *at risk* — forecast margin has slipped to 8.7% from 11.0%.\n\nKauri Apartments Stage 2 and Newmarket Retail Refit are both on track.",
+      "**Riverside Office Fitout** is forecast **6% over** — $786,000 at completion against a $742,000 budget (+$44,000). The overrun is driven by **Electrical (+$23,000 at completion, +$11,300 already spent past budget)** and **Structural steel (+$10,500, +$5,500 so far)**.\n\n**Hobsonville Warehouse** is also forecast **over** — $1,932,000 at completion against a $1,880,000 budget (+$52,000, 2.8%), and its margin has slipped to 8.7% from 11.0%.\n\nKauri Apartments Stage 2 and Newmarket Retail Refit are both on track.",
   },
   {
     question: "Why is Riverside over budget?",
     keywords: ["why", "riverside", "driving", "cause", "reason"],
     answer:
-      "Two trades account for most of it:\n\n- **Electrical (16-100)** — $72,300 actual against $61,000 budget, **+$11,300**\n- **Structural steel (05-100)** — $41,500 against $36,000, **+$5,500**\n\nA **$12,400 Voltix Electrical invoice with no matching PO** is still pending approval and would push electrical further over if released.",
+      "Two trades account for $33,500 of the $44,000 forecast overrun:\n\n- **Electrical (16-100)** — $72,300 actual against $61,000 budget, **+$11,300** so far; forecast **+$23,000** at completion\n- **Structural steel (05-100)** — $41,500 against $36,000, **+$5,500** so far; forecast **+$10,500**\n\nA **$12,400 Voltix Electrical invoice with no matching PO** is still pending approval and would push electrical further over if released — the forecast already allows for it.",
   },
   {
     question: "What's committed vs budget on Kauri Apartments Stage 2?",
@@ -1096,7 +1099,7 @@ export const statutoryClocks: StatutoryClock[] = [
     consequence: "The full claimed amount becomes recoverable as a debt.",
   },
   {
-    // Two working days left when the demo opens.
+    // One working day left when the demo opens.
     id: "CLK-002",
     kind: "Variation notice due",
     sourceId: "VAR-001",
@@ -1206,11 +1209,12 @@ export const statutoryExceptions: ExceptionItem[] = [
   },
   {
     id: "EXC-06",
-    type: "Variation notice overdue",
-    severity: "High",
+    // Type, severity and the days left are worded from CLK-002 in derive.ts.
+    type: "Variation notice due",
+    severity: "Medium",
     projectId: "RIV-01",
-    description:
-      "The switchboard upgrade instruction of 24 Aug has not been notified as a variation. Two working days remain before the right to claim is lost.",
+    description: "The switchboard upgrade instruction of 24 Aug has not been notified as a variation.",
+    clockSourceId: "VAR-001",
   },
   {
     id: "EXC-07",
@@ -1221,3 +1225,169 @@ export const statutoryExceptions: ExceptionItem[] = [
       "Retention money held on trust is short of the ledger balance. Holding less than the retention liability is an offence under the 2023 amendment.",
   },
 ];
+
+// ---------------------------------------------------------------------------
+// Source records behind each budget line
+//
+// Every line's committed figure is the sum of its purchase orders and every
+// line's actual is the sum of its posted bills, so a QS opening a line sees it
+// add up. Bills the AP pipeline already knows (`invoices`) appear as
+// themselves; the earlier progress bills that make up the rest of the actual
+// are generated deterministically from the line. Costs are carried net of GST.
+// ---------------------------------------------------------------------------
+
+/** Who a trade's POs and bills come from when no pipeline invoice names one. */
+const tradeSuppliers: Record<string, string> = {
+  "01-100": "Kiwi Site Services",
+  "02-100": "Groundline Civil",
+  "02-200": "Groundline Civil",
+  "03-100": "Pacific Concrete Ltd",
+  "03-200": "ReoMesh NZ",
+  "04-100": "Precast Solutions NZ",
+  "05-100": "Northern Steel Supplies",
+  "06-100": "TimberYard Co",
+  "07-100": "FireSeal Systems",
+  "07-200": "Roofline Systems",
+  "08-100": "ClearView Glazing",
+  "09-100": "Linea Interiors",
+  "10-100": "Linea Interiors",
+  "12-100": "Ashfield Flooring",
+  "15-100": "AirStream Mechanical",
+  "15-200": "PlumbRight Ltd",
+  "16-100": "Voltix Electrical",
+  "17-100": "Meridian Fitout Supply",
+  "26-100": "Netlink Cabling",
+  "31-100": "Greenscape Landscapes",
+};
+
+/** Month-end dates the earlier progress bills fall on, most recent first. */
+const progressBillDates = ["2026-08-25", "2026-07-25", "2026-06-25", "2026-05-25"];
+
+/** Stable four-digit number from a string — keeps generated references fixed. */
+function stableNumber(seed: string, base: number): number {
+  let h = 0;
+  for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) % 9973;
+  return base + (h % 900);
+}
+
+function supplierPrefix(supplier: string): string {
+  return supplier.replace(/[^A-Za-z]/g, "").slice(0, 3).toUpperCase();
+}
+
+const toCents = (n: number) => Math.round(n * 100);
+
+function recordsForLine(line: BudgetLine): LineRecord[] {
+  const key = `${line.projectId}-${line.code}`;
+  const pipeline = invoices.filter((i) => i.projectId === line.projectId && i.lineCode === line.code);
+  const supplier = pipeline[0]?.supplier ?? tradeSuppliers[line.code] ?? "Trade supplier";
+  const records: LineRecord[] = [];
+
+  // Purchase orders: the original order up to budget, and any extra raised over it.
+  const knownPos = purchaseRequests.filter(
+    (r) => r.projectId === line.projectId && r.costCode === line.code && r.poNumber
+  );
+  for (const pr of knownPos) {
+    records.push({
+      id: `${key}-${pr.poNumber}`,
+      projectId: line.projectId,
+      costCode: line.code,
+      kind: "Purchase order",
+      system: "ApprovalMax",
+      reference: pr.poNumber!,
+      supplier: pr.supplier,
+      date: pr.requestedOn,
+      amount: pr.amount,
+      inActual: false,
+    });
+  }
+  const remainingCommitted = line.committedAmount - knownPos.reduce((s, r) => s + r.amount, 0);
+  const original = Math.min(remainingCommitted, line.budgetAmount);
+  const orders: { amount: number; note?: string }[] = [{ amount: original, note: "Original order" }];
+  if (remainingCommitted > original) {
+    orders.push({ amount: remainingCommitted - original, note: "Raised above budget" });
+  }
+  orders
+    .filter((o) => o.amount > 0)
+    .forEach((o, n) => {
+      const reference = `PO-${stableNumber(`${key}-po-${n}`, 3100)}`;
+      records.push({
+        id: `${key}-${reference}`,
+        projectId: line.projectId,
+        costCode: line.code,
+        kind: "Purchase order",
+        system: "ApprovalMax",
+        reference,
+        supplier,
+        date: n === 0 ? "2026-04-14" : "2026-08-04",
+        amount: o.amount,
+        inActual: false,
+        note: o.note,
+      });
+    });
+
+  // Bills the pipeline already holds. Only approved bills count toward actual;
+  // ones still in capture, coding or approval, and duplicates, are shown but
+  // not counted.
+  for (const inv of pipeline) {
+    const duplicate = inv.flags?.includes("Duplicate");
+    const captured = inv.status === "Captured";
+    const approved = ["Approved", "Awaiting payment", "Paid"].includes(inv.status);
+    records.push({
+      id: `${key}-${inv.id}`,
+      projectId: line.projectId,
+      costCode: line.code,
+      kind: "Bill",
+      system: captured ? "EzzyBills" : "Xero",
+      reference: inv.invoiceNumber,
+      supplier: inv.supplier,
+      date: inv.date,
+      amount: toCents(inv.amount - inv.gst) / 100,
+      inActual: approved && !duplicate,
+      invoiceId: inv.id,
+      note: duplicate
+        ? "Duplicate — held out of actual"
+        : captured
+          ? "Captured, not yet coded — not in actual"
+          : !approved
+            ? `${inv.status}${inv.hasPO ? "" : " · no purchase order"} — not in actual`
+            : inv.status,
+    });
+  }
+
+  // Earlier progress bills make up the rest of the actual.
+  const postedCents = records
+    .filter((r) => r.kind === "Bill" && r.inActual)
+    .reduce((s, r) => s + toCents(r.amount), 0);
+  const remainderCents = toCents(line.actualAmount) - postedCents;
+  if (remainderCents > 0) {
+    const count = Math.min(progressBillDates.length, Math.max(1, Math.round(remainderCents / 1_800_000)));
+    const weights = [0.4, 0.3, 0.2, 0.1].slice(0, count);
+    const weightTotal = weights.reduce((a, b) => a + b, 0);
+    let allocated = 0;
+    weights.forEach((w, n) => {
+      const last = n === count - 1;
+      const amountCents = last
+        ? remainderCents - allocated
+        : Math.round((remainderCents * (w / weightTotal)) / 10_000) * 10_000;
+      allocated += amountCents;
+      const reference = `${supplierPrefix(supplier)}-${stableNumber(`${key}-bill-${n}`, 2100)}`;
+      records.push({
+        id: `${key}-${reference}`,
+        projectId: line.projectId,
+        costCode: line.code,
+        kind: "Bill",
+        system: "Xero",
+        reference,
+        supplier,
+        date: progressBillDates[n],
+        amount: amountCents / 100,
+        inActual: true,
+        note: "Progress claim",
+      });
+    });
+  }
+
+  return records;
+}
+
+export const lineRecords: LineRecord[] = budgetLines.flatMap(recordsForLine);
